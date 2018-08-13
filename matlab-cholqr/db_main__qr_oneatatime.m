@@ -41,7 +41,11 @@
 %  this is what we would do working on a V
    tau1 = 2/( 1 + norm(V(2:m,1))^2 );
    V(1:m,2) = A(1:m,2) - [ 1; V(2:m,1) ] * tau1 * ( [ 1; V(2:m,1) ]' * A(1:m,2) );
-   norma2 = norm(V(2:m,2),2);
+   VV = V(3:m,2);
+   V(2,2) = A(2,2) - [ V(2,1) ] * tau1 * ( [ 1; V(2:m,1) ]' * A(1:m,2) );
+   dV22 = V(2,2)
+   norma2_3 = V(3:m,2)'*V(3:m,2);
+   norma2 = sqrt( V(2,2)*V(2,2) + norma2_3 );
    if ( V(2,2) > 0 ) V(2,2) = V(2,2) + norma2; else V(2,2) = V(2,2) - norma2; end
    V(3:m,2) = V(3:m,2) / V(2,2);
    if ( V(2,2) > 0 ) V(2,2) = - norma2; else V(2,2) = norma2; end
@@ -64,6 +68,7 @@
    dR(1,2) = dA12 - dtau1 * dgamma;                % this is the correct R(1,2) computed only with A values :)
    dV(2,1) = dA21 / dalpha1;                       % I feel we will need this V(2,1) a lot (in step 3, step 4, etc.)
    dR(2,2) = dA22 - [ dV(2,1) ] * dtau1 * dgamma;  % this is not the final R
+   dR22 = dR(2,2);
 %
 %  step 2: I am not sure how to compute dnorma2. Here is a bunch of way to do it . . .
 %  dnorma2 = norm( A(2:m,2) - [ A(2:m,1) ] * tau1 * dgamma / dalpha1 );                                            %  this might be a problem to compute
@@ -71,11 +76,38 @@
 %  dnorma2 = sqrt( norm(A(1:m,2))^2 - dR(1,2)^2 );                                                                 %  this is one way to do it, not sure if this is stable
 %
 %  step 2: now, that we computed dnorma2 we can use it
+%  the following lines are confi
    if ( dR(2,2) > 0 ) dR(2,2) = dR(2,2) + dnorma2; else dR(2,2) = dR(2,2) - dnorma2; end
    if ( dR(2,2) > 0 ) dR(2,2) = - dnorma2; else dR(2,2) = dnorma2; end
 %
 %  step 2: all done :) ready for the check
    norm( triu(qr(As(1:m,1:2))) - [ dR(1:2,1:2); zeros(m-2,2) ], 'fro' ) / norm( triu(qr(As(1:m,1:2))), 'fro' )
+%
+%  step 3
+%  this is what we would do working on a V
+   tau2 = 2/( 1 + norm(V(3:m,2))^2 );
+   V(1:m,3) = A(1:m,3);
+   V(1:m,3) = V(1:m,3) - [ 1; V(2:m,1) ] * tau1 * ( [ 1; V(2:m,1) ]' * V(1:m,3) );
+   V(1:m,3) = V(1:m,3) - [ 0; 1; V(3:m,2) ] * tau2 * ( [ 0; 1; V(3:m,2) ]' * V(1:m,3) );
+   norma3 = norm(V(3:m,3),2);
+   if ( V(3,3) > 0 ) V(3,3) = V(3,3) + norma3; else V(3,3) = V(3,3) - norma3; end
+   V(4:m,3) = V(4:m,3) / V(3,3);
+   if ( V(3,3) > 0 ) V(3,3) = - norma3; else V(3,3) = norma3; end
+%  this is the check
+   norm( triu(qr(As(1:m,1:3))) - [ triu(V(1:3,1:3)); zeros(m-3,3) ], 'fro' ) / norm( triu(qr(As(1:m,1:3))), 'fro' )
+%
+%  step 2
+%  now we do the same (i.e. compute R(1:2,1:2)) without V
+%
+%  step 2: this all the quantities from A that we will need:
+%
+   if ( dR22 > 0 ) RV22 = dV22 + dnorma2; else dV22 = dV22 - dnorma2; end
+   dtau2 = 2/( 1 + norm(VV)^2/( dV22^2 ) );
+   abs(dtau2 - tau2 )
+
+
+
+
 
 
 
