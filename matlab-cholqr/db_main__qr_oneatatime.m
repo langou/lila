@@ -51,15 +51,19 @@
 %  step 2
 %  now we do the same (i.e. compute R(1:2,1:2)) without V
    dtau1 = 2/( 1 + norm(A(2:m,1))^2/dalpha1^2 ); 
-   dbeta = A(2:m,1)' * A(2:m,2);      % we are only allowed to do a A'*A kind of stuff, so we do it here. 
-   dgamma = A(1,2) + dbeta / dalpha1; % this is [ 1; V(2:m,1) ]' * A(1:m,2)
-   dR(1,2) = A(1,2) - dtau1 * dgamma;   % this is the correct R(1,2) computed only with A values :)
+   dbeta11 = A(2:m,1)' * A(2:m,1);        % we are only allowed to do a A'*A kind of stuff, so we do it here. 
+   dbeta12 = A(2:m,1)' * A(2:m,2);        % we are only allowed to do a A'*A kind of stuff, so we do it here. 
+   dbeta22 = A(2:m,2)'* A(2:m,2);
+   dgamma = A(1,2) + dbeta12 / dalpha1;   % this is [ 1; V(2:m,1) ]' * A(1:m,2)
+   dR(1,2) = A(1,2) - dtau1 * dgamma;     % this is the correct R(1,2) computed only with A values :)
    dV(2,1) = A(2,1) / dalpha1;
-   dR(2,2) = A(2,2) - [ dV(2,1) ] * dtau1 * dbeta;
-
-   dnorma2 = norma2; %%% This is cheating . . . dnorma2 needs to be computed from A, using norma2 is cheating
-   if ( R(2,2) > 0 ) dR(2,2) = dR(2,2) + dnorma2; else dR(2,2) = dR(2,2) - dnorma2; end
-   if ( R(2,2) > 0 ) dR(2,2) = - dnorma2; else dR(2,2) = dnorma2; end
+   dR(2,2) = A(2,2) - [ dV(2,1) ] * dtau1 * dgamma;
+%  I am not sure how to compute dnorma2. Here is a bunch of way to do it . . .
+%  dnorma2 = norm( A(2:m,2) - [ A(2:m,1) ] * tau1 * dgamma / dalpha1 );                                            %  this might be a problem to compute
+   dnorma2 = sqrt( dbeta22 - 2 * dbeta12 * tau1 * dgamma / dalpha1  + dbeta11 *( tau1 * dgamma / dalpha1 )^2 );    %  this might be a problem to compute accurately
+%  dnorma2 = sqrt( norm(A(1:m,2))^2 - dR(1,2)^2 );                                                                 %  this is one way to do it, not sure if this is stable
+   if ( dR(2,2) > 0 ) dR(2,2) = dR(2,2) + dnorma2; else dR(2,2) = dR(2,2) - dnorma2; end
+   if ( dR(2,2) > 0 ) dR(2,2) = - dnorma2; else dR(2,2) = dnorma2; end
    norm( triu(qr(As(1:m,1:2))) - [ dR(1:2,1:2); zeros(m-2,2) ], 'fro' ) / norm( triu(qr(As(1:m,1:2))), 'fro' )
 
 
