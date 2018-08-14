@@ -97,7 +97,7 @@
 %
 %  norma = norm(V(1:m,1),2);                                                       % 2.1
 %   norma = sqrt( dA(1:n,2)'*dA(1:n,2) + dG(2,2) ); 
-   norma = sqrt( dA(2:n,2)'*dA(2:n,2) + dG(2,2) ); 
+   norma = sqrt( dV(2:n,2)'*dV(2:n,2) + dG(2,2) ); 
 %
 %  if ( V(1,1) > 0 ) V(1,1) = V(1,1) + norma; else V(1,1) = V(1,1) - norma; end    % 2.2
    if ( dV(2,2) > 0 ) dV(2,2) = dV(2,2) + norma; else dV(2,2) = dV(2,2) - norma; end
