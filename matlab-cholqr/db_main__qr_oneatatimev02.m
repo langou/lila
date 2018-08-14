@@ -53,6 +53,7 @@
    if ( V(2,2) > 0 ) V(2,2) = - norma2; else V(2,2) = norma2; end
 %  this is the check
    norm( triu(qr(As(1:m,1:2))) - [ triu(V(1:2,1:2)); zeros(m-2,2) ], 'fro' ) / norm( triu(qr(As(1:m,1:2))), 'fro' )
+return
 %
 %  step 2
 %  now we do the same (i.e. compute R(1:2,1:2)) without V

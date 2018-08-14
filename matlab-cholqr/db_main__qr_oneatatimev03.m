@@ -71,30 +71,24 @@
 %  this is the check
    norm( triu(RR(1,1:n)) - triu(dV(1,1:n)), 'fro' ) / norm( triu(RR(1,1:n)), 'fro' )
    norm( tril(RR(1:n,1),-1) - tril(dV(1:n,1),-1), 'fro' ) / norm( tril(RR(1:n,1),-1), 'fro' )
-   norm( V(1:n,1:n) - dV(1:n,1:n), 'fro' ) / norm( V(1:n,1:n), 'fro' ) 
-%%%%%%
+   norm( V(1:n,1:n) - dV(1:n,1:n), 'fro' ) / norm( V(1:n,1:n), 'fro' )
+%
+%===========================================================================================================================================
 %
 %  step 2
 %  this is what we would do working on a V
+
    norma = norm(V(2:m,2),2);                                                                         % 2.1
    if ( V(2,2) > 0 ) V(2,2) = V(2,2) + norma; else V(2,2) = V(2,2) - norma; end                      % 2.2
    alpha(2) = V(2,2);                                                                                % 2.3
    V(3:m,2) = V(3:m,2) / alpha(2);                                                                   % 2.4
    if ( V(2,2) > 0 ) V(2,2) = - norma; else V(2,2) = norma; end                                      % 2.5
    tau2 = 2/( 1 + norm(V(3:m,2))^2 );                                                                % 2.6
-   V(2:m,3:n) = A(2:m,3:n) - [ [ 1; V(3:m,2) ] ] * tau2 * ( [ 1; V(3:m,2) ]' * A(2:m,3:n) );         % 2.7
-%   V(1:m,3:n) = A(1:m,3:n) - [ [0; 1; V(3:m,2) ] ] * tau2 * ( [0; 1; V(3:m,2) ]' * A(1:m,3:n) );         % 2.7
-%
+   V(2:m,3:n) = V(2:m,3:n) - [ [ 1; V(3:m,2) ] ] * tau2 * ( [ 1; V(3:m,2) ]' * V(2:m,3:n) );         % 2.7
+
 %  this is the check
    norm( triu(RR(2,1:n)) - triu(V(2,1:n)), 'fro' ) / norm( triu(RR(2,1:n)), 'fro' )
    norm( tril(RR(1:m,2),-1) - tril(V(1:m,2),-1), 'fro' ) / norm( tril(RR(1:m,2),-1), 'fro' )
-
-
-
-
-return
-%
-%%%%%%
 %
 %  step 2
 %  Update A'*A
@@ -102,13 +96,15 @@ return
 %   dG = RR(1,1:n)'*RR(1,1:n) - A'*A;                                              % 2.0 ??
 %
 %  norma = norm(V(1:m,1),2);                                                       % 2.1
-   norma = sqrt( dA(1:n,2)'*dA(1:n,2) + dG(2,2) ); 
+%   norma = sqrt( dA(1:n,2)'*dA(1:n,2) + dG(2,2) ); 
+   norma = sqrt( dA(2:n,2)'*dA(2:n,2) + dG(2,2) ); 
 %
 %  if ( V(1,1) > 0 ) V(1,1) = V(1,1) + norma; else V(1,1) = V(1,1) - norma; end    % 2.2
    if ( dV(2,2) > 0 ) dV(2,2) = dV(2,2) + norma; else dV(2,2) = dV(2,2) - norma; end
 %
 %  alpha(1) = V(1,1);                                                              % 2.3
    dalpha(2) = dV(2,2);
+%   dalpha(2) = alpha(2);
 %
 %  V(2:m,1) = V(2:m,1) / dalpha(1);                                                % 2.4
    dV(3:n,2) = dV(3:n,2) / dalpha(2);
@@ -123,14 +119,17 @@ return
 %  dV(1,2:n) = dV(1,2:n) - [ 1 ] * tau1 * ( A(1,2:n) + [ V(2:m,1) ]' * A(2:m,2:n) );
 %  dV(1,2:n) = dV(1,2:n) - [ 1 ] * tau1 * ( A(1,2:n) + [ A(2:m,1)/ dalpha(1) ]' * A(2:m,2:n) );
 %  dV(1,2:n) = dV(1,2:n) - [ 1 ] * tau1 * ( dV(1,2:n) + ( dG(1,2:n) + dA(2:n,1)' * dA(2:n,2:n) ) / dalpha(1) );
-%  dV(1,2:n) = dV(1,2:n) - dtau(1) * ( dA(1,2:n) + ( dG(1,2:n) / dalpha(1) + dV(2:n,1)' * dA(2:n,2:n) )  );
 
-   dV(2:n,3:n) = A(2:n,3:n) - [ [ 1; V(3:n,2) ] ] * dtau(2) * ( [ 1; V(3:m,2) ]' * A(2:m,3:n) );         % 2.7
+   dV(2,3:n) = dV(2,3:n) - dtau(2) * ( dA(2,3:n) + ( dG(2,3:n) / dalpha(2) + dV(3:n,2)' * dA(3:n,3:n) )  );
+
+%   dV(2:n,3:n) = dV(2:n,3:n) - [ [ 1; V(3:n,2) ] ] * dtau(2) * ( [ 1; V(3:n,2) ]' * dV(2:n,3:n) );         % 2.7
 
 %
 %  this is the check
    norm( triu(RR(2,1:n)) - triu(dV(2,1:n)), 'fro' ) / norm( triu(RR(2,1:n)), 'fro' )
    norm( tril(RR(1:n,2),-1) - tril(dV(1:n,2),-1), 'fro' ) / norm( tril(RR(1:n,2),-1), 'fro' )
    norm( V(1:n,1:n) - dV(1:n,1:n), 'fro' ) / norm( V(1:n,1:n), 'fro' )
+%
+%===========================================================================================================================================
+%
 
-%%%%
