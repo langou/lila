@@ -1,8 +1,8 @@
 %
    clear
 %
-   m = 31;
-   n = 10;
+   m = 76;
+   n = 27;
    log10KA = 4;
 %
    U = randn(m,n); [U,~]=qr(U,0);
