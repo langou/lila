@@ -42,21 +42,12 @@
 %
 %
 %  3
-   lda = m; ldb = m; ldq = m;
    for k = 2:5;
-%
-   BBB(1:ihi(k-1),1:nb(k)) = A(1:ihi(k-1),ilo(k):ihi(k));
-%
-%  BBB(1:ihi(k-1),1:nb(k)) = (tril(A(1:ihi(k-1),1:ihi(k-1)),-1)+eye(ihi(k-1),ihi(k-1)))'*BBB(1:ihi(k-1),1:nb(k));
-   [ BBB ] = blas_trmm ( 'L', 'L', 'T', 'U', ihi(k-1), nb(k), 1.0e+00, A, 1, 1, lda, BBB, 1, 1, ldb );
-%
-   BBB(1:ihi(k-1),1:nb(k)) = BBB(1:ihi(k-1),1:nb(k)) + A(ilo(k):m,1:ihi(k-1))'*A(ilo(k):m,ilo(k):ihi(k));
-%
-%  BBB = triu( T(1:ihi(k-1),1:ihi(k-1)) )'*BBB;
-  [ BBB ] = blas_trmm ( 'L', 'U', 'T', 'N', ihi(k-1), nb(k), 1.0e+00, T, 1, 1, lda, BBB, 1, 1, ldb );
-%
-   A(1:ihi(k-1),ilo(k):ihi(k)) = A(1:ihi(k-1),ilo(k):ihi(k)) - (tril(A(1:ihi(k-1),1:ihi(k-1)),-1)+eye(ihi(k-1),ihi(k-1)))*BBB(1:ihi(k-1),1:nb(k));
-   A(ilo(k):m,ilo(k):ihi(k)) = A(ilo(k):m,ilo(k):ihi(k)) - A(ilo(k):m,1:ihi(k-1))*BBB(1:ihi(k-1),1:nb(k));
+   BBB = ((tril(A(1:ihi(k-1),1:ihi(k-1)),-1)+eye(ihi(k-1),ihi(k-1)))'*A(1:ihi(k-1),ilo(k):ihi(k)));
+   BBB = BBB + A(ilo(k):m,1:ihi(k-1))'*A(ilo(k):m,ilo(k):ihi(k));
+   BBB = triu( T(1:ihi(k-1),1:ihi(k-1)) )'*BBB;
+   A(1:ihi(k-1),ilo(k):ihi(k)) = A(1:ihi(k-1),ilo(k):ihi(k)) - (tril(A(1:ihi(k-1),1:ihi(k-1)),-1)+eye(ihi(k-1),ihi(k-1)))*BBB;
+   A(ilo(k):m,ilo(k):ihi(k)) = A(ilo(k):m,ilo(k):ihi(k)) - A(ilo(k):m,1:ihi(k-1))*BBB;
 %
    [ A(ilo(k):m,ilo(k):ihi(k)) ] = geqr2( A(ilo(k):m,ilo(k):ihi(k)) );
 %
@@ -66,21 +57,17 @@
    T(1:ihi(k-1),ilo(k):ihi(k)) = T(1:ihi(k-1),ilo(k):ihi(k)) + A(ihi(k)+1:m,1:ihi(k-1))' * A(ihi(k)+1:m,ilo(k):ihi(k))  ;
    T(1:ihi(k-1),ilo(k):ihi(k)) = - ( T(1:ihi(k-1),1:ihi(k-1)) * T(1:ihi(k-1),ilo(k):ihi(k)) * T(ilo(k):ihi(k),ilo(k):ihi(k)) ) ;
 %
-   BBB(1:ihi(k-1),1:nb(k)) = A(ilo(k):ihi(k),1:ihi(k-1))';
-   BBB(1:ihi(k-1),1:nb(k)) = triu( T(1:ihi(k-1),1:ihi(k-1)) )*BBB(1:ihi(k-1),1:nb(k));
+   BBB(1:ihi(k-1),1:nb(k)) = triu( T(1:ihi(k-1),1:ihi(k-1)) )*[A(ilo(k):ihi(k),1:ihi(k-1))'];
    BBB(1:ihi(k-1),1:nb(k)) = BBB(1:ihi(k-1),1:nb(k)) + T(1:ihi(k-1),ilo(k):ihi(k))*( tril(A(ilo(k):ihi(k),ilo(k):ihi(k)),-1)+eye(nb(k)) )';
    BBB(ilo(k):ihi(k),1:nb(k)) = triu( T(ilo(k):ihi(k),ilo(k):ihi(k)) )*[tril(A(ilo(k):ihi(k),ilo(k):ihi(k)),-1)+eye(nb(k))]';
 %
-   Q(1:ihi(k-1),ilo(k):ihi(k)) = BBB(1:ihi(k-1),1:nb(k));
-%   Q(1:ihi(k-1),ilo(k):ihi(k)) = - (tril(A(1:ihi(k-1),1:ihi(k-1)),-1)+eye(ihi(k-1),ihi(k-1))) * Q(1:ihi(k-1),ilo(k):ihi(k));
-   [ Q ] = blas_trmm ( 'L', 'L', 'N', 'U', ihi(k-1), nb(k), -1.0e+00, A, 1, 1, lda, Q, 1, ilo(k), ldq );
+   Q(1:ihi(k-1),ilo(k):ihi(k)) = - (tril(A(1:ihi(k-1),1:ihi(k-1)),-1)+eye(ihi(k-1),ihi(k-1))) * BBB(1:ihi(k-1),1:nb(k));
 %
    Q(ilo(k):ihi(k),ilo(k):ihi(k)) = ( tril( A(ilo(k):ihi(k),ilo(k):ihi(k)), -1 ) + eye(nb(k),nb(k) ) ) * triu( BBB(ilo(k):ihi(k),1:nb(k)) ) ;
    Q(ilo(k):ihi(k),ilo(k):ihi(k)) = eye(nb(k),nb(k)) - Q(ilo(k):ihi(k),ilo(k):ihi(k));
    Q(ilo(k):ihi(k),ilo(k):ihi(k)) = Q(ilo(k):ihi(k),ilo(k):ihi(k)) - A(ilo(k):ihi(k),1:ihi(k-1)) * BBB(1:ihi(k-1),1:nb(k));
 %
-   Q(ihi(k)+1:m,ilo(k):ihi(k)) = A(ihi(k)+1:m,ilo(k):ihi(k));
-   Q(ihi(k)+1:m,ilo(k):ihi(k)) = - Q(ihi(k)+1:m,ilo(k):ihi(k)) * triu( BBB(ilo(k):ihi(k),1:nb(k)) );
+   Q(ihi(k)+1:m,ilo(k):ihi(k)) = - A(ihi(k)+1:m,ilo(k):ihi(k)) * triu( BBB(ilo(k):ihi(k),1:nb(k)) );
    Q(ihi(k)+1:m,ilo(k):ihi(k)) = Q(ihi(k)+1:m,ilo(k):ihi(k)) - A(ihi(k)+1:m,1:ihi(k-1)) * BBB(1:ihi(k-1),1:nb(k)) ;
    end
 %
