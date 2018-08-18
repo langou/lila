@@ -5,7 +5,7 @@
    m = 15;
    n = 7;
 %
-   log10KA = 2;
+   log10KA = 6;
 %
    U = randn(m,n); [U,~]=qr(U,0);
    V = randn(n,n); [V,~]=qr(V,0);
@@ -15,8 +15,8 @@
 %
    nrmA = norm(A,'fro');
 %
-%  [Q R] = qr(A,0);
-   R = chol( A'*A, 'upper'); Q = A / R;
+   [Q R] = qr(A,0);
+%  R = chol( A'*A, 'upper'); Q = A / R;
 %
    fprintf('|| A - Q*R || / || A ||          = %6.1e\n',norm(A-Q*R,'fro')/norm(A,'fro'));
    fprintf('|| I - Q''*Q ||                   = %6.1e\n',norm(eye(n) - Q'*Q,'fro'));
@@ -47,7 +47,7 @@
 %
    V = L;
    T = U / (V(1:n,1:n)');
-   TT = larft(V);
+   TT = larft(V); T = TT;
 %
    H = ( eye(m) - V * T * V' );
 %
@@ -60,16 +60,19 @@
    fprintf(' ----- ||tril(H''*A, -1)|| = %d\n', ( norm(tril(H'*A, -1),'fro' ) )  / nrmA );
    fprintf(' ----- ||H - Q|| = %d', ( norm(H(1:m,1:n) - Qs*D,'fro') ) );
    fprintf('\n');
-   fprintf('||T - larft(V)|| = %d ', norm(T - TT,'fro'));
+   fprintf('||T - larft(V)|| = %d ', norm(T - larft(V),'fro'));
+   fprintf('\n');
+   fprintf(' ----- ||H - Q|| = %d', norm( A - H(1:m,1:n)*D*R,'fro')/norm(A) ) ;
+   fprintf('\n');
+   fprintf(' ----- ||H - Q|| = %d', norm( A - H(1:m,1:n)*( triu(H(1:m,1:n)'*A )),'fro')/norm(A) ) ;
+   fprintf('\n');
 %
-   n1 = 20;
+   n1 = 2;
    B = randn(m,n1);
    B1 = B - Qs*(Qs'*B);
    norm( Qs' * B1 ) / norm( B1 )
-   B1 = ( B - V * ( T * ( V' * B ) ) );
-   norm( Qs' * B1 ) / norm( B1 )
-   B1 = ( B - V * ( TT * ( V' * B ) ) );
-   norm( Qs' * B1 ) / norm( B1 )
+   B2 = ( B - V * ( T * ( V' * B ) ) );
+%  norm( Qs' * B1 ) / norm( B1 )
    
 
 
