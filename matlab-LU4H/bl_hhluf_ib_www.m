@@ -82,7 +82,7 @@
 %  ib = [ 4, 6, 3, 4, 3, 7 ];
 %  ib_block = ib_block + 3;
 %
-   ib = [ 4, 6, 3, 4, 3, 7 ];
+   ib = [ 3, 5, 2, 9, 3, 5 ];
    ib_block = ib_block + 3;
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -135,13 +135,9 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+      k_break = 4; % 4 is the block we want to break
 
-
-
-
-
-      for j = ib_block-1:-1:ib_block-2,
-
+      for j = ib_block-1:-1:k_break+1,
 
       jlo = jlo - ib(j);
       jhi = jhi - ib(j+1);
@@ -150,11 +146,31 @@
       BBB(jlo:jhi,ilo(k):ihi(k)) = T(jlo:jhi,jlo:jhi) * BBB(jlo:jhi,ilo(k):ihi(k));
       QQ2 ( jlo:m, ilo(k):ihi(k)) = QQ2 ( jlo:m, ilo(k):ihi(k)) - V(jlo:m,jlo:jhi) * BBB(jlo:jhi,ilo(k):ihi(k));
 
-
-
-
-
       end
+
+      i1 = 3; % 3 is how we break block k_break so we break 9=3+6
+      i2 = ib(k_break) - i1;
+ 
+      jlo = jlo - i2;
+      jhi = jhi - ib(k_break+1);
+
+      BBB(jlo:jhi,jlo:ihi(k)) = V(jlo:m,jlo:jhi)' * QQ2(jlo:m,jlo:ihi(k));
+      BBB(jlo:jhi,ilo(k):ihi(k)) = T(jlo:jhi,jlo:jhi) * BBB(jlo:jhi,ilo(k):ihi(k));
+      QQ2 ( jlo:m, ilo(k):ihi(k)) = QQ2 ( jlo:m, ilo(k):ihi(k)) - V(jlo:m,jlo:jhi) * BBB(jlo:jhi,ilo(k):ihi(k));
+
+      jlo = jlo - i1;
+      jhi = jhi - i2;
+
+         BBB(jlo:jhi,ilo(k):ihi(k)) = A(jhi+1:m,jlo:jhi)' * QQ2(jhi+1:m,ilo(k):ihi(k));
+%
+         BBB(jlo:jhi,ilo(k):ihi(k)) = T(jlo:jhi,jlo:jhi) * BBB(jlo:jhi,ilo(k):ihi(k));
+%
+         QQ2(jlo:jhi,ilo(k):ihi(k)) = QQ2(jlo:jhi,ilo(k):ihi(k)) - (tril(A(jlo:jhi,jlo:jhi),-1)+eye(i1,i1)) * BBB(jlo:jhi,ilo(k):ihi(k));
+         QQ2(jhi+1:m,ilo(k):ihi(k)) = QQ2(jhi+1:m,ilo(k):ihi(k)) - A(jhi+1:m,jlo:jhi) * BBB(jlo:jhi,ilo(k):ihi(k));
+%
+
+
+ 
 
 
  
@@ -201,10 +217,11 @@
 %
 %    This portion constructs Q beyond the new block we've done QR on
 %
-      for j = ib_block-3:-1:1,
+      for j = k_break-1:-1:1,
 
       jlo = jlo - ib(j);
-      jhi = jhi - ib(j+1);
+
+      if (j==k_break-1) jhi = jhi - i1; else jhi = jhi - ib(j+1); end
 
 
 %

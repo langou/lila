@@ -79,9 +79,6 @@
 %
 %   ib = [ 4, 6, 3, 7, 7 ];
 %   ib_block = ib_block + 2;
-%  ib = [ 4, 6, 3, 4, 3, 7 ];
-%  ib_block = ib_block + 3;
-%
    ib = [ 4, 6, 3, 4, 3, 7 ];
    ib_block = ib_block + 3;
 %
@@ -94,6 +91,8 @@
 % Constructing workspace
 %
    QQ2 = Q(1:m,1:ihi(k-1));
+   QQ2(1:m,ilo(k):ihi(k)) = zeros(m,nb(k));
+   QQ2(ilo(k):ihi(k),ilo(k):ihi(k)) = eye(nb(k),nb(k));
 %
    jlo = ihi(k)-ib(ib_block)+1;
    jhi = ihi(k);
@@ -117,49 +116,60 @@
 %
       QQ2(jhi+1:m,jlo:jhi) = - A(jhi+1:m,jlo:jhi) * triu( BBB(jlo:jhi,jlo:jhi) );
 %
+%%     jlo = jlo - ib(ib_block-1)- ib(ib_block-2);
+%%     jhi = jhi - ib(ib_block);
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%
+%%%    (upper) T
+%%%
+%%%     BBB(jlo:jhi,jlo:jhi) = (tril(A(jlo:jhi,jlo:jhi),-1)+eye(size(A(jlo:jhi,jlo:jhi))))';
+%%%
+%%%%%%   Column had zeros based off the previous ib
+%%%
+%%%   Rect * Rect
+%%%
+%%%     BBB(jlo:jhi,ilo(k)+ib(ib_block-1)+ib(ib_block-2):ihi(k)) = A(jhi+1:m,jlo:jhi)' * QQ2(jhi+1:m,ilo(k)+ib(ib_block-1)+ib(ib_block-2):ihi(k));
+%%%%%%%%
+%%%
+%%%   (upper) T * Rect
+%%%
+%%%     BBB(jlo:jhi,ilo(k):ihi(k)) = T(jlo:jhi,jlo:jhi) * BBB(jlo:jhi,ilo(k):ihi(k));
+%%%
+%%%   [ I, zeros ]  - (lower) T * [ (upper) T, Rect ]
+%%%
+%%%     QQ2(jlo:jhi,ilo(k):ihi(k)) = QQ2(jlo:jhi,ilo(k):ihi(k)) - (tril(A(jlo:jhi,jlo:jhi),-1)+eye(size(A(jlo:jhi,jlo:jhi)))) * BBB(jlo:jhi,ilo(k):ihi(k));
+%%%
+%%%   [ zeros, Rect ]  - Rect * [ (upper) T, Rect ]
+%%%
+%%%     QQ2(jhi+1:m,ilo(k):ihi(k)) = QQ2(jhi+1:m,ilo(k):ihi(k)) - A(jhi+1:m,jlo:jhi) * BBB(jlo:jhi,ilo(k):ihi(k));
+%%%
+%%%     jlo = jlo - ib(ib_block-3);
+%%%     jhi = jhi - ib(ib_block-1)- ib(ib_block-2);
+%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
       V=zeros(m,m);
       V(1:m,1:n) =  tril(A,-1)+eye(m,n);
 %
-
-
-      klo = jlo - ib(ib_block-1)- ib(ib_block-2);
-      khi = jhi - ib(ib_block);
-
-      QQ2(klo:khi,klo:khi) = eye(size(QQ2(klo:khi,klo:khi)));
-      QQ2(klo:khi,khi+1:ihi(k)) = zeros(size(QQ2(klo:khi,khi+1:ihi(k))));
-      QQ2(khi+1:m,klo:khi) = zeros(size(QQ2(khi+1:m,klo:khi)));
-      QQ2(khi+1:m,khi+1:ihi(k)) = QQ2(khi+1:m,khi+1:ihi(k));
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-
-
-
-
-      for j = ib_block-1:-1:ib_block-2,
-
-
-      jlo = jlo - ib(j);
-      jhi = jhi - ib(j+1);
-
+      jlo = jlo - ib(ib_block-1)- ib(ib_block-2);
+      jhi = jhi - ib(ib_block);
+%
+%
+      QQ2(jlo:jhi,jlo:jhi) = eye(size(QQ2(jlo:jhi,jlo:jhi)));
+      QQ2(jlo:jhi,jhi+1:ihi(k)) = zeros(size(QQ2(jlo:jhi,jhi+1:ihi(k))));
+      QQ2(jhi+1:m,jlo:jhi) = zeros(size(QQ2(jhi+1:m,jlo:jhi)));
+      QQ2(jhi+1:m,jhi+1:ihi(k)) = QQ2(jhi+1:m,jhi+1:ihi(k))
+%
       BBB(jlo:jhi,jlo:ihi(k)) = V(jlo:m,jlo:jhi)' * QQ2(jlo:m,jlo:ihi(k));
+%
       BBB(jlo:jhi,ilo(k):ihi(k)) = T(jlo:jhi,jlo:jhi) * BBB(jlo:jhi,ilo(k):ihi(k));
+%
       QQ2 ( jlo:m, ilo(k):ihi(k)) = QQ2 ( jlo:m, ilo(k):ihi(k)) - V(jlo:m,jlo:jhi) * BBB(jlo:jhi,ilo(k):ihi(k));
-
-
-
-
-
-      end
-
-
- 
-
-
+%
+      jlo = jlo - ib(ib_block-3);
+      jhi = jhi - ib(ib_block-1)- ib(ib_block-2);
 %
 
 
@@ -202,11 +212,6 @@
 %    This portion constructs Q beyond the new block we've done QR on
 %
       for j = ib_block-3:-1:1,
-
-      jlo = jlo - ib(j);
-      jhi = jhi - ib(j+1);
-
-
 %
          BBB(jlo:jhi,ilo(k):ihi(k)) = A(jhi+1:m,jlo:jhi)' * QQ2(jhi+1:m,ilo(k):ihi(k));
 %
@@ -215,6 +220,8 @@
          QQ2(jlo:jhi,ilo(k):ihi(k)) = QQ2(jlo:jhi,ilo(k):ihi(k)) - (tril(A(jlo:jhi,jlo:jhi),-1)+eye(ib(j),ib(j))) * BBB(jlo:jhi,ilo(k):ihi(k));
          QQ2(jhi+1:m,ilo(k):ihi(k)) = QQ2(jhi+1:m,ilo(k):ihi(k)) - A(jhi+1:m,jlo:jhi) * BBB(jlo:jhi,ilo(k):ihi(k));
 %
+         if (j > 1 ) jlo = jlo - ib(j-1); end;
+         if (j > 1 ) jhi = jhi - ib(j); end;
 %
        end
 
