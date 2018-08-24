@@ -27,8 +27,7 @@
       ihi(i) = ihi(i-1) + nb(i);
    end
 %
-   T = zeros(m,n);
-   V = zeros(m,n);
+   T = zeros(n,n);
    As = A;
    nrmA = norm(A,'fro');
    Q = zeros( m, n );
@@ -49,8 +48,7 @@
       [ A(j:m,j+1:ihi(1)) ] = larfL( A(j:m,j), A(j:m,j+1:ihi(1)) );
    end
 %
-   V(1:m,1:ihi(1)) = tril( A(1:m,1:ihi(1)), -1 ) + eye(m,ihi(1));
-   T(1:ihi(1),1:ihi(1)) = larft( V(1:m,1:ihi(1)) );
+   T(1:ihi(1),1:ihi(1)) = larft( A(1:m,1:ihi(1)) );
 %
 %  ORGQR on the first block
 %
@@ -95,7 +93,7 @@
 %     end
 %     start of ORMQRF
 %
-      [ A ] = lila_ormqrf_v0( m, ihi(k-1), nb(k), A, 1, 1, lda, A, 1, ilo(k), lda );
+     [ A ] = lila_ormqrf_v0( m, ihi(k-1), nb(k), A, 1, 1, lda, A, 1, ilo(k), lda );
 %
 %     start of GEQRF
 %     for j = ilo(k):ihi(k),
@@ -105,8 +103,11 @@
 %     end of GEQRF
 %
       [ A ] = lila_geqrf_v0( ml, nl, A, ilo(k), ilo(k), lda );
-       T(ilo(k):ihi(k),ilo(k):ihi(k) ) = larft( A(ilo(k):m,ilo(k):ihi(k) ) );
-       V(ilo(k):m,ilo(k):ihi(k) ) = tril( A(ilo(k):m,ilo(k):ihi(k)), -1 ) + eye(m-ilo(k)+1,nb(k));;
+%
+%
+      T(ilo(k):ihi(k),ilo(k):ihi(k) ) = larft( A(ilo(k):m,ilo(k):ihi(k) ) );
+      T(1:ihi(k-1),ilo(k):ihi(k)) = -( T(1:ihi(k-1),1:ihi(k-1))*A(ilo(k):m,1:ihi(k-1))' )*( (tril(A(ilo(k):m,ilo(k):ihi(k)),-1)+eye(m-ilo(k)+1,nb(k)))*T(ilo(k):ihi(k),ilo(k):ihi(k) ) );
+%
 %
 %     start of ORGQR
 %     nn = nb(k);
@@ -119,8 +120,8 @@
 %     Q(ilo(k):m,ilo(k):ihi(k)) = QQ;
 %     end of ORGQR
 %
-     Q(ilo(k):m,ilo(k):ihi(k)) = A(ilo(k):m,ilo(k):ihi(k));
-     [ Q ] = lila_orgqr_v0( ml, nl, Q, ilo(k), ilo(k), ldq );
+      Q(ilo(k):m,ilo(k):ihi(k)) = A(ilo(k):m,ilo(k):ihi(k));
+      [ Q ] = lila_orgqr_v0( ml, nl, Q, ilo(k), ilo(k), ldq );
 %
 %     start ORMQRbz
 %     QQ = [ zeros(ihi(k-1),nb(k)) ; QQ];
@@ -132,8 +133,6 @@
       [ Q ] = lila_ormqrbz_v0( m, ihi(k-1), nb(k), A, 1, 1, lda, Q, 1, ilo(k), ldq );
 %
 %
-%         Local check on kth block
-%
       R = triu(A(1:ihi(k),1:ihi(k)));
       fprintf('||Q''Q - I|| = %f', norm(Q(1:m,1:ihi(k))'*Q(1:m,1:ihi(k)) - eye(ihi(k)), 'fro'));
       fprintf('                ||A - Q*R|| = %f\n\n', norm(As(1:m,1:ihi(k)) - Q(1:m,1:ihi(k))*R(1:ihi(k),1:ihi(k)), 'fro') / norm(As(1:m,1:ihi(k)), 'fro'));
@@ -143,12 +142,9 @@
 %  Checks for the good T
 %
    V = ( tril( A(1:m,1:ihi(nb_block)), -1 ) + eye(m,ihi(nb_block)) ) ;
-   T = larft( V );
+   T1 = larft( V );
    H = (eye(m,m) - V * ( T(1:ihi(nb_block),1:ihi(nb_block)) * ( V' ) ) );
 
-
-
-   fprintf('||H''*H - I|| = %f', norm(H'*H - eye(m,m), 'fro') );
-   fprintf('   ||H''*Q - I|| = %f', norm(H'*Q - eye(m,n), 'fro') );
-   fprintf('   ||tril(H''*A, -1)|| = %f', norm(tril(H'*As, -1), 'fro') / norm(R, 'fro') );
-   fprintf('   ||triu(H''*A) / norm(R)|| = %f\n', norm(triu(H'*As), 'fro') / norm(R, 'fro') );
+   fprintf('||H''*H - I|| = %e', norm(H'*H - eye(m,m), 'fro') );
+   fprintf('   ||H''*Q - I|| = %e', norm(H'*Q - eye(m,n), 'fro') );
+   fprintf('   ||triu(H''*A) / norm(R)|| = %e\n', norm( H'*As - [ R; zeros(m-n,n) ], 'fro') / norm( As, 'fro') );
