@@ -29,6 +29,7 @@
 %
    As = A;
    nrmA = norm(A,'fro');
+   Q = zeros( m, n );
 %
 %
 %
@@ -51,7 +52,7 @@
 %  ORGQR on the first block
 %
    R = triu(A(1:ihi(1),1:ihi(1)));
-   Q = eye( m, ihi(1) );
+   Q(1:m,ilo(1):ihi(1)) = eye( m, ihi(1) );
    for j = ihi(1):-1:1,
       [ Q(j:m,j:ihi(1)) ] = larfL( A(j:m,j), Q(j:m,j:ihi(1)) );
    end
@@ -60,8 +61,8 @@
 %
    fprintf('Local check on block 1');
    fprintf('               Semi-local check on block 1\n');
-   fprintf('||Q''Q - I|| = %f', norm(Q'*Q - eye(nb(1)), 'fro'));
-   fprintf('                ||A - Q*R|| = %f\n\n', norm(As(1:m,1:ihi(1)) - Q*R, 'fro') / norm(As(1:m,1:ihi(1)), 'fro'));
+   fprintf('||Q''Q - I|| = %f', norm(Q(1:m,ilo(1):ihi(1))'*Q(1:m,ilo(1):ihi(1)) - eye(nb(1)), 'fro'));
+   fprintf('                ||A - Q*R|| = %f\n\n', norm(As(1:m,1:ihi(1)) - Q(1:m,ilo(1):ihi(1))*R(ilo(1):ihi(1),ilo(1):ihi(1)), 'fro') / norm(As(1:m,1:ihi(1)), 'fro'));
 %
 %
 %
@@ -78,69 +79,59 @@
 %                       Looooooooopping time
 %
    lda = -1;
+   ldq = -1;
    ml= m;
    for k = 2:nb_block,
 %
       ml = ml - nb(k-1);
       nl = nb(k);
-%     ORMQRf
 %
+%     start of ORMQRF
 %     for j = 1:ihi(k-1),
 %        [ A(j:m,ilo(k):ihi(k)) ] = larfL( A(j:m,j), A(j:m,ilo(k):ihi(k)) );
 %     end
+%     start of ORMQRF
 %
       [ A ] = lila_ormqrf_v0( m, ihi(k-1), nb(k), A, 1, 1, lda, A, 1, ilo(k), lda );
-%
-%
 %
 %     start of GEQRF
 %     for j = ilo(k):ihi(k),
 %        [ A(j:m,j) ] = larfg( A(j:m,j) );
 %        [ A(j:m,j+1:ihi(k)) ] = larfL( A(j:m,j), A(j:m,j+1:ihi(k)) );
 %     end
+%     end of GEQRF
 %
       [ A ] = lila_geqrf_v0( ml, nl, A, ilo(k), ilo(k), lda );
 %
-%     end of GEQRF
-%
-%
-%
 %     start of ORGQR
-      nn = nb(k);
-      AA = A(ilo(k):m,ilo(k):ihi(k));
-%
-      QQ = zeros( ml, nn );
-      QQ(1:nn,1:nn) = eye( nn, nn );
-      for j = nn:-1:1,
-         [ QQ(j:ml,j:nn) ] = larfL( AA(j:ml,j), QQ(j:ml,j:nn) );
-      end
-%
-%    Q(ilo(k):m,ilo(k):ihi(k)) = A(ilo(k):m,ilo(k):ihi(k));
-%    [ Q ] = lila_orgqr_v0( ml, nl, Q, ilo(k), ilo(k), lda );
-%
+%     nn = nb(k);
+%     AA = A(ilo(k):m,ilo(k):ihi(k));
+%     QQ = zeros( ml, nn );
+%     QQ(1:nn,1:nn) = eye( nn, nn );
+%     for j = nn:-1:1,
+%        [ QQ(j:ml,j:nn) ] = larfL( AA(j:ml,j), QQ(j:ml,j:nn) );
+%     end
+%     Q(ilo(k):m,ilo(k):ihi(k)) = QQ;
 %     end of ORGQR
 %
-%
+     Q(ilo(k):m,ilo(k):ihi(k)) = A(ilo(k):m,ilo(k):ihi(k));
+     [ Q ] = lila_orgqr_v0( ml, nl, Q, ilo(k), ilo(k), ldq );
 %
 %     start ORMQRbz
-      QQ = [ zeros(ihi(k-1),nb(k)) ; QQ];
-      for j = ihi(k-1):-1:1,
-         [ QQ(j:m,1:nn) ] = larfL( A(j:m,j), QQ(j:m,1:nn) );
-      end
+%     QQ = [ zeros(ihi(k-1),nb(k)) ; QQ];
+%     for j = ihi(k-1):-1:1,
+%        [ QQ(j:m,1:nn) ] = larfL( A(j:m,j), QQ(j:m,1:nn) );
+%     end
 %     end ORMQRbz
 %
-%     [ A ] = lila_ormqrbz_v0( m, ihi(k-1), nb(k), A, 1, 1, lda, Q, 1, ilo(k), ldq );
-%
+      [ Q ] = lila_ormqrbz_v0( m, ihi(k-1), nb(k), A, 1, 1, lda, Q, 1, ilo(k), ldq );
 %
 %
 %         Local check on kth block
 %
-      Q(1:m,ilo(k):ihi(k)) = QQ;
       R = triu(A(1:ihi(k),1:ihi(k)));
-      fprintf('Local check on block %d', k);
-      fprintf('               Semi-local check on blocks 1-%d\n', k);
-      fprintf('||Q''Q - I|| = %f', norm(QQ'*QQ - eye(nb(k)), 'fro'));
-      fprintf('                ||A - Q*R|| = %f\n\n', norm(As(1:m,1:ihi(k)) - Q*R, 'fro') / norm(As(1:m,1:ihi(k)), 'fro'));
+      fprintf('||Q''Q - I|| = %f', norm(Q(1:m,1:ihi(k))'*Q(1:m,1:ihi(k)) - eye(ihi(k)), 'fro'));
+      fprintf('                ||A - Q*R|| = %f\n\n', norm(As(1:m,1:ihi(k)) - Q(1:m,1:ihi(k))*R(1:ihi(k),1:ihi(k)), 'fro') / norm(As(1:m,1:ihi(k)), 'fro'));
 
    end
 %
