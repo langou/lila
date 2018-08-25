@@ -1,23 +1,22 @@
-   function [ B ] = lila_ormqrf_v01( m, n, k, A, ia, ja, lda, B, ib, jb, ldb, T )
+   function [ B ] = lila_ormqrf_v01( m, n, k, A, ia, ja, lda, B, ib, jb, ldb, T, it, jt, ldt )
 %
       ialo = ia;
       iahi = ia+m-1;
       jalo = ja;
+      jahi = ja+k-1;
 %
       iblo = ib;
       ibhi = ib+m-1;
       jblo = jb;
-      jbhi = jb+k-1;
+      jbhi = jb+n-1;
 %
-%      for c = 1:n,
-%         [ B(iblo:ibhi,jblo:jbhi) ] = larfL( A(ialo:iahi,jalo), B(iblo:ibhi,jblo:jbhi) );
-%         iblo = iblo + 1;
-%         ialo = ialo + 1;
-%         jalo = jalo + 1;
-%      end
+      itlo = it;
+      ithi = it+k-1;
+      jtlo = jt;
+      jthi = jt+k-1;
 %
-      V = tril(A(1:m,1:n), -1) + eye(m,n);
-      H = (eye(m,m) - V * ( T(1:n,1:n)' * V' ) );
-      B(1:m,jb:jb+k-1) = H*B(1:m,jb:jb+k-1);
-
+      V = tril(A(ialo:iahi,jalo:jahi), -1) + eye(m,k);
+      H = (eye(m,m) - V * ( T(itlo:ithi,jtlo:jthi)' * V' ) );
+      B(iblo:ibhi,jblo:jbhi) = H*B(iblo:ibhi,jblo:jbhi);
+%
    end

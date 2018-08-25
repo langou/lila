@@ -7,9 +7,9 @@
       iblo = ib;
       ibhi = ib+m-1;
       jblo = jb;
-      jbhi = jb+k-1;
+      jbhi = jb+n-1;
 %
-      for c = 1:n,
+      for c = 1:k,
          [ B(iblo:ibhi,jblo:jbhi) ] = larfL( A(ialo:iahi,jalo), B(iblo:ibhi,jblo:jbhi) );
          iblo = iblo + 1;
          ialo = ialo + 1;

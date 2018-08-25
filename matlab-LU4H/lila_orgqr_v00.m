@@ -8,7 +8,7 @@ function [ A ] = lila_orgqr_v0( m, n, A, ia, ja, lda )
       QQ = zeros( m, n );
       QQ(1:n,1:n) = eye( n, n );
       for j = n:-1:1,
-         [ QQ(j:m,j:n) ] = larfL( A(ilo:ihi,jlo:jhi), QQ(j:m,j:n) );
+         [ QQ(j:m,j:n) ] = larfL( A(ilo:ihi,jlo), QQ(j:m,j:n) );
          ilo = ilo - 1;
          jlo = jlo - 1;
       end

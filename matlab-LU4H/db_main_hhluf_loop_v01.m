@@ -81,58 +81,25 @@
 %
    lda = -1;
    ldq = -1;
-   ml= m;
+   ldt = -1;
+%
+   ml = m;
    for k = 2:nb_block-1,
 %
       ml = ml - nb(k-1);
       nl = nb(k);
 %
-%     start of ORMQRF
-%     for j = 1:ihi(k-1),
-%        [ A(j:m,ilo(k):ihi(k)) ] = larfL( A(j:m,j), A(j:m,ilo(k):ihi(k)) );
-%     end
-%     start of ORMQRF
-%
-%     [ A ] = lila_ormqrf_v00( m, ihi(k-1), nb(k), A, 1, 1, lda, A, 1, ilo(k), lda );
-     [ A ] = lila_ormqrf_v01( m, ihi(k-1), nb(k), A, 1, 1, lda, A, 1, ilo(k), lda, T );
-%
-%     start of GEQRF
-%     for j = ilo(k):ihi(k),
-%        [ A(j:m,j) ] = larfg( A(j:m,j) );
-%        [ A(j:m,j+1:ihi(k)) ] = larfL( A(j:m,j), A(j:m,j+1:ihi(k)) );
-%     end
-%     end of GEQRF
+      [ A ] = lila_ormqrf_v01( m, nb(k), ihi(k-1), A, 1, 1, lda, A, 1, ilo(k), lda, T, 1, 1, ldt );
 %
       [ A ] = lila_geqrf_v00( ml, nl, A, ilo(k), ilo(k), lda );
-%
 %
       T(ilo(k):ihi(k),ilo(k):ihi(k) ) = larft( A(ilo(k):m,ilo(k):ihi(k) ) );
       T(1:ihi(k-1),ilo(k):ihi(k)) = -( T(1:ihi(k-1),1:ihi(k-1))*A(ilo(k):m,1:ihi(k-1))' )*( (tril(A(ilo(k):m,ilo(k):ihi(k)),-1)+eye(m-ilo(k)+1,nb(k)))*T(ilo(k):ihi(k),ilo(k):ihi(k) ) );
 %
-%
-%     start of ORGQR
-%     nn = nb(k);
-%     AA = A(ilo(k):m,ilo(k):ihi(k));
-%     QQ = zeros( ml, nn );
-%     QQ(1:nn,1:nn) = eye( nn, nn );
-%     for j = nn:-1:1,
-%        [ QQ(j:ml,j:nn) ] = larfL( AA(j:ml,j), QQ(j:ml,j:nn) );
-%     end
-%     Q(ilo(k):m,ilo(k):ihi(k)) = QQ;
-%     end of ORGQR
-%
       Q(ilo(k):m,ilo(k):ihi(k)) = A(ilo(k):m,ilo(k):ihi(k));
-      [ Q ] = lila_orgqr_v00( ml, nl, Q, ilo(k), ilo(k), ldq );
+      [ Q ] = lila_orgqr_v01( ml, nl, Q, ilo(k), ilo(k), ldq, T, ilo(k), ilo(k), ldt );
 %
-%     start ORMQRbz
-%     QQ = [ zeros(ihi(k-1),nb(k)) ; QQ];
-%     for j = ihi(k-1):-1:1,
-%        [ QQ(j:m,1:nn) ] = larfL( A(j:m,j), QQ(j:m,1:nn) );
-%     end
-%     end ORMQRbz
-%
-      [ Q ] = lila_ormqrbz_v00( m, ihi(k-1), nb(k), A, 1, 1, lda, Q, 1, ilo(k), ldq );
-%
+      [ Q ] = lila_ormqrbz_v01( m, nb(k), ihi(k-1), A, 1, 1, lda, Q, 1, ilo(k), ldq, T, 1, 1, ldt );
 %
       R = triu(A(1:ihi(k),1:ihi(k)));
       fprintf('||Q''Q - I|| = %e', norm(Q(1:m,1:ihi(k))'*Q(1:m,1:ihi(k)) - eye(ihi(k)), 'fro'));
@@ -141,27 +108,21 @@
    end
 %%%
 %
-%  Taking out the final block to work through the code on
-%
-%
       k = nb_block;
       ml = ml - nb(nb_block-1);
       nl = nb(nb_block);
 %
-      [ A ] = lila_ormqrf_v01( m, ihi(nb_block-1), nb(nb_block), A, 1, 1, lda, A, 1, ilo(nb_block), lda, T );
+      [ A ] = lila_ormqrf_v01( m, nb(k), ihi(k-1), A, 1, 1, lda, A, 1, ilo(k), lda, T, 1, 1, ldt );
 %
-%     Not doing anything with geqrf yet
+      [ A ] = lila_geqrf_v00( ml, nl, A, ilo(k), ilo(k), lda );
 %
-      [ A ] = lila_geqrf_v00( ml, nl, A, ilo(nb_block), ilo(nb_block), lda );
+      T(ilo(k):ihi(k),ilo(k):ihi(k) ) = larft( A(ilo(k):m,ilo(k):ihi(k) ) );
+      T(1:ihi(k-1),ilo(k):ihi(k)) = -( T(1:ihi(k-1),1:ihi(k-1))*A(ilo(k):m,1:ihi(k-1))' )*( (tril(A(ilo(k):m,ilo(k):ihi(k)),-1)+eye(m-ilo(k)+1,nb(k)))*T(ilo(k):ihi(k),ilo(k):ihi(k) ) );
 %
-      T(ilo(nb_block):ihi(nb_block),ilo(nb_block):ihi(nb_block) ) = larft( A(ilo(nb_block):m,ilo(nb_block):ihi(nb_block) ) );
-      T(1:ihi(nb_block-1),ilo(nb_block):ihi(nb_block)) = -( T(1:ihi(nb_block-1),1:ihi(nb_block-1))*A(ilo(nb_block):m,1:ihi(nb_block-1))' )*( (tril(A(ilo(nb_block):m,ilo(nb_block):ihi(nb_block)),-1)+eye(m-ilo(nb_block)+1,nb(nb_block)))*T(ilo(nb_block):ihi(nb_block),ilo(nb_block):ihi(nb_block) ) );
+      Q(ilo(k):m,ilo(k):ihi(k)) = A(ilo(k):m,ilo(k):ihi(k));
+      [ Q ] = lila_orgqr_v01( ml, nl, Q, ilo(k), ilo(k), ldq, T, ilo(k), ilo(k), ldt );
 %
-%
-      Q(ilo(nb_block):m,ilo(nb_block):ihi(nb_block)) = A(ilo(nb_block):m,ilo(nb_block):ihi(nb_block));
-      [ Q ] = lila_orgqr_v00( ml, nl, Q, ilo(k), ilo(k), ldq );
-%
-      [ Q ] = lila_ormqrbz_v00( m, ihi(nb_block-1), nb(nb_block), A, 1, 1, lda, Q, 1, ilo(nb_block), ldq );
+      [ Q ] = lila_ormqrbz_v01( m, nb(nb_block), ihi(nb_block-1), A, 1, 1, lda, Q, 1, ilo(nb_block), ldq, T, 1, 1, ldt );
 %
 %
       R = triu(A(1:ihi(nb_block),1:ihi(nb_block)));

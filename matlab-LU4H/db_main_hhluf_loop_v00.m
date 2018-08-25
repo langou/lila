@@ -92,7 +92,7 @@
 %     end
 %     start of ORMQRF
 %
-      [ A ] = lila_ormqrf_v00( m, ihi(k-1), nb(k), A, 1, 1, lda, A, 1, ilo(k), lda );
+      [ A ] = lila_ormqrf_v00( m, nb(k), ihi(k-1), A, 1, 1, lda, A, 1, ilo(k), lda );
 %
 %     start of GEQRF
 %     for j = ilo(k):ihi(k),
@@ -124,7 +124,7 @@
 %     end
 %     end ORMQRbz
 %
-      [ Q ] = lila_ormqrbz_v00( m, ihi(k-1), nb(k), A, 1, 1, lda, Q, 1, ilo(k), ldq );
+      [ Q ] = lila_ormqrbz_v00( m, nb(k), ihi(k-1), A, 1, 1, lda, Q, 1, ilo(k), ldq );
 %
 %
 %         Local check on kth block
