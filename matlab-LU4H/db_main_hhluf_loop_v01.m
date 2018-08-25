@@ -93,7 +93,7 @@
 %     end
 %     start of ORMQRF
 %
-%     [ A ] = lila_ormqrf_v0( m, ihi(k-1), nb(k), A, 1, 1, lda, A, 1, ilo(k), lda );
+%     [ A ] = lila_ormqrf_v00( m, ihi(k-1), nb(k), A, 1, 1, lda, A, 1, ilo(k), lda );
      [ A ] = lila_ormqrf_v01( m, ihi(k-1), nb(k), A, 1, 1, lda, A, 1, ilo(k), lda, T );
 %
 %     start of GEQRF
@@ -103,7 +103,7 @@
 %     end
 %     end of GEQRF
 %
-      [ A ] = lila_geqrf_v0( ml, nl, A, ilo(k), ilo(k), lda );
+      [ A ] = lila_geqrf_v00( ml, nl, A, ilo(k), ilo(k), lda );
 %
 %
       T(ilo(k):ihi(k),ilo(k):ihi(k) ) = larft( A(ilo(k):m,ilo(k):ihi(k) ) );
@@ -122,7 +122,7 @@
 %     end of ORGQR
 %
       Q(ilo(k):m,ilo(k):ihi(k)) = A(ilo(k):m,ilo(k):ihi(k));
-      [ Q ] = lila_orgqr_v0( ml, nl, Q, ilo(k), ilo(k), ldq );
+      [ Q ] = lila_orgqr_v00( ml, nl, Q, ilo(k), ilo(k), ldq );
 %
 %     start ORMQRbz
 %     QQ = [ zeros(ihi(k-1),nb(k)) ; QQ];
@@ -131,7 +131,7 @@
 %     end
 %     end ORMQRbz
 %
-      [ Q ] = lila_ormqrbz_v0( m, ihi(k-1), nb(k), A, 1, 1, lda, Q, 1, ilo(k), ldq );
+      [ Q ] = lila_ormqrbz_v00( m, ihi(k-1), nb(k), A, 1, 1, lda, Q, 1, ilo(k), ldq );
 %
 %
       R = triu(A(1:ihi(k),1:ihi(k)));
@@ -144,6 +144,7 @@
 %  Taking out the final block to work through the code on
 %
 %
+      k = nb_block;
       ml = ml - nb(nb_block-1);
       nl = nb(nb_block);
 %
@@ -151,26 +152,16 @@
 %
 %     Not doing anything with geqrf yet
 %
-      [ A ] = lila_geqrf_v0( ml, nl, A, ilo(nb_block), ilo(nb_block), lda );
+      [ A ] = lila_geqrf_v00( ml, nl, A, ilo(nb_block), ilo(nb_block), lda );
 %
-%     Constructing T
-% 
       T(ilo(nb_block):ihi(nb_block),ilo(nb_block):ihi(nb_block) ) = larft( A(ilo(nb_block):m,ilo(nb_block):ihi(nb_block) ) );
       T(1:ihi(nb_block-1),ilo(nb_block):ihi(nb_block)) = -( T(1:ihi(nb_block-1),1:ihi(nb_block-1))*A(ilo(nb_block):m,1:ihi(nb_block-1))' )*( (tril(A(ilo(nb_block):m,ilo(nb_block):ihi(nb_block)),-1)+eye(m-ilo(nb_block)+1,nb(nb_block)))*T(ilo(nb_block):ihi(nb_block),ilo(nb_block):ihi(nb_block) ) );
 %
 %
       Q(ilo(nb_block):m,ilo(nb_block):ihi(nb_block)) = A(ilo(nb_block):m,ilo(nb_block):ihi(nb_block));
-      %% We don't feed A to this so I am adding it. We need it to compute V within it
-      [ Q ] = lila_orgqr_v01( ml, nl, Q, ilo(nb_block), ilo(nb_block), ldq, T, A );
+      [ Q ] = lila_orgqr_v00( ml, nl, Q, ilo(k), ilo(k), ldq );
 %
-%     start ORMQRbz
-%     QQ = [ zeros(ihi(k-1),nb(k)) ; QQ];
-%     for j = ihi(k-1):-1:1,
-%        [ QQ(j:m,1:nn) ] = larfL( A(j:m,j), QQ(j:m,1:nn) );
-%     end
-%     end ORMQRbz
-%
-      [ Q ] = lila_ormqrbz_v0( m, ihi(nb_block-1), nb(nb_block), A, 1, 1, lda, Q, 1, ilo(nb_block), ldq );
+      [ Q ] = lila_ormqrbz_v00( m, ihi(nb_block-1), nb(nb_block), A, 1, 1, lda, Q, 1, ilo(nb_block), ldq );
 %
 %
       R = triu(A(1:ihi(nb_block),1:ihi(nb_block)));

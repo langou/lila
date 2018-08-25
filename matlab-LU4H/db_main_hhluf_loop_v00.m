@@ -92,7 +92,7 @@
 %     end
 %     start of ORMQRF
 %
-      [ A ] = lila_ormqrf_v0( m, ihi(k-1), nb(k), A, 1, 1, lda, A, 1, ilo(k), lda );
+      [ A ] = lila_ormqrf_v00( m, ihi(k-1), nb(k), A, 1, 1, lda, A, 1, ilo(k), lda );
 %
 %     start of GEQRF
 %     for j = ilo(k):ihi(k),
@@ -101,7 +101,7 @@
 %     end
 %     end of GEQRF
 %
-      [ A ] = lila_geqrf_v0( ml, nl, A, ilo(k), ilo(k), lda );
+      [ A ] = lila_geqrf_v00( ml, nl, A, ilo(k), ilo(k), lda );
 %
 %     start of ORGQR
 %     nn = nb(k);
@@ -115,7 +115,7 @@
 %     end of ORGQR
 %
      Q(ilo(k):m,ilo(k):ihi(k)) = A(ilo(k):m,ilo(k):ihi(k));
-     [ Q ] = lila_orgqr_v0( ml, nl, Q, ilo(k), ilo(k), ldq );
+     [ Q ] = lila_orgqr_v00( ml, nl, Q, ilo(k), ilo(k), ldq );
 %
 %     start ORMQRbz
 %     QQ = [ zeros(ihi(k-1),nb(k)) ; QQ];
@@ -124,14 +124,14 @@
 %     end
 %     end ORMQRbz
 %
-      [ Q ] = lila_ormqrbz_v0( m, ihi(k-1), nb(k), A, 1, 1, lda, Q, 1, ilo(k), ldq );
+      [ Q ] = lila_ormqrbz_v00( m, ihi(k-1), nb(k), A, 1, 1, lda, Q, 1, ilo(k), ldq );
 %
 %
 %         Local check on kth block
 %
       R = triu(A(1:ihi(k),1:ihi(k)));
-      fprintf('||Q''Q - I|| = %f', norm(Q(1:m,1:ihi(k))'*Q(1:m,1:ihi(k)) - eye(ihi(k)), 'fro'));
-      fprintf('                ||A - Q*R|| = %f\n\n', norm(As(1:m,1:ihi(k)) - Q(1:m,1:ihi(k))*R(1:ihi(k),1:ihi(k)), 'fro') / norm(As(1:m,1:ihi(k)), 'fro'));
+      fprintf('||Q''Q - I|| = %e', norm(Q(1:m,1:ihi(k))'*Q(1:m,1:ihi(k)) - eye(ihi(k)), 'fro'));
+      fprintf('                ||A - Q*R|| / || A || = %e\n\n', norm(As(1:m,1:ihi(k)) - Q(1:m,1:ihi(k))*R(1:ihi(k),1:ihi(k)), 'fro') / norm(As(1:m,1:ihi(k)), 'fro'));
 
    end
 %
