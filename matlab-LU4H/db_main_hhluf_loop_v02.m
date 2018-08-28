@@ -82,13 +82,13 @@
    ldt = -1;
 %
    ml = m;
-%   for k = 2:nb_block,
-   for k = 2:ib_block,
+   for k = 2:nb_block,
+%   for k = 2:ib_block,
 %
       ml = ml - nb(k-1);
       nl = nb(k);
 %
-      [ A ] = lila_ormqrf_v02( m, nb(k), ihi(k-1), A, 1, 1, lda, A, 1, ilo(k), lda, T, 1, 1, ldt, ib );
+      [ A ] = lila_ormqrf_v02( m, nb(k), ihi(k-1), A, 1, 1, lda, A, 1, ilo(k), lda, T, 1, 1, ldt, ib, nb, k );
 %
       [ A ] = lila_geqrf_v00( ml, nl, A, ilo(k), ilo(k), lda );
 %
