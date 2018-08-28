@@ -1,11 +1,14 @@
 %
    clear
 %
-   nb = [ 3, 4, 5, 4, 9, 2, 3 11, 3, 6, 9, 10, 14, 8, 7, 12, 14, 9, 2, 5];
-   m = 281;
+%   nb = [ 3, 4, 5, 4, 9, 2, 3 11, 3, 6, 9, 10, 14, 8, 7, 12, 14, 9, 2, 5];
+   nb = [ 3, 4, 5, 9, 2, 5];
+   ib = [ 2, 7, 2, 3, 8, 4, 2 ];
+   m = 81;
 %
    n = sum(nb);
    nb_block = size(nb,2);
+   ib_block = size(ib,2);
 %
    log10KA = 12;
 %
@@ -35,7 +38,6 @@
 %
 %
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -70,26 +72,23 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
 %
 %
 %                       Looooooooopping time
+%
 %
    lda = -1;
    ldq = -1;
    ldt = -1;
 %
    ml = m;
-   for k = 2:nb_block-1,
+%   for k = 2:nb_block,
+   for k = 2:ib_block,
 %
       ml = ml - nb(k-1);
       nl = nb(k);
 %
-      [ A ] = lila_ormqrf_v01( m, nb(k), ihi(k-1), A, 1, 1, lda, A, 1, ilo(k), lda, T, 1, 1, ldt );
+      [ A ] = lila_ormqrf_v02( m, nb(k), ihi(k-1), A, 1, 1, lda, A, 1, ilo(k), lda, T, 1, 1, ldt, ib );
 %
       [ A ] = lila_geqrf_v00( ml, nl, A, ilo(k), ilo(k), lda );
 %
@@ -97,37 +96,42 @@
       T(1:ihi(k-1),ilo(k):ihi(k)) = -( T(1:ihi(k-1),1:ihi(k-1))*A(ilo(k):m,1:ihi(k-1))' )*( (tril(A(ilo(k):m,ilo(k):ihi(k)),-1)+eye(m-ilo(k)+1,nb(k)))*T(ilo(k):ihi(k),ilo(k):ihi(k) ) );
 %
       Q(ilo(k):m,ilo(k):ihi(k)) = A(ilo(k):m,ilo(k):ihi(k));
-      [ Q ] = lila_orgqr_v01( ml, nl, Q, ilo(k), ilo(k), ldq, T, ilo(k), ilo(k), ldt );
+      [ Q ] = lila_orgqr_v02( ml, nl, Q, ilo(k), ilo(k), ldq, T, ilo(k), ilo(k), ldt );
 %
-      [ Q ] = lila_ormqrbz_v01( m, nb(k), ihi(k-1), A, 1, 1, lda, Q, 1, ilo(k), ldq, T, 1, 1, ldt );
+      [ Q ] = lila_ormqrbz_v02( m, nb(k), ihi(k-1), A, 1, 1, lda, Q, 1, ilo(k), ldq, T, 1, 1, ldt );
 %
       R = triu(A(1:ihi(k),1:ihi(k)));
       fprintf('||Q''Q - I|| = %e', norm(Q(1:m,1:ihi(k))'*Q(1:m,1:ihi(k)) - eye(ihi(k)), 'fro'));
       fprintf('                ||A - Q*R|| = %e\n\n', norm(As(1:m,1:ihi(k)) - Q(1:m,1:ihi(k))*R(1:ihi(k),1:ihi(k)), 'fro') / norm(As(1:m,1:ihi(k)), 'fro'));
 
    end
-%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-      k = nb_block;
-      ml = ml - nb(nb_block-1);
-      nl = nb(nb_block);
-%
-      [ A ] = lila_ormqrf_v01( m, nb(k), ihi(k-1), A, 1, 1, lda, A, 1, ilo(k), lda, T, 1, 1, ldt );
-%
-      [ A ] = lila_geqrf_v00( ml, nl, A, ilo(k), ilo(k), lda );
-%
-      T(ilo(k):ihi(k),ilo(k):ihi(k) ) = larft( A(ilo(k):m,ilo(k):ihi(k) ) );
-      T(1:ihi(k-1),ilo(k):ihi(k)) = -( T(1:ihi(k-1),1:ihi(k-1))*A(ilo(k):m,1:ihi(k-1))' )*( (tril(A(ilo(k):m,ilo(k):ihi(k)),-1)+eye(m-ilo(k)+1,nb(k)))*T(ilo(k):ihi(k),ilo(k):ihi(k) ) );
-%
-      Q(ilo(k):m,ilo(k):ihi(k)) = A(ilo(k):m,ilo(k):ihi(k));
-      [ Q ] = lila_orgqr_v01( ml, nl, Q, ilo(k), ilo(k), ldq, T, ilo(k), ilo(k), ldt );
-%
-      [ Q ] = lila_ormqrbz_v01( m, nb(nb_block), ihi(nb_block-1), A, 1, 1, lda, Q, 1, ilo(nb_block), ldq, T, 1, 1, ldt );
+%            Don't need this out of the loop any longer.
 %
 %
-      R = triu(A(1:ihi(nb_block),1:ihi(nb_block)));
-      fprintf('||Q''Q - I|| = %e', norm(Q(1:m,1:ihi(nb_block))'*Q(1:m,1:ihi(nb_block)) - eye(ihi(nb_block)), 'fro'));
-      fprintf('                ||A - Q*R|| = %e\n\n', norm(As(1:m,1:ihi(nb_block)) - Q(1:m,1:ihi(nb_block))*R(1:ihi(nb_block),1:ihi(nb_block)), 'fro') / norm(As(1:m,1:ihi(nb_block)), 'fro'));
+%      k = nb_block;
+%      ml = ml - nb(nb_block-1);
+%      nl = nb(nb_block);
+%
+%      [ A ] = lila_ormqrf_v01( m, nb(k), ihi(k-1), A, 1, 1, lda, A, 1, ilo(k), lda, T, 1, 1, ldt );
+%
+%      [ A ] = lila_geqrf_v00( ml, nl, A, ilo(k), ilo(k), lda );
+%
+%      T(ilo(k):ihi(k),ilo(k):ihi(k) ) = larft( A(ilo(k):m,ilo(k):ihi(k) ) );
+%      T(1:ihi(k-1),ilo(k):ihi(k)) = -( T(1:ihi(k-1),1:ihi(k-1))*A(ilo(k):m,1:ihi(k-1))' )*( (tril(A(ilo(k):m,ilo(k):ihi(k)),-1)+eye(m-ilo(k)+1,nb(k)))*T(ilo(k):ihi(k),ilo(k):ihi(k) ) );
+%
+%      Q(ilo(k):m,ilo(k):ihi(k)) = A(ilo(k):m,ilo(k):ihi(k));
+%      [ Q ] = lila_orgqr_v01( ml, nl, Q, ilo(k), ilo(k), ldq, T, ilo(k), ilo(k), ldt );
+%
+%      [ Q ] = lila_ormqrbz_v01( m, nb(nb_block), ihi(nb_block-1), A, 1, 1, lda, Q, 1, ilo(nb_block), ldq, T, 1, 1, ldt );
+%
+%
+%      R = triu(A(1:ihi(nb_block),1:ihi(nb_block)));
+%      fprintf('||Q''Q - I|| = %e', norm(Q(1:m,1:ihi(nb_block))'*Q(1:m,1:ihi(nb_block)) - eye(ihi(nb_block)), 'fro'));
+%      fprintf('                ||A - Q*R|| = %e\n\n', norm(As(1:m,1:ihi(nb_block)) - Q(1:m,1:ihi(nb_block))*R(1:ihi(nb_block),1:ihi(nb_block)), 'fro') / norm(As(1:m,1:ihi(nb_block)), 'fro'));
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
