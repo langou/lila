@@ -19,14 +19,60 @@
       jtlo = jt;
       jthi = jt+k-1;
 %
+%%%%
+%
+%  working through some ideas
+%
+%
+      ll = size(ub,2);
+      count = 0;
+      kill_num = 0;
+      tmp_val1 = 0;
+%
+      for z = 1:ll,
+         if tmp_val1 < k, tmp_val1 = tmp_val1 + ub(z); count = count+1; else end;
+         if tmp_val1 > k, tmp_val1 = tmp_val1 - ub(z); count = count-1; else end;
+      end
+%
+      for z = 1:count,
+         kill_num = kill_num + ub(z);
+      end
+      tmp_val2 = abs(k - kill_num); % tmp_val2 is the value to move backwards in ib for the correct block size
+%
+      jahi = ja+ub(1)-1;
+      jthi = jt+ub(1)-1;
+      ithi = it+ub(1)-1;
+      for z = 1:count-1,
       
+%         V = tril(A(ialo:iahi,jalo:jahi), -1) + eye(m,k);
+         V = tril(A(ialo:iahi,jalo:jahi), -1) + eye(m,ub(z));
+T(itlo:ithi,jtlo:jthi)'
+         H = (eye(m,m) - V(ialo:iahi,jalo:jahi) * ( T(itlo:ithi,jtlo:jthi)' * V(ialo:iahi,jalo:jahi)' ) );
 
-%      V = tril(A(ialo:iahi,jalo:jahi), -1) + eye(m,k);
-      V = tril(A(ialo:iahi,), -1) + eye(m,k);
+         B(iblo:ibhi,jblo:jbhi) = H*B(iblo:ibhi,jblo:jbhi);
 
-      H = (eye(m,m) - V * ( T(itlo:ithi,jtlo:jthi)' * V' ) );
-%      H = (eye(m,m) - V * ( T()' * V' ) );
-
-      B(iblo:ibhi,jblo:jbhi) = H*B(iblo:ibhi,jblo:jbhi);
+         jahi = ub(z+1);
+         jtlo = jtlo + ub(z);
+         itlo = itlo + ub(z);
+         jthi = jthi + ub(z+1);
+         ithi = ithi + ub(z+1);
+      end
+%      
+      if tmp_val2 == 0,
+         % do nothing - we've exhausted the block
+      else
+%
+         jahi = jahi - tmp_val2;
+         jthi = jthi - tmp_val2;
+         ithi = ithi - tmp_val2;
+%
+         V = tril(A(ialo:iahi,jalo:jahi), -1) + eye(m,ub(count) - tmp_val2);
+%
+         H = (eye(m,m) - V(ialo:iahi,jalo:jahi) * ( T(itlo:ithi,jtlo:jthi)' * V(ialo:iahi,jalo:jahi)' ) );
+%
+         B(iblo:ibhi,jblo:jbhi) = H*B(iblo:ibhi,jblo:jbhi);
+%
+       end
 %
    end
+
