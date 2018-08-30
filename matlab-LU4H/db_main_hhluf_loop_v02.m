@@ -1,16 +1,18 @@
 %
    clear
 %
-%   nb = [ 3, 4, 5, 4, 9, 2, 3 11, 3, 6, 9, 10, 14, 8, 7, 12, 14, 9, 2, 5];
-   nb = [ 13, 4, 9, 2, 7];
-   ib = [ 4, 7, 5, 3, 4, 6, 3, 2, 1 ];
-   m = 81;
+   m = 60;
+   tb = [ 4, 3, 13, 2, 4, 8,  7, 9 ];
+   ub = [ 4, 3, 4, 9, 2, 4, 3, 5, 7, 9 ];
+   i = 12;
+   k = 17;
 %
+   nb = [ sum(tb), 7 ];
    n = sum(nb);
    nb_block = size(nb,2);
-   ib_block = size(ib,2);
+   tb_block = size(tb,2);
 %
-   log10KA = 12;
+   log10KA = 2;
 %
    U = randn(m,n); [U,~]=qr(U,0);
    V = randn(n,n); [V,~]=qr(V,0);
@@ -20,14 +22,14 @@
 %
    ilo = zeros(nb_block,1);
    ilo(1) = 1;
-   for i = 2:nb_block,
-      ilo(i) = ilo(i-1) + nb(i-1);
+   for ii = 2:nb_block,
+      ilo(ii) = ilo(ii-1) + nb(ii-1);
    end
 %
    ihi = zeros(nb_block,1);
    ihi = nb(1);
-   for i = 2:nb_block,
-      ihi(i) = ihi(i-1) + nb(i);
+   for ii = 2:nb_block,
+      ihi(ii) = ihi(ii-1) + nb(ii);
    end
 %
    T = zeros(n,n);
@@ -81,14 +83,116 @@
    ldq = -1;
    ldt = -1;
 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
    ml = m;
-%   for k = 2:nb_block,
-%   for k = 2:ib_block,
 %
-      ml = ml - nb(2-1);
+
+      jblo = ilo(2);
+      jbhi = ihi(2);
+      iblo = 1;
+      ibhi = m;
+
+      ialo = 1;
+      jalo = 1;
+      jahi = 1;
+      iahi = m;
+
+
+      itlo = 1;
+      jtlo = 1;
+      ithi = 1;
+      jthi = 1;
+
+      mll = m;
+ 
+      for ii = 1:i-1,
+ 
+         V = tril(A(ialo:iahi,jalo:jahi), -1) + eye(mll,1);
+ 
+         H = (eye(mll,mll) - V * ( larft(V) * V' ) );
+ 
+         A(iblo:ibhi,jblo:jbhi) = H*A(iblo:ibhi,jblo:jbhi);
+        
+         mll = mll-1;
+ 
+         iblo = iblo+1;
+ 
+         ialo = ialo+1;
+         jalo = jalo+1;
+         jahi = jahi+1;
+         iahi = m;
+ 
+         itlo = itlo+1;
+         jtlo = jtlo+1;
+         ithi = ithi+1;
+         jthi = jthi+1;
+ 
+      end
+i-1
+
+%%%
+     [ A ] = lila_ormqrf_v03( m, nb(2), k, i, A, 1, 1, lda, A, 1, ilo(2), lda, T, 1, 1, ldt, tb );
+return
+
+         mll = mll-k;
+
+         iblo = iblo+k;
+
+         ialo = ialo+k;
+         jalo = jalo+k;
+         jahi = jahi+k;
+         iahi = m;
+
+         itlo = itlo+k;
+         jtlo = jtlo+k;
+         ithi = ithi+k;
+         jthi = jthi+k;
+
+%%%
+i+k
+      for ii = i+k:ihi(1),
+
+         V = tril(A(ialo:iahi,jalo:jahi), -1) + eye(mll,1);
+
+         H = (eye(mll,mll) - V * ( larft(V) * V' ) );
+
+         A(iblo:ibhi,jblo:jbhi) = H*A(iblo:ibhi,jblo:jbhi);
+        
+         mll = mll-1;
+
+         iblo = iblo+1;
+
+         ialo = ialo+1;
+         jalo = jalo+1;
+         jahi = jahi+1;
+         iahi = m;
+
+         itlo = itlo+1;
+         jtlo = jtlo+1;
+         ithi = ithi+1;
+         jthi = jthi+1;
+
+      end
+%%%
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+      ml = ml - nb(1);
       nl = nb(2);
 %
-      [ A ] = lila_ormqrf_v02( m, nb(2), ihi(2-1), A, 1, 1, lda, A, 1, ilo(2), lda, T, 1, 1, ldt, ib, nb, 2 );
 %
       [ A ] = lila_geqrf_v00( ml, nl, A, ilo(2), ilo(2), lda );
 %
@@ -103,6 +207,12 @@
       R = triu(A(1:ihi(2),1:ihi(2)));
       fprintf('||Q''Q - I|| = %e', norm(Q(1:m,1:ihi(2))'*Q(1:m,1:ihi(2)) - eye(ihi(2)), 'fro'));
       fprintf('                ||A - Q*R|| = %e\n\n', norm(As(1:m,1:ihi(2)) - Q(1:m,1:ihi(2))*R(1:ihi(2),1:ihi(2)), 'fro') / norm(As(1:m,1:ihi(2)), 'fro'));
+
+
+
+
+
+
 return
 %   end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
