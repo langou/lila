@@ -2,10 +2,12 @@
    clear
 %
    m = 60;
-   tb = [ 4, 3, 13, 2, 4, 8,  7, 9 ];
-   ub = [ 4, 3, 4, 9, 2, 4, 3, 5, 7, 9 ];
-   i = 12;
-   k = 17;
+%  tb = [ 4, 3, 13, 2, 4, 8,  7, 9 ];
+%  for i = 1:sum(tb),
+%  for k = 1:sum(tb)-i+1,
+   tb = 50;
+   for i = 10,
+   for k = 30,
 %
    nb = [ sum(tb), 7 ];
    n = sum(nb);
@@ -64,10 +66,10 @@
 %
 %  Local check on first block
 %
-   fprintf('Local check on block 1');
-   fprintf('                    Semi-local check on block 1\n\n');
-   fprintf('||Q''Q - I|| = %e', norm(Q(1:m,ilo(1):ihi(1))'*Q(1:m,ilo(1):ihi(1)) - eye(nb(1)), 'fro'));
-   fprintf('                ||A - Q*R|| = %e\n\n', norm(As(1:m,1:ihi(1)) - Q(1:m,ilo(1):ihi(1))*R(ilo(1):ihi(1),ilo(1):ihi(1)), 'fro') / norm(As(1:m,1:ihi(1)), 'fro'));
+%  fprintf('Local check on block 1');
+%  fprintf('                    Semi-local check on block 1\n\n');
+%  fprintf('||Q''Q - I|| = %e', norm(Q(1:m,ilo(1):ihi(1))'*Q(1:m,ilo(1):ihi(1)) - eye(nb(1)), 'fro'));
+%  fprintf('                ||A - Q*R|| = %e\n\n', norm(As(1:m,1:ihi(1)) - Q(1:m,ilo(1):ihi(1))*R(ilo(1):ihi(1),ilo(1):ihi(1)), 'fro') / norm(As(1:m,1:ihi(1)), 'fro'));
 %
 %
 %
@@ -129,11 +131,10 @@
          jthi = jthi+1;
  
       end
-i-1
+%i-1
 
 %%%
      [ A ] = lila_ormqrf_v03( m, nb(2), k, i, A, 1, 1, lda, A, 1, ilo(2), lda, T, 1, 1, ldt, tb );
-return
 
          mll = mll-k;
 
@@ -150,7 +151,7 @@ return
          jthi = jthi+k;
 
 %%%
-i+k
+%i+k
       for ii = i+k:ihi(1),
 
          V = tril(A(ialo:iahi,jalo:jahi), -1) + eye(mll,1);
@@ -206,7 +207,25 @@ i+k
 %
       R = triu(A(1:ihi(2),1:ihi(2)));
       fprintf('||Q''Q - I|| = %e', norm(Q(1:m,1:ihi(2))'*Q(1:m,1:ihi(2)) - eye(ihi(2)), 'fro'));
-      fprintf('                ||A - Q*R|| = %e\n\n', norm(As(1:m,1:ihi(2)) - Q(1:m,1:ihi(2))*R(1:ihi(2),1:ihi(2)), 'fro') / norm(As(1:m,1:ihi(2)), 'fro'));
+      fprintf('                ||A - Q*R|| / || A || = %e\n', norm(As(1:m,1:ihi(2)) - Q(1:m,1:ihi(2))*R(1:ihi(2),1:ihi(2)), 'fro') / norm(As(1:m,1:ihi(2)), 'fro'));
+
+end
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
