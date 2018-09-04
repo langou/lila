@@ -147,6 +147,12 @@
 
            if ( ( jj+tb(ll)-1 ) <= k ), vb = tb(ll); else vb = k-jj+1; end;
 
+%ii = ii+1;
+%vb = ub(ii+1);
+%ub(ii+1)
+%tb(ll+1)
+%vb
+
            jahi = jahi+vb;
            ithi = ithi+vb;
            jthi = jthi+vb;
