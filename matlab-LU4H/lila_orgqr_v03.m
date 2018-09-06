@@ -51,7 +51,7 @@
 %
 %      V = tril( A( ialo:iahi, jalo:jahi ), -1 ) + eye( size(ialo:iahi,2),1 );
 %
-%%      QQ( ii:mll,ii:nll ) = QQ( ii:mll,ii:nll ) - V * ( T(itlo:ithi,jtlo:jthi ) * ( V' * QQ( ii:mll,ii:nll ) ) );
+%      QQ( ii:mll,ii:nll ) = QQ( ii:mll,ii:nll ) - V * ( T(itlo:ithi,jtlo:jthi ) * ( V' * QQ( ii:mll,ii:nll ) ) );
 %      QQQQ( ii+i-1:m,ii:nll ) = QQQQ( ii+i-1:m,ii:nll ) - V * ( T(itlo:ithi,jtlo:jthi ) * ( V' * QQQQ( ii+i-1:m,ii:nll ) ) );   
 % 
 %      ialo = ialo-1;
@@ -72,7 +72,7 @@
 %   jalo = ja+i-1;
 %   jahi = ja+i-1+n-1;
 %
-%%   A( ialo:iahi, jalo:jahi ) = QQ;
+%   A( ialo:iahi, jalo:jahi ) = QQ;
 %   A( ialo:iahi, jalo:jahi ) = QQQQ( ialo:iahi, 1:n);
 %
 %%%% this is by blocks respecting the tb structure at starting from the bottom

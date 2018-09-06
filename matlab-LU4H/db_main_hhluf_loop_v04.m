@@ -2,7 +2,7 @@
    clear
 %
    m = 60;
-  tb = [ 4, 5, 3, 5, 7, 9, 5, 4, 5, 7 ];
+  tb = [ 4, 5, 3, 5, 7, 9, 5, 4, 5 ];
   nb = [ 20, 13 ];
 %   tb = [ 10, 10:-2:1 ];
 %   nb = [ 10, 35 ];
@@ -42,7 +42,8 @@
    T = zeros(n,n);
    As = A;
    nrmA = norm(A,'fro');
-   Q = zeros( m, n );
+%  Q = zeros( m, n );
+   Q = randn( m, n );
 %
 %
 %
@@ -196,7 +197,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %
-%               Working to break this bad boy up now
 %
 
    Q(ilo(2):m,ilo(2):ihi(2)) = A(ilo(2):m,ilo(2):ihi(2));
@@ -209,56 +209,62 @@
 
 
 %%%
-%  [ Q ] = lila_ormqrbz_v02( m, nb(2), ihi(2-1), A, 1, 1, lda, Q, 1, ilo(2), ldq, T, 1, 1, ldt );
 %
    i = 4;
    k = 10;
 %
-   Q(1:ihi(1),ilo(2):ihi(2)) = zeros( size( Q(1:ihi(1),ilo(2):ihi(2)) ));
 
-      ialo = ihi(1);   % k = ihi(1);
-%
-      iahi = m;    % Stays the same
+      Q(i+k:ihi(1),ilo(2):ihi(2)) = zeros( size( Q(i+k:ihi(1),ilo(2):ihi(2)) ));
+      ialo = ihi(1);   
+      iahi = m;   
 %
       jalo = ihi(1);
       jahi = ihi(1);
 %
       iblo = ihi(1);
       ibhi = m;
-      jblo = ilo(2);
 %
+      jblo = ilo(2);
       jbhi = ihi(2);
 %
       itlo = ihi(1);
       ithi = ihi(1);
+%
       jtlo = ihi(1);
       jthi = ihi(1);
-%
-   for ii = ihi(1):-1:i+k,
 
-      ml = iahi-ialo+1;
+%%%
 
-      V = tril(A(ialo:iahi,jalo:jahi), -1) + eye(size(A(ialo:iahi,jalo:jahi)));
+ 
+    for ii = ihi(1):-1:i+k,
+ 
+       ml = iahi-ialo+1;
+ 
+       V = tril(A(ialo:iahi,jalo:jahi), -1) + eye(size(A(ialo:iahi,jalo:jahi)));
+ 
+       H = (eye(ml,ml) - V * ( T(itlo:ithi,jtlo:jthi) * V' ) );
+ 
+       Q(iblo:ibhi,jblo:jbhi) = H*Q(iblo:ibhi,jblo:jbhi);
+ 
+       iblo = iblo-1;
+ 
+       ialo = ialo-1;
+       jalo = jalo-1;
+       jahi = jahi-1;
+ 
+       itlo = itlo-1;
+       ithi = ithi-1;
+ 
+       jtlo = jtlo-1;
+       jthi = jthi-1;
+ 
+    end
 
-      H = (eye(ml,ml) - V * ( T(itlo:ithi,jtlo:jthi) * V' ) );
+%%%
 
-      Q(iblo:ibhi,jblo:jbhi) = H*Q(iblo:ibhi,jblo:jbhi);
+%   Q(i:i+k-1,ilo(2):ihi(2)) = zeros( size( Q(i:i+k-1,ilo(2):ihi(2)) ))
 
-      iblo = iblo-1;
-
-      ialo = ialo-1;
-      jalo = jalo-1;
-      jahi = jahi-1;
-
-      itlo = itlo-1;
-      ithi = ithi-1;
-
-      jtlo = jtlo-1;
-      jthi = jthi-1;
-
-   end
-
-   [ Q ] = lila_ormqrbz_v03( m, nb(2), k, i, A, 1, 1, lda, Q, 1, ilo(2), ldq, T, 1, 1, ldt, tb );
+   [ Q ] = lila_ormqrbz_v04( m, nb(2), k, i, A, 1, 1, lda, Q, 1, ilo(2), ldq, T, 1, 1, ldt, tb );
 
    iblo = iblo-k;
 
@@ -272,10 +278,11 @@
    jtlo = jtlo-k;
    jthi = jthi-k;
 
+   Q(1:i-1,ilo(2):ihi(2)) = zeros( size( Q(1:i-1,ilo(2):ihi(2)) ));
+
   for ii = i-1:-1:1,
 
       ml = iahi-ialo+1;
-
 
       V = tril(A(ialo:iahi,jalo:jahi), -1) + eye(size(A(ialo:iahi,jalo:jahi)));
 
