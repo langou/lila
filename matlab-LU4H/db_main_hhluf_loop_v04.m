@@ -2,16 +2,16 @@
    clear
 %
    m = 60;
-  tb = [ 4, 5, 3, 5, 7, 9, 5, 4, 5 ];
+%  tb = [ 4, 5, 3, 5, 7, 9, 5, 4, 5 ];
+  tb = [ 4, 5, 4, 3, 9, 6, 8, 7, 5, 4, 5 ];
   nb = [ 20, 13 ];
 %   tb = [ 10, 10:-2:1 ];
 %   nb = [ 10, 35 ];
-   n = sum(nb);
-   if ( sum(tb) < n ) fprintf('sum(tb) < n\n'); return; end
-% tb = [ 4 ];
 % for i = 1:sum(tb),
 % for k = 1:sum(tb)-i+1,
-%   tb = 50;
+%
+   n = sum(nb);
+   if ( sum(tb) < n ) fprintf('sum(tb) < n\n'); return; end
 %
    for i_1 = 3,
    for k_1 = 6,
@@ -213,8 +213,10 @@
    i = 4;
    k = 10;
 %
-
+%%%
+%
       Q(i+k:ihi(1),ilo(2):ihi(2)) = zeros( size( Q(i+k:ihi(1),ilo(2):ihi(2)) ));
+%
       ialo = ihi(1);   
       iahi = m;   
 %
@@ -262,7 +264,7 @@
 
 %%%
 
-%   Q(i:i+k-1,ilo(2):ihi(2)) = zeros( size( Q(i:i+k-1,ilo(2):ihi(2)) ))
+%   Q(i:i+k-1,ilo(2):ihi(2)) = zeros( size( Q(i:i+k-1,ilo(2):ihi(2)) ));
 
    [ Q ] = lila_ormqrbz_v04( m, nb(2), k, i, A, 1, 1, lda, Q, 1, ilo(2), ldq, T, 1, 1, ldt, tb );
 
@@ -323,7 +325,8 @@
 
    fprintf('\n')
 
-
+%   end
+%   end
 
 return
 

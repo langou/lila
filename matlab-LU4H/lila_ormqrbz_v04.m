@@ -86,80 +86,64 @@
 %
 %%%%%%%%%%    This portion will construct Q based on tb    
 %
-%  tb = [ 4, 5, 3, 5, 7, 9, 5, 4, 5 ];
-%  nb = [ 20, 13 ];
-%
-%  ub = [ 4, 5, 3, 5, 3, 4, 9, 5, 4, 5 ];                    
-%
    ll = 1;
    jj = 1;
    while( jj + tb( ll ) < i + n )
      jj = jj + tb( ll );
      ll = ll + 1;
    end
-   vb = i + n - jj
-%
-
-jj
-ll
-tb
+   vb = i + n - jj - 2;  %Why does minus two work?
 %
 %
-%
-   ml = m - i + 1;
-
-   ialo = ia+i-1+k-1-vb+1
+   ialo = ia+i-1+k-1-vb+1;
    iahi = m; 
- 
+% 
    jalo = ja+i-1+k-1-vb+1;
    jahi = ja+i-1+k-1;
-
+%
    itlo = it+i-1+k-1-vb+1;
    ithi = it+i-1+k-1;
- 
+% 
    jtlo = jt+i-1+k-1-vb+1;
    jthi = jt+i-1+k-1;
-
+%
    iblo = ib+i-1+k-1-vb+1;
    ibhi = m;
-
-   jblo = jb
-   jbhi = jb+n-1
-
+%
+   jblo = jb;
+   jbhi = jb+n-1;
+%
    not_done = 1;
-
+%
    while ( not_done == 1 )
-
+%
+      ml = iahi-ialo+1;
+%
       V = tril( A( ialo:iahi,jalo:jahi ), -1 ) + eye( size( A( ialo:iahi,jalo:jahi ) ) );
-
-%      H = ( eye( ml,ml ) - V * ( T( itlo:ithi,jtlo:jthi ) * V' ) );
-      H = ( eye( size(V,1),size(V,1) ) - V * ( T( itlo:ithi,jtlo:jthi ) * V' ) );
-
+%
+      H = ( eye( ml,ml ) - V * ( T( itlo:ithi,jtlo:jthi ) * V' ) );
+%
       Q( iblo:ibhi,jblo:jbhi ) = H * Q( iblo:ibhi,jblo:jbhi );
- 
+% 
       jahi = jahi-vb;     
       ithi = ithi-vb; 
       jthi = jthi-vb;    
-
+%
       ll = ll - 1;
       if( ll > 0 )
       if ( i <= ( ialo-tb(ll) ) ), vb = tb(ll); else vb = ialo - i; not_done = 0; end;
       else 
          not_done = 0;
       end
-
-
+%
       ialo = ialo-vb;
       jalo = jalo-vb;         
       itlo = itlo-vb;          
       jtlo = jtlo-vb;     
       iblo = iblo-vb;    
-
+%
    end
-
-%%%%%%%%%%
-
-
+%
    B = Q;
 %
    end
