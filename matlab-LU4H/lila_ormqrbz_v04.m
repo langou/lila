@@ -88,12 +88,12 @@
 %
    ll = 1;
    jj = 1;
-   while( jj + tb( ll ) < i + n )
+   while( jj + tb( ll ) < i + k )
      jj = jj + tb( ll );
      ll = ll + 1;
    end
-   vb = i + n - jj - 2;  %Why does minus two work?
-%
+   vb = i + k - jj ; 
+fprintf('vb = %d   (i=%d,k=%d,jj=%d)   ', vb, i, k, jj)
 %
    ialo = ia+i-1+k-1-vb+1;
    iahi = m; 
@@ -131,7 +131,7 @@
 %
       ll = ll - 1;
       if( ll > 0 )
-      if ( i <= ( ialo-tb(ll) ) ), vb = tb(ll); else vb = ialo - i; not_done = 0; end;
+         if ( i <= ( ialo-tb(ll) ) ), vb = tb(ll); else vb = ialo - i; not_done = 0; end;
       else 
          not_done = 0;
       end
@@ -141,6 +141,18 @@
       itlo = itlo-vb;          
       jtlo = jtlo-vb;     
       iblo = iblo-vb;    
+%
+   end
+%
+   if( ll > 0 )
+%
+      ml = iahi-ialo+1;
+%
+      V = tril( A( ialo:iahi,jalo:jahi ), -1 ) + eye( size( A( ialo:iahi,jalo:jahi ) ) );
+%
+      H = ( eye( ml,ml ) - V * ( T( itlo:ithi,jtlo:jthi ) * V' ) );
+%
+      Q( iblo:ibhi,jblo:jbhi ) = H * Q( iblo:ibhi,jblo:jbhi );
 %
    end
 %

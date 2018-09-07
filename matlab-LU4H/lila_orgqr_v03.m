@@ -126,7 +126,7 @@
 
       ll = ll - 1;
       if( ll > 0 )
-      if ( i <= ( ialo-tb(ll) ) ), vb = tb(ll); else vb = ialo - i; not_done = 0; end;
+      if ( i <= ( ialo-tb(ll) ) ), vb = tb(ll); else vb = ialo - i; not_done = 0;  end;
       else 
          not_done = 0;
       end
@@ -141,10 +141,12 @@
 
 %%%%%
 
+      if( ll > 0 )
   
        V = tril( A( ialo:iahi, jalo:jahi ), -1 ) + eye( size( A( ialo:iahi, jalo:jahi ) ));
    
        QQ(ialo:iahi,1:n) = QQ(ialo:iahi,1:n) - V * ( T(itlo:ithi,jtlo:jthi) * ( V' * QQ(ialo:iahi,1:n) ) );
+end
    
 
 
