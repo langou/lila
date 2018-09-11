@@ -93,7 +93,7 @@
      ll = ll + 1;
    end
    vb = i + k - jj ; 
-fprintf('vb = %d   (i=%d,k=%d,jj=%d)   ', vb, i, k, jj)
+%fprintf('vb = %d   (i=%d,k=%d,jj=%d)   ', vb, i, k, jj)
 %
    ialo = ia+i-1+k-1-vb+1;
    iahi = m; 
