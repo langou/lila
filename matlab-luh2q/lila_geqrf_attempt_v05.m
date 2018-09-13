@@ -1,10 +1,18 @@
 %
-   clear
+   function [ A, Q ] = lila_geqrf_attempt_v05_w01( m, nb, i, A, Q, nb_lvl2 );
+   Q = [];
 %
-   m = 30;
-   mt = 9;
-   nb = [ 10, 12 ];
+   if ( m < i ) fprintf('m < i\n'); return; end
 %
+   nb_block = size(nb,2);
+%
+   nb_block
+return
+
+
+
+
+
    mt = 3;
    nb = [ 10, 10 ];
 %
@@ -12,8 +20,7 @@
    tb = mt*ones(1,n);
    if ( sum(tb) < n ) fprintf('sum(tb) < n\n'); return; end
 %
-   nb_block = size(nb,2);
-%
+   %
    log10KA = 2;
 %
    U = randn(m,n); [U,~]=qr(U,0);
