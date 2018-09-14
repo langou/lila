@@ -1,4 +1,15 @@
 
+* write (3) example-of-use codes 
+    1. one block of columns at a time
+    2. many levels of blocking
+       (Julien can, maybe, clean up the manylevels code and have it recursive . . .)
+    3. recursive code for QR factorization
+
+* write each of the (5) codes (3) times:
+    1. _v05_w01_ one column at a time (mt=1)
+    2. _v05_w02_ full T (mt=n)
+    3. _v05_w03_ with mt
+
 * write (5) unit test suite for 
     1. lila_geqrf_v05
     2. lila_ormqrf_v05
@@ -6,21 +17,17 @@
     4. lila_larft_connect_v05
     5. lila_ormqrbz_v05
 
-* write (3) example-of-use codes 
-    1. one block of columns at a time
-    2. many levels of blocking
-    3. recursive code for QR factorization
-
-* write each of the (5) codes (3) times:
-    1. one column at a time
-    2. full T
-    3. with mt
-
 * start saving FLOPS for each of the (15) codes
     1. each of the (15) codes
 
+* count the FLOPS, in particular for QR and Full T and [ A, Q, T ] 
+  do we save FLOPS?
+
+* write a suite of code that only computes A/T first, then compute, then another suite that computes
+  A/Q/T at once
+
 * convert matlab syntax to C syntax but stay in matlab, 
-    1. each of the (15) codes
+    1. each of the (30) codes
     2. each of the unit test code
     3. each of the demo code
 
@@ -29,14 +36,7 @@
     2. each of the unit test code
     3. each of the demo code
 
-* write a suite of code that only computes A/T first, then compute, then another suite that computes
-  A/Q/T at once
-
 * write an LAPACK based code for qrinsert, write the LAPACK code that would do this
-
-* count the FLOPS, in particular for QR and Full T and [ A, Q, T ] 
-  do we save FLOPS?
 
 * time the code, release the code, write a paper
 
-( Julien can, maybe, clean up the manylevels code and have it recursive . . .)

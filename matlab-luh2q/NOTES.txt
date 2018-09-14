@@ -23,7 +23,7 @@ Papers
 
       ^ it can be said that everything we have been doing can be done with LAPACK by rewriting the code
 
-      ^ since LAPACK recompute T at each call of each subrroutines, it is very easy for LAPACK to change the NB to 
+      ^ since LAPACK recompute T at each call of each subrroutines, it is very easy for LAPACK to change the NB to whatever  
 
       ^ coupling of the algorithmic block size, with the user block size
 
@@ -44,35 +44,42 @@ Papers
 
       ^ and we are able to break the recusion in three ways, four ways, etc. instead of limiting with a recursion that divides by 2
 
+      ^ for recursion, easy with mt=n, easy with mt=1, not obvious otherwise
+
   - main feature of the new Householder QR fatorization suite
 
-    o limited blocking with mt
+    o controlled limit on the flops with mt
 
     o we pass the T in all of our subroutines (as opposed to recompute it)
 
-    o compact representation "that extends naturally" no matter
+    o compact WY T representation "that extends naturally" no matter where we work
 
   - consequences of these features
 
     o decoupling of the algorithmic block size, with the user block size
 
-    o we can do re
+    o we can block to a smaller size than MT and still have an MT blocking at the higher level
+
+    o we can do recursion with MT independent of the leaf recursion size (only possible before with MT=1 or MT=N)
 
   - extensions (list of things we plan on doing, one day)
 
     o 1D data distribution and with MPI
 
-    o MGS and the T matrix of MGS
+    o MGS and the T matrix of MGS (for Stephen and Kasia)
 
-  - extensions (list of things we dream on doing but will not)
+  - extensions (list of things we dream on doing but will not do)
 
     o Given V, T1 and mt1 and a new mt2, give the corresponding T2 (reusing information in T1)
 
-    o French and Wise explain how to do 
+    o RFP format for storage of the T matrix
+
+    o French and Wise explain how to do recursion in both dimension (columns and rows)
+      this means writing all these routines for TT
 
 * paper on Householder reconstruction
 
-  - code the Householder reconstruction of Demmel
+  - code the Householder reconstruction algorithm of Demmel
 
   - study the reconstruction quality as a function of the quality of Q + proof
 
@@ -82,7 +89,7 @@ Papers
 
     o write a ``better`` [Q1,R1] = qrinsert(Q,R,n+1,X,'col') subroutines where X is a block of vectors
 
-    o try to break other block Gram-Schmidt algorithm
+  - try to break other block Gram-Schmidt algorithm
 
 
     
