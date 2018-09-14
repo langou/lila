@@ -1,0 +1,40 @@
+
+* write subroutine LARFT that works on T, mt (not needed for us but can be useful)
+    1. lila_larft_v05
+
+* write (5) unit test suite for 
+    1. lila_geqrf_v05
+    2. lila_ormqrf_v05
+    3. lila_larft_v05
+    4. lila_larft_connect_v05
+    5. lila_ormqrbz_v05
+
+* write (3) example-of-use codes 
+    1. one block of columns at a time
+    2. many levels of blocking
+    3. recursive code for QR factorization
+
+* write each of the (5) codes (3) times:
+    1. one column at a time
+    2. full T
+    3. with mt
+
+* start saving FLOPS for each of the (15) codes
+    1. each of the (15) codes
+
+* convert matlab syntax to C syntax but stay in matlab, 
+    1. each of the (15) codes
+    2. each of the unit test code
+    3. each of the demo code
+
+* convert the codes to C, each of the (15) codes
+    1. each of the (15) codes
+    2. each of the unit test code
+    3. each of the demo code
+
+* write an LAPACK based code for qrinsert, write the LAPACK code that would do this
+
+* count the FLOPS, in particular for QR and Full T and [ A, Q, T ] 
+  do we save FLOPS?
+
+* time the code, release the code, write a paper
