@@ -1,0 +1,31 @@
+
+Papers
+
+* software paper on the new subroutines
+  - present the interface, design choices
+  - present the test suite
+  - present three ways to program the code
+    o one block of columns at a time
+    o many levels of blocking
+    o recursive code for QR factorization
+  - present also the cons and pros of the new approach with timing experiments
+  - comparison with state of the arts
+    o it can be said that everything we have been doing can be done with LAPACK by rewriting the code
+    o internal blocking in 
+  - main feature of the new Householder QR fatorization suite
+    o limited blocking with mt
+    o compact representation "that extends naturally" no matter
+  - consquences of these features
+    
+
+* code the Householder reconstruction of Demmel
+
+* study of 
+
+Extensions
+
+* 1D data distribution
+
+* 
+
+    

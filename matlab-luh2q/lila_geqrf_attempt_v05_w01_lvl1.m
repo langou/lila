@@ -1,7 +1,5 @@
 %
-   function [ A, Q, TT, T ] = lila_geqrf_attempt_v05_w01_lvl1( m, nb, i, A, Q, TT, mt, T, nb_lvl2 );
-%
-   if ( m < i ) fprintf('m < i\n'); return; end
+   function [ A, Q, TT, T ] = lila_geqrf_attempt_v05_w01_lvl1( m, nb, i, A, Q, TT, mt, T, nb_lvl2 )
 %
    nb_block = size(nb,2);
 %
@@ -93,5 +91,5 @@
 %
 
 %
-   [ Q ] = lila_ormqrbz_v05( m, nb(2), ihi(1), i, A, 1, 1, lda, Q, 1, ilo(2), ldq, T, 1, 1, ldt );
+   [ Q ] = lila_ormqrbz_v05( m, nb(2), ihi(1), i, A, 1, 1, lda, Q, 1, ilo(2), ldq, TT, mt );
 %
