@@ -1,4 +1,4 @@
-   function [ TT ] = lila_larft_v05( m, n, i, mt, A, TT )
+   function [ T ] = lila_larft_v05( m, n, i, mt, A, T )
 %
    ilo = i;
    ihi = ilo + n - 1;
@@ -11,7 +11,7 @@
    jtlo = ilo;
    jthi = jtlo+vb-1;
 %
-   TT(itlo:ithi,jtlo:jthi) = lapack_larft( A(jtlo:m,jtlo:jthi ) );
+   T(itlo:ithi,jtlo:jthi) = lapack_larft( A(jtlo:m,jtlo:jthi ) );
 %
    itlo = mod(itlo+vb-1,mt)+1;
    jtlo = jtlo+vb;
@@ -21,7 +21,7 @@
 %
    while (( itlo == 1 )&&(vb~=0))
 %
-      TT(itlo:ithi,jtlo:jthi) = lapack_larft( A(jtlo:m,jtlo:jthi ) );
+      T(itlo:ithi,jtlo:jthi) = lapack_larft( A(jtlo:m,jtlo:jthi ) );
 %
       itlo = mod(itlo+vb-1,mt)+1;
       jtlo = jtlo+vb;

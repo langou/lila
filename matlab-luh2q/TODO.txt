@@ -38,3 +38,5 @@
   do we save FLOPS?
 
 * time the code, release the code, write a paper
+
+( Julien can, maybe, clean up the manylevels code and have it recursive . . .)

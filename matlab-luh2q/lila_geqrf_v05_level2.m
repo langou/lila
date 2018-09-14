@@ -25,12 +25,12 @@
 %
    for k = 2:nb_block,
 %
-   [ A ] = lila_ormqrf_v05( m, nb(k), ihi(k-1)-ilo(1)+1, ilo(1), A, 1, 1, lda, A, 1, ilo(k), lda, T, mt );
+   [ A ] = lila_ormqrf_v05( m, nb(k), ihi(k-1)-ilo(1)+1, ilo(1), ilo(k), mt, A, T );
 %
    [ A, T, Q ] = lila_geqr2_v05( m, nb(k), ilo(k), mt, A, T, Q );
 %
    [ T ] = lila_larft_connect_v05( m, nb(k), ilo(k), A, T, mt  );
 %
-   [ Q ] = lila_ormqrbz_v05( m, nb(k), ihi(k-1)-ilo(1)+1, ilo(1), A, 1, 1, lda, Q, 1, ilo(k), ldq, T, mt );
+   [ Q ] = lila_ormqrbz_v05( m, nb(k), ihi(k-1)-ilo(1)+1, ilo(1), ilo(k), mt, A, T, Q );
 %
    end

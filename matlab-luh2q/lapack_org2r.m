@@ -1,5 +1,5 @@
 %
-   function [ Q ] = lapack_orgqr( m, n, i, A, Q )
+   function [ Q ] = lapack_org2r( m, n, i, A, Q )
 %
    ilo = i;
    ihi = ilo + n - 1;

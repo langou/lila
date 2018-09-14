@@ -35,12 +35,12 @@ else
 %
    [ A, T, Q ] = lila_geqrf_v05_recursive( m, nb(1), ilo(1), mt, A, T, Q );
 %
-   [ A ] = lila_ormqrf_v05( m, nb(2), nb(1), ilo(1), A, 1, 1, lda, A, 1, ilo(2), lda, T, mt );
+   [ A ] = lila_ormqrf_v05( m, nb(2), nb(1), ilo(1), ilo(2), mt, A, T );
 %
    [ A, T, Q ] = lila_geqrf_v05_recursive( m, nb(2), ilo(2), mt, A, T, Q );
 %
    [ T ] = lila_larft_connect_v05( m, nb(2), ilo(2), A, T, mt  );
 %
-   [ Q ] = lila_ormqrbz_v05( m, nb(2), nb(1), ilo(1), A, 1, 1, lda, Q, 1, ilo(2), ldq, T, mt );
+   [ Q ] = lila_ormqrbz_v05( m, nb(2), nb(1), ilo(1), ilo(2), mt, A, T, Q );
 %
 end

@@ -8,6 +8,6 @@
 %
    [ T ] = lila_larft_v05( m, n, i, mt, A, T );
 %
-   [ Q ] = lapack_orgqr( m, n, i, A, Q );
+   [ Q ] = lapack_org2r( m, n, i, A, Q );
 %
 end

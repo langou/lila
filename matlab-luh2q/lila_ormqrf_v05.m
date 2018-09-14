@@ -1,17 +1,17 @@
-   function [ B ] = lila_ormqrf_v05( m, n, k, i, A, ia, ja, lda, B, ib, jb, ldb, T, mt )
+   function [ A ] = lila_ormqrf_v05( m, n, k, i, j, mt, A, T )
 %
       vb= mt - mod(i-1,mt) ;
       if ( vb > k ), vb = k; end
 %
-      ialo = ia+i-1;
-      iahi = ia+m-1;
-      jalo = ja+i-1;
+      ialo = i;
+      iahi = m;
+      jalo = i;
       jahi = jalo+vb-1;
 %
-      iblo = ib+i-1;
-      ibhi = ib+m-1;
-      jblo = jb;
-      jbhi = jb+n-1;
+      iblo = i;
+      ibhi = m;
+      jblo = j;
+      jbhi = j+n-1;
 %
       itlo = mod(i-1,mt)+1;
       ithi = itlo+vb-1;
@@ -30,7 +30,7 @@
 
          H = (eye(ml,ml) - V * ( T(itlo:ithi,jtlo:jthi)' * V' ) );
 
-         B(iblo:ibhi,jblo:jbhi) = H*B(iblo:ibhi,jblo:jbhi);
+         A(iblo:ibhi,jblo:jbhi) = H*A(iblo:ibhi,jblo:jbhi);
        
          if ( jj + vb - 1 == k ) 
 
