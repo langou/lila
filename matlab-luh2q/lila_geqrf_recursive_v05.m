@@ -1,9 +1,9 @@
 %
-   function [ A, Q, TT ] = lila_geqrf_recursive_v05( m, n, i, A, Q, TT, mt )
+   function [ A, T, Q ] = lila_geqrf_recursive_v05( m, n, i, mt, A, T, Q )
 %
 if ( n < 10 )
 
-   [ A, Q, TT ] = lila_geqrf_recursive_v05_lvl3( m, n, i, A, Q, TT, mt );
+   [ A, T, Q ] = lila_geqr2_v05( m, n, i, mt, A, T, Q );
 
 % if (n == 1)
 
@@ -11,7 +11,7 @@ if ( n < 10 )
    % [ A(i:m,i) ] = larfg( A(i:m,i) );
    % if (A(i,i)<0), Q(i:m,i) = -Q(i:m,i); end;
    % it = mod(i,mt); if(it==0) it=mt; end;
-   % TT(it,i) = larft( A(i:m,i) );
+   % T(it,i) = larft( A(i:m,i) );
 
 else
 %
@@ -33,14 +33,14 @@ else
    ldq = -1;
    ldt = -1;
 %
-   [ A, Q, TT ] = lila_geqrf_recursive_v05( m, nb(1), ilo(1), A, Q, TT, mt );
+   [ A, T, Q ] = lila_geqrf_recursive_v05( m, nb(1), ilo(1), mt, A, T, Q );
 %
-   [ A ] = lila_ormqrf_v05( m, nb(2), nb(1), ilo(1), A, 1, 1, lda, A, 1, ilo(2), lda, TT, mt );
+   [ A ] = lila_ormqrf_v05( m, nb(2), nb(1), ilo(1), A, 1, 1, lda, A, 1, ilo(2), lda, T, mt );
 %
-   [ A, Q, TT ] = lila_geqrf_recursive_v05( m, nb(2), ilo(2), A, Q, TT, mt );
+   [ A, T, Q ] = lila_geqrf_recursive_v05( m, nb(2), ilo(2), mt, A, T, Q );
 %
-   [ TT ] = lila_larft_connect_v05( m, nb(2), ilo(2), A, TT, mt  );
+   [ T ] = lila_larft_connect_v05( m, nb(2), ilo(2), A, T, mt  );
 %
-   [ Q ] = lila_ormqrbz_v05( m, nb(2), nb(1), ilo(1), A, 1, 1, lda, Q, 1, ilo(2), ldq, TT, mt );
+   [ Q ] = lila_ormqrbz_v05( m, nb(2), nb(1), ilo(1), A, 1, 1, lda, Q, 1, ilo(2), ldq, T, mt );
 %
 end

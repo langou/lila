@@ -14,12 +14,12 @@
    As = A;
 %
    Q = randn(m,n);
-   TT = zeros(mt,n);
-   [ A, Q, TT ] = lila_geqrf_recursive_v05( m, n, 1, A, Q, TT, mt );
+   T = zeros(mt,n);
+   [ A, T, Q ] = lila_geqrf_recursive_v05( m, n, 1, mt, A, T, Q );
 %
-   T = larft( A );
+   TT = larft( A );
    V = tril(A(1:m,1:n),-1)+eye(m,n);
-   H = eye(m,m) - V * T * V';
+   H = eye(m,m) - V * TT * V';
    norm(H'*H-eye(m),'fro')
    norm(tril(H'*As,-1),'fro')/norm(A,'fro')
    norm(triu(H'*As)-triu(A),'fro')/norm(A,'fro')
@@ -29,4 +29,4 @@
 %
    norm(qr(As,0)-A,'fro')/norm(As,'fro')
 %
-   [1:n;TT]
+   [1:n;T]

@@ -32,6 +32,9 @@
     2. each of the unit test code
     3. each of the demo code
 
+* write a suite of code that only computes A/T first, then compute, then another suite that computes
+  A/Q/T at once
+
 * write an LAPACK based code for qrinsert, write the LAPACK code that would do this
 
 * count the FLOPS, in particular for QR and Full T and [ A, Q, T ] 

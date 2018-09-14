@@ -1,11 +1,11 @@
-   function [ TT ] = lila_larft_connect_v05( m, nb3, ilo3, A, TT, mt )
+   function [ TT ] = lila_larft_connect_v05( m, n, i, A, TT, mt )
 %
-   vb= mt - mod(ilo3-1,mt) ;
-   if ( vb > nb3 ), vb = nb3; end
+   vb= mt - mod(i-1,mt) ;
+   if ( vb > n ), vb = n; end
 %
-   itlo = mod(ilo3-1,mt)+1;
+   itlo = mod(i-1,mt)+1;
    ithi = itlo+vb-1;
-   jtlo = ilo3;
+   jtlo = i;
    jthi = jtlo+vb-1;
 %
    TT(1:itlo-1,jtlo:jthi) = ...
