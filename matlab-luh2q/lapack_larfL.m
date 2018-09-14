@@ -1,4 +1,4 @@
-function [ B ] = larfL( a, B )
+function [ B ] = lapack_larfL( a, B )
 
   [m,n]=size(B);
 

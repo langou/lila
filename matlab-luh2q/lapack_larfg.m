@@ -1,4 +1,4 @@
-function [ a ] = larfg( a )
+function [ a ] = lapack_larfg( a )
 
    m = size(a,1);
    norma = norm( a, 2);

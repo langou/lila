@@ -18,7 +18,7 @@
      QQ(ialo:ialo+n-1,1:n) = eye( n,n );
 %
      V = tril( A( ialo:iahi, jalo:jahi ), -1 ) + eye( ml, n );
-T(itlo:ithi,jtlo:jthi) = larft( V );
+     T(itlo:ithi,jtlo:jthi) = lapack_larft( V );
      QQ(ialo:iahi,1:n) = QQ(ialo:iahi,1:n) - V * ( T(itlo:ithi,jtlo:jthi) * ( V' * QQ(ialo:iahi,1:n) ) );
 %
      A( ialo:iahi, jalo:jahi ) = QQ(ialo:iahi,1:n);

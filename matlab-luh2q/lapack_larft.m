@@ -1,4 +1,4 @@
-function [ T ] = larft( V )
+function [ T ] = lapack_larft( V )
 
    [ m, k] = size(V);
 

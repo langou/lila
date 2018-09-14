@@ -1,13 +1,13 @@
 %
-   function [ A, TT, Q ] = lila_geqr2_v05( m, n, i, mt, A, TT, Q )
+   function [ A, T, Q ] = lila_geqr2_v05( m, n, i, mt, A, T, Q )
 %
    ilo = i;
    ihi = ilo + n - 1;
 %
-   [ A ] = lila_geqr2( m, n, i, A );
+   [ A ] = lapack_geqr2( m, n, i, A );
 %
-   [ TT ] = lila_larft_v05( m, n, i, A, TT, mt );
+   [ T ] = lila_larft_v05( m, n, i, mt, A, T );
 %
-   [ Q ] = lila_orgqr( m, n, i, A, Q );
+   [ Q ] = lapack_orgqr( m, n, i, A, Q );
 %
 end

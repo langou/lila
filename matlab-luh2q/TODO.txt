@@ -1,7 +1,4 @@
 
-* write subroutine LARFT that works on T, mt (not needed for us but can be useful)
-    1. lila_larft_v05
-
 * write (5) unit test suite for 
     1. lila_geqrf_v05
     2. lila_ormqrf_v05

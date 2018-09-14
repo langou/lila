@@ -10,8 +10,6 @@
 
    Q(iblo:i+k-1,jblo:jbhi) = zeros( size( Q(i:i+k-1,jblo:jbhi) ));
 
-%%%%%%%%%%    This portion constructs Q column by column
-%
     ml = m - i - k + 2 ;
   
     ialo = ia+i-1+k-1;
@@ -30,7 +28,7 @@
  
        V = tril(A(ialo:iahi,jalo:jahi), -1) + eye(size(A(ialo:iahi,jalo:jahi)));
  
-       TTTT(jalo:jahi,jalo:jahi) = larft( V );
+       TTTT(jalo:jahi,jalo:jahi) = lapack_larft( V );
        H = (eye(ml,ml) - V * ( TTTT(jalo:jahi,jalo:jahi) * V' ) );
  
        Q(iblo:ibhi,jblo:jbhi) = H * Q(iblo:ibhi,jblo:jbhi);
