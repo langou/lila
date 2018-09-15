@@ -1,6 +1,13 @@
 
 Papers
 
+The key idea is to have a reprentation for the T matrix that is consistent at (and understood by) all levels.
+We want to do many-level blocking but need to choose one block size.
+Example: 
+MT is 70
+
+
+
 * software paper on the new subroutines
 
   - present the interface, design choices
