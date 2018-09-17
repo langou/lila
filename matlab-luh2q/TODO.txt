@@ -4,6 +4,28 @@
     2. many levels of blocking
        (Julien can, maybe, clean up the manylevels code and have it recursive . . .)
     3. recursive code for QR factorization
+    4. recursion that divides by 3 (just for fun)
+    5. Fixed blocking:
+          ALGORITHMIC BLOCKING (MT) is 120
+          USER BLOCKING is 10, 10, 10, 18, 19, 7, 5, etc.
+          ARCHITECTURE BLOCKING (NB) is 2000, 400, 90, 32, 8
+          IB in the interface of each routine. So although we have a full T, we use part of it. With IB.
+
+PLASMA/DPLASMA is using higher levels that organize themselves around IB (which
+is a good idea), but cannot go below. 
+Below IB, we can have algorithms that use smaller blocking easily. (With IB.)
+
+Show where is PLASMA in our code, we can do PLASMA with our code
+Show where is Gustavon with our code, we can do Gustavson with our code, 
+Show where is LAPACK with our code. 
+We can do many levels blocking with LAPACK, (since LAPACK keeps on recomputing, we can show that it does not realy work)
+
+Show as well teh various T matrix, the one from PLASMA, teh one from LAPACK. 
+And show how the blocking of the algorithm works. 
+
+Maybe explain that what we want to offer is a framework. We hope that we are only showing 10% of the power of this framework 
+and we hope that other will use the frmework and shwo more reason to use it
+
 
 * write each of the (5) codes (3) times:
     1. _v05_w01_ one column at a time (mt=1)
