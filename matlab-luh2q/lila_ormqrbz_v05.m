@@ -22,7 +22,7 @@
    jblo = jb;
    jbhi = jb+n-1;
   
-   for ii = i+k-1:-1:i,
+   for ii = k:-1:1,
  
       V = tril(A(ialo:iahi,jalo:jahi), -1) + eye(size(A(ialo:iahi,jalo:jahi)));
  

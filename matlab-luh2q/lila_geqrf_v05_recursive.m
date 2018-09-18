@@ -33,14 +33,24 @@ else
    ldq = -1;
    ldt = -1;
 %
+%   NOTE that I CHEAT:
+%      I use larft(V) within some of the subroutines
+%      This will need to change when we get the big T back
+%
    [ A, T, Q ] = lila_geqrf_v05_recursive( m, nb(1), ilo(1), mt, A, T, Q );
 %
-   [ A ] = lila_ormqrf_v05( m, nb(2), nb(1), ilo(1), ilo(2), mt, A, T );
+%   [ A ] = lila_ormqrf_v05_w01( m, nb(2), nb(1), ilo(1), ilo(2), mt, A, T );
+   [ A ] = lila_ormqrf_v05_w02( m, nb(2), nb(1), ilo(1), ilo(2), mt, A, T );
+%   [ A ] = lila_ormqrf_v05_w03( m, nb(2), nb(1), ilo(1), ilo(2), mt, A, T );
 %
    [ A, T, Q ] = lila_geqrf_v05_recursive( m, nb(2), ilo(2), mt, A, T, Q );
 %
-   [ T ] = lila_larft_connect_v05( m, nb(2), ilo(2), A, T, mt  );
+%   [ T ] = lila_larft_connect_v05_w01( m, nb(2), ilo(2), mt, A, T  );   %- DNW
+   [ T ] = lila_larft_connect_v05_w02( m, nb(2), ilo(2), mt, A, T  );   
+%   [ T ] = lila_larft_connect_v05_w03( m, nb(2), ilo(2), mt, A, T  );   %- DNW
 %
-   [ Q ] = lila_ormqrbz_v05( m, nb(2), nb(1), ilo(1), ilo(2), mt, A, T, Q );
+%   [ Q ] = lila_ormqrbz_v05_w01( m, nb(2), nb(1), ilo(1), ilo(2), mt, A, T, Q );
+   [ Q ] = lila_ormqrbz_v05_w02( m, nb(2), nb(1), ilo(1), ilo(2), mt, A, T, Q );
+%   [ Q ] = lila_ormqrbz_v05_w03( m, nb(2), nb(1), ilo(1), ilo(2), mt, A, T, Q );   %- DNW
 %
 end

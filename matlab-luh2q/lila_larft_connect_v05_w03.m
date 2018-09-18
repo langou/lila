@@ -1,4 +1,4 @@
-   function [ TT ] = lila_larft_connect_v05( m, n, i, mt, A, TT )
+   function [ TT ] = lila_larft_connect_v05_w03( m, n, i, mt, A, T )
 %
    vb= mt - mod(i-1,mt) ;
    if ( vb > n ), vb = n; end

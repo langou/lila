@@ -1,3 +1,29 @@
+teh level blocking is oly active in GEQRQF
+We could have it active in ORMQR, and etc. 
+It is not activiated here, we relay on efficient BLAS kelrnls
+
+Easy #1:
+( computing T once )
+LAPACK is LB1 = MT = 64
+PLASMA is LB1 = 200, LB2 = MT = 32
+DPLASMA is LB1 = 2000, LB2 = 200, LB3 = MT = 32
+when the leaf is MT, it is easy
+
+Easy #2:
+( recomputing T each time )
+Another thing taht is easy is ti recompute the T at each level
+And LAPACK kind of does this. So by hacking ILAENV, we could
+
+Our motto: take from Bill Gropp
+the goal is not to make what is easy easier, 
+the goal is not to make what is impossible possible
+
+
+We identify and decouple 4 blocking types:
+          ALGORITHMIC BLOCKING (TB) is 120
+          USER BLOCKING (NB) is 10, 10, 10, 18, 19, 7, 5, etc.
+          Level BLOCKING (LB) is 2000, 400, 90, 32, 8
+          Inner Blocking (IB) in the interface of each routine. So although we have a full T, we use part of it. With IB.
 
 * write (3) example-of-use codes 
     1. one block of columns at a time
@@ -6,10 +32,14 @@
     3. recursive code for QR factorization
     4. recursion that divides by 3 (just for fun)
     5. Fixed blocking:
-          ALGORITHMIC BLOCKING (MT) is 120
-          USER BLOCKING is 10, 10, 10, 18, 19, 7, 5, etc.
-          ARCHITECTURE BLOCKING (NB) is 2000, 400, 90, 32, 8
-          IB in the interface of each routine. So although we have a full T, we use part of it. With IB.
+        M = 13,000, N=12,000
+	NLB = 4
+        LB1 = 2048
+        LB1 =  250
+        LB1 =   65
+        LB8 =   10
+        MT = 96
+        IB = 96 (we do not have teh IB feature) IB1, IB2, IB3, IB4
 
 PLASMA/DPLASMA is using higher levels that organize themselves around IB (which
 is a good idea), but cannot go below. 
@@ -26,21 +56,25 @@ And show how the blocking of the algorithm works.
 Maybe explain that what we want to offer is a framework. We hope that we are only showing 10% of the power of this framework 
 and we hope that other will use the frmework and shwo more reason to use it
 
+Julien needs to write a code that does any levels, as oppsoed to thre elevels
+teh wya rto do this is with fixed blocking
 
-* write each of the (5) codes (3) times:
+
+* write each of the (6) codes (3) times:
     1. _v05_w01_ one column at a time (mt=1)
     2. _v05_w02_ full T (mt=n)
     3. _v05_w03_ with mt
 
-* write (5) unit test suite for 
-    1. lila_geqrf_v05
-    2. lila_ormqrf_v05
+* write (6) unit test suite for 
+    1. lila_ormqrf_v05
+    2. lila_geqrf_v05
     3. lila_larft_v05
-    4. lila_larft_connect_v05
-    5. lila_ormqrbz_v05
+    4. lila_orgqrf_v05
+    5. lila_larft_connect_v05
+    6. lila_ormqrbz_v05
 
-* start saving FLOPS for each of the (15) codes
-    1. each of the (15) codes
+* start saving FLOPS for each of the (18) codes
+    1. each of the (18) codes
 
 * count the FLOPS, in particular for QR and Full T and [ A, Q, T ] 
   do we save FLOPS?
