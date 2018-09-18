@@ -21,27 +21,16 @@
    ldq = -1;
    ldt = -1;
 %
-%  [ A, T, Q ] = lila_geqr2_v05_w01( m, nb(1), ilo(1), mt, A, T, Q );
-   [ A, T, Q ] = lila_geqr2_v05_w02( m, nb(1), ilo(1), mt, A, T, Q );
-%  [ A, T, Q ] = lila_geqr2_v05_w03( m, nb(1), ilo(1), mt, A, T, Q );
-
+   [ A, T, Q ] = lila_geqr2_v05_w03( m, nb(1), ilo(1), mt, A, T, Q );
 %
    for k = 2:nb_block,
 %
-%   [ A ] = lila_ormqrf_v05_w01( m, nb(k), ihi(k-1)-ilo(1)+1, ilo(1), ilo(k), mt, A, T );
-   [ A ] = lila_ormqrf_v05_w02( m, nb(k), ihi(k-1)-ilo(1)+1, ilo(1), ilo(k), mt, A, T );
-%   [ A ] = lila_ormqrf_v05_w03( m, nb(k), ihi(k-1)-ilo(1)+1, ilo(1), ilo(k), mt, A, T );
+   [ A ] = lila_ormqrf_v05( m, nb(k), ihi(k-1)-ilo(1)+1, ilo(1), ilo(k), mt, A, T );
 %
-%  [ A, T, Q ] = lila_geqr2_v05_w01( m, nb(k), ilo(k), mt, A, T, Q );
-   [ A, T, Q ] = lila_geqr2_v05_w02( m, nb(k), ilo(k), mt, A, T, Q );
-%  [ A, T, Q ] = lila_geqr2_v05_w03( m, nb(k), ilo(k), mt, A, T, Q );
+   [ A, T, Q ] = lila_geqr2_v05_w03( m, nb(k), ilo(k), mt, A, T, Q );
 %
-%   [ T ] = lila_larft_connect_v05_w01(  m, nb(k), ilo(k), mt, A, T  );   %- DNW
-   [ T ] = lila_larft_connect_v05_w02(  m, nb(k), ilo(k), mt, A, T  );   
-%   [ T ] = lila_larft_connect_v05_w03(  m, nb(k), ilo(k), mt, A, T  );   %- DNW
+   [ T ] = lila_larft_connect_v05( m, nb(k), ilo(k), mt, A, T  );   
 %
-%   [ Q ] = lila_ormqrbz_v05_w01( m, nb(k), ihi(k-1)-ilo(1)+1, ilo(1), ilo(k), mt, A, T, Q );
-   [ Q ] = lila_ormqrbz_v05_w02( m, nb(k), ihi(k-1)-ilo(1)+1, ilo(1), ilo(k), mt, A, T, Q );
-%   [ Q ] = lila_ormqrbz_v05_w03( m, nb(k), ihi(k-1)-ilo(1)+1, ilo(1), ilo(k), mt, A, T, Q );  %- DNW
-
+   [ Q ] = lila_ormqrbz_v05( m, nb(k), ihi(k-1)-ilo(1)+1, ilo(1), ilo(k), mt, A, T, Q );
+%
    end
