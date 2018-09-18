@@ -26,19 +26,20 @@
    n = sum(nb_lvl1);
    if ( m < n ) fprintf('m < n\n'); return; end
 %
-%  we are checking w02
-   mt = n;
+%  we are checking w01
+   mt = 1;
 %
    U = randn(m,n); [U,~]=qr(U,0);
    V = randn(n,n); [V,~]=qr(V,0);
    S = diag( 10.^( linspace( 0, -log10KA, n ) ) );
    A = U * S * V';
-   clear U S V;
+   clear U S V
    As = A;
 %
    Q = randn(m,n);
    T = zeros(mt,n);
-   [ A, T, Q ] = lila_geqrf_v05_level1( m, n, 1, mt, A, T, Q );
+   [ A, T, Q ] = lila_geqrf_v05_w01_level1( m, n, 1, mt, A, T, Q );
+%  [ A, T, Q ] = lila_geqrf_v05_w02_level1( m, n, 1, mt, A, T, Q );
 %
    TT = lapack_larft( A );
    V = tril(A(1:m,1:n),-1)+eye(m,n);

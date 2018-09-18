@@ -1,10 +1,12 @@
    function [ A ] = lila_ormqrf_v05_w01( m, n, k, i, j, mt, A, T )
 %
-   Q(i:m,i:i+n-1) = eye( m-i+1, n );
+   for ii = i:i+k-1, 
 %
-   for j = i+n-1:-1:i,
-   [ Q(j:m,j:i+n-1) ] = lapack_larfL( A(j:m,i+n-1), Q(j:m,j:i+n-1) );
+   V = tril(A(ii:m,ii), -1) + eye(m-ii+1,1);
+%
+   H = (eye(m-ii+1,m-ii+1) - V * ( T(1,ii) * V' ) );
+%
+   A(ii:m,j:j+n-1) = H*A(ii:m,j:j+n-1);
+%
    end
 %
-end
-
