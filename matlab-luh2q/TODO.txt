@@ -1,4 +1,4 @@
-teh level blocking is oly active in GEQRQF
+the level blocking is oly active in GEQRQF
 We could have it active in ORMQR, and etc. 
 It is not activiated here, we relay on efficient BLAS kelrnls
 
@@ -11,12 +11,12 @@ when the leaf is MT, it is easy
 
 Easy #2:
 ( recomputing T each time )
-Another thing taht is easy is ti recompute the T at each level
+Another thing that is easy is to recompute the T at each level
 And LAPACK kind of does this. So by hacking ILAENV, we could
 
 Our motto: take from Bill Gropp
 the goal is not to make what is easy easier, 
-the goal is not to make what is impossible possible
+the goal is to make what is impossible possible
 
 
 We identify and decouple 4 blocking types:
@@ -54,24 +54,24 @@ Show as well teh various T matrix, the one from PLASMA, teh one from LAPACK.
 And show how the blocking of the algorithm works. 
 
 Maybe explain that what we want to offer is a framework. We hope that we are only showing 10% of the power of this framework 
-and we hope that other will use the frmework and shwo more reason to use it
+and we hope that other will use the frmework and show more reason to use it
 
-Julien needs to write a code that does any levels, as oppsoed to thre elevels
-teh wya rto do this is with fixed blocking
+Julien needs to write a code that does any levels, as opposed to three levels
+the way to do this is with fixed blocking
 
 
 * write each of the (6) codes (3) times:
-    1. _v05_w01_ one column at a time (mt=1)
-    2. _v05_w02_ full T (mt=n)
-    3. _v05_w03_ with mt
+    1. _v05_w01_ one column at a time (mt=1)  * DONE
+    2. _v05_w02_ full T (mt=n)                * DONE
+    3. _v05_w03_ with mt                      * 
 
 * write (6) unit test suite for 
-    1. lila_ormqrf_v05
-    2. lila_geqrf_v05
-    3. lila_larft_v05
-    4. lila_orgqrf_v05
-    5. lila_larft_connect_v05
-    6. lila_ormqrbz_v05
+    1. lila_ormqrf_v05            * 
+    2. lila_geqrf_v05             *
+    3. lila_larft_v05             *
+    4. lila_orgqrf_v05            *
+    5. lila_larft_connect_v05     *
+    6. lila_ormqrbz_v05           *
 
 * start saving FLOPS for each of the (18) codes
     1. each of the (18) codes

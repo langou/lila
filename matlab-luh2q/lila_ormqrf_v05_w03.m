@@ -1,4 +1,5 @@
-   function [ A ] = lila_ormqrf_v05( m, n, k, i, j, mt, A, T )
+%
+   function [ A ] = lila_ormqrf_v05_w03( m, n, k, i, j, mt, A, T )
 %
       vb= mt - mod(i-1,mt) ;
       if ( vb > k ), vb = k; end
