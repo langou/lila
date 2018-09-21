@@ -33,6 +33,7 @@
         V = tril(A(ialo:iahi,jalo:jahi), -1) + eye(ml,vb);
 %
         H = (eye(ml,ml) - V * ( T(itlo:ithi,jtlo:jthi) * V' ) );
+%        H = (eye(ml,ml) - V * ( lapack_larft(V) * V' ) );
 %
         Q(iblo:ibhi,jblo:jbhi) = H*Q(iblo:ibhi,jblo:jbhi);
 %
@@ -59,7 +60,7 @@
             iblo = iblo-vb;
             jalo = jalo-vb;
 %
-            itlo = mod(itlo-vb,mt);
+            itlo = mod(itlo-vb,mt); if (itlo == 0), itlo = mt; end
             ithi = itlo+vb-1;
             jtlo = jtlo-vb;
 %

@@ -27,7 +27,7 @@
    if ( m < n ) fprintf('m < n\n'); return; end
 %
 %  we are checking w03
-   mt =  10;
+   mt =  11;
 %
    U = randn(m,n); [U,~]=qr(U,0);
    V = randn(n,n); [V,~]=qr(V,0);
@@ -38,6 +38,7 @@
 %
    Q = randn(m,n);
    T = zeros(mt,n);
+%  [ A, T, Q ] = lila_geqrf_v05_w00_level1( m, n, 1, mt, A, T, Q );
 %  [ A, T, Q ] = lila_geqrf_v05_w01_level1( m, n, 1, mt, A, T, Q );
 %  [ A, T, Q ] = lila_geqrf_v05_w02_level1( m, n, 1, mt, A, T, Q );
    [ A, T, Q ] = lila_geqrf_v05_w03_level1( m, n, 1, mt, A, T, Q );

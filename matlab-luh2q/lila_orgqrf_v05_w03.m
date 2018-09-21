@@ -4,16 +4,7 @@
    ilo = i;
    ihi = ilo + n - 1;
 %
-QQ = Q;
-   QQ(ilo:m,ilo:ihi) = eye( size ( QQ(ilo:m,ilo:ihi) ) );
-  for j = ihi:-1:ilo,
-     [ QQ(j:m,j:ihi) ] = lapack_larfL( A(j:m,j), QQ(j:m,j:ihi) );
-  end
-%
-%fprintf('cheating   %d\n',ihi:-1:ilo);
-
-
-%
+   Q(ilo:m,ilo:ihi) = eye( size ( Q(ilo:m,ilo:ihi) ) );
 %
       vb = mod(i+n-1,mt); if ( vb == 0), vb = mt; end;
 %
@@ -35,17 +26,13 @@ QQ = Q;
 %
       jj = 1;
 %
-%fprintf('\n');
       while ( not_done == 1 )
 %
-%fprintf('broken   %d\n',jahi:-1:jalo);
-
         V = tril(A(ialo:iahi,jalo:jahi), -1) + eye(ml,vb);
 %
         H = (eye(ml,ml) - V * ( T(itlo:ithi,jtlo:jthi) * V' ) );
 %
-        Q(ialo:iahi,ialo:ihi) = H*Q(ialo:iahi,ialo:ihi);
-%       Q(ialo:iahi,jalo:jahi) = H*Q(ialo:iahi,jalo:jahi);
+        Q(ialo:m,ialo:ihi) = H*Q(ialo:m,ialo:ihi);
 %
          if ( jj + vb - 1 == n ) 
 %
@@ -69,7 +56,7 @@ QQ = Q;
             ialo = ialo-vb;
             jalo = jalo-vb;
 %
-            itlo = mod(itlo-vb,mt);
+            itlo = mod(itlo-vb,mt); if (itlo == 0), itlo = mt; end
             ithi = itlo+vb-1;
             jtlo = jtlo-vb;
 %
@@ -77,11 +64,5 @@ QQ = Q;
 %
       end
 %
-
-   norm( QQ(ilo:m,ilo:ihi) - Q(ilo:m,ilo:ihi))
-Q = QQ;
-
-
-%fprintf('\n');
    end
 

@@ -6,6 +6,5 @@
    [ T ] = lila_larft_v05_w03( m, n, i, mt, A, T );  
 %
    [ Q ] = lila_orgqrf_v05_w03( m, n, i, mt, A, T, Q );  
-%  This does not follow the structure of mt
 %
    end
