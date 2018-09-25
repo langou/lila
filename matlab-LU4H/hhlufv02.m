@@ -5,7 +5,7 @@
    m = 15;
    n = 7;
 %
-   log10KA = 6;
+   log10KA = 1.5;
 %
    U = randn(m,n); [U,~]=qr(U,0);
    V = randn(n,n); [V,~]=qr(V,0);

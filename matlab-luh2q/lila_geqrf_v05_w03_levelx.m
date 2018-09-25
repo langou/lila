@@ -1,16 +1,23 @@
 %
-   function [ A, T, Q ] = lila_geqrf_v05_w03_levelx( ii_lvl, nb_lvl, m, n, i, mt, A, T, Q )
+   function [ A, T, Q ] = lila_geqrf_v05_w03_levelx( n_lvl, i_lvl, nb_lvl, m, n, i, mt, A, T, Q )
 %
-   nb = nb_lvl(ii_lvl);
+   nb = nb_lvl(i_lvl);
    nb_block = ceil( n / nb );
+%
+   i_lvl = i_lvl + 1;
 %
    lda = -1;
    ldq = -1;
    ldt = -1;
 %
    if ( nb > n ) vb = n; else vb = nb; end;
-
-   [ A, T, Q ] = lila_geqr2_v05_w03( m, vb, i, mt, A, T, Q );
+%
+   if (i_lvl == n_lvl+1)
+%  [ A, T, Q ] = lila_geqr2_v05_w03( m, vb, i, mt, A, T, Q );
+   [ A, T, Q ] = lila_geqr2_v05_q00( m, vb, i, mt, A, T, Q );
+   else
+   [ A, T, Q ] = lila_geqrf_v05_w03_levelx( n_lvl, i_lvl, nb_lvl, m, vb, i, mt, A, T, Q );
+   end
 %
    ilo = i;
    kb = 0;
@@ -23,10 +30,16 @@
 %
    [ A ] = lila_ormqrf_v05_w03( m, vb, kb, i, ilo, mt, A, T );
 %
-   [ A, T, Q ] = lila_geqr2_v05_w03( m, vb, ilo, mt, A, T, Q );
+   if (i_lvl == n_lvl+1)
+%  [ A, T, Q ] = lila_geqr2_v05_w03( m, vb, ilo, mt, A, T, Q );
+   [ A, T, Q ] = lila_geqr2_v05_q00( m, vb, ilo, mt, A, T, Q );
+   else
+   [ A, T, Q ] = lila_geqrf_v05_w03_levelx( n_lvl, i_lvl, nb_lvl, m, vb, ilo, mt, A, T, Q );
+   end
 %
    [ T ] = lila_larft_connect_v05_w03(  m, vb, ilo, mt, A, T  );   
 %
    [ Q ] = lila_ormqrbz_v05_w03( m, vb, kb, i, ilo, mt, A, T, Q );
 %
    end
+%

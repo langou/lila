@@ -4,12 +4,13 @@
 %
    fprintf('\n');
 %
-   m = 500;
-   n = 410;
-   log10KA = 4;
+   m = 300;
+   n = 117;
+   log10KA = 11;
 %
    mt = 410;
-   nb_lvl = [64, 32, 8, 2 ];
+%  nb_lvl = [128, 64, 32, 8, 2 ];
+   nb_lvl = [128, 64, 32 ];
 %
    n_lvl = size( nb_lvl, 2);
 %
@@ -35,10 +36,10 @@
    TT = lapack_larft( A );
    V = tril(A(1:m,1:n),-1)+eye(m,n);
    H = eye(m,m) - V * TT * V';
-   fprintf('||H''*H-I|| = %d',norm(H'*H-eye(m),'fro'))
+   fprintf('\n||H''*H-I|| = %d',norm(H'*H-eye(m),'fro'))
    fprintf('                 ||tril(H''*As)|| = %d',norm(tril(H'*As,-1),'fro')/norm(A,'fro'))
    fprintf('              ||triu(H''*As)-R|| = %d\n\n',norm(triu(H'*As)-triu(A),'fro')/norm(A,'fro'))
-   fprintf('||qr(As)-A|| = %d',norm(qr(As,0)-A,'fro')/norm(As,'fro'))
+%  fprintf('||qr(As)-A|| = %d',norm(qr(As,0)-A,'fro')/norm(As,'fro'))
    R = triu(A(1:n,1:n));
    fprintf('               ||Q''Q - I|| = %e', norm(Q(1:m,1:n)'*Q(1:m,1:n) - eye(n), 'fro'));
    fprintf('                  ||A - Q*R|| / || A || = %e\n\n', norm(As(1:m,1:n) - Q(1:m,1:n)*R(1:n,1:n), 'fro') / norm(As(1:m,1:n), 'fro'));
