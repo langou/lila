@@ -1,40 +1,43 @@
 %
-   function [ A, T, Q ] = lila_geqrf_v05_w03_level1( m, n, i, mt, A, T, Q )
+   function [ A, T, Q ] = lila_geqrf_v05_w03_level1( n_lvl, i_lvl, nb_lvl, m, n, i, mt, A, T, Q )
 %
-   global nb_lvl1;
-   global ii_lvl2;
-   global nb_lvl2;
+   nb = nb_lvl(i_lvl);
+   nb_block = ceil( n / nb );
 %
-   nb = nb_lvl1;
-%
-   nb_block = size(nb,2);
-%
-   ilo = zeros(1,nb_block);
-   ihi = zeros(1,nb_block);
-   ilo(1) = i;
-   ihi(1) = ilo(1) + nb(1) - 1;
-   for ii = 2:nb_block,
-      ilo(ii) = ilo(ii-1) + nb(ii-1);
-      ihi(ii) = ihi(ii-1) + nb(ii);
-   end
+   i_lvl = i_lvl + 1;
 %
    lda = -1;
    ldq = -1;
    ldt = -1;
 %
-   ii_lvl2 = 1;
-   [ A, T, Q ] = lila_geqrf_v05_w03_level2( m, nb(1), ilo(1), mt, A, T, Q );
+   if ( nb > n ) vb = n; else vb = nb; end;
 %
-   for k = 2:nb_block,
+   if (i_lvl == n_lvl+1)
+   [ A, T, Q ] = lila_geqr2_v05_w03( m, vb, i, mt, A, T, Q );
+   else
+   [ A, T, Q ] = lila_geqrf_v05_w03_level1( n_lvl, i_lvl, nb_lvl, m, vb, i, mt, A, T, Q );
+   end
 %
-   ii_lvl2 = k;
+   ilo = i;
+   kb = 0;
 %
-   [ A ] = lila_ormqrf_v05_w03( m, nb(k), ihi(k-1)-ilo(1)+1, ilo(1), ilo(k), mt, A, T );
+   for j = 2:nb_block,
 %
-   [ A, T, Q ] = lila_geqrf_v05_w03_level2( m, nb(k), ilo(k), mt, A, T, Q );
+   ilo = ilo + vb;
+   kb = kb + vb;
+   if ( kb + nb > n ) vb = n - kb ; else vb = nb; end;
 %
-   [ T ] = lila_larft_connect_v05_w03( m, nb(k), ilo(k), mt, A, T  );  
+   [ A ] = lila_ormqrf_v05_w03( m, vb, kb, i, ilo, mt, A, T );
 %
-   [ Q ] = lila_ormqrbz_v05_w03( m, nb(k), ihi(k-1)-ilo(1)+1, ilo(1), ilo(k), mt, A, T, Q );
+   if (i_lvl == n_lvl+1)
+   [ A, T, Q ] = lila_geqr2_v05_w03( m, vb, ilo, mt, A, T, Q );
+   else
+   [ A, T, Q ] = lila_geqrf_v05_w03_level1( n_lvl, i_lvl, nb_lvl, m, vb, ilo, mt, A, T, Q );
+   end
+%
+   [ T ] = lila_larft_connect_v05_w03(  m, vb, ilo, mt, A, T  );   
+%
+   [ Q ] = lila_ormqrbz_v05_w03( m, vb, kb, i, ilo, mt, A, T, Q );
 %
    end
+%

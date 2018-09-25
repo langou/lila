@@ -2,33 +2,18 @@
    clear
    clear global
 %
-   global nb_lvl1;
-   global ii_lvl2;
-   global nb_lvl2;
-%
    fprintf('\n');
-   m = 100;
-%   mt = 9;
-   log10KA = 2;
-   nb_lvl2{1} = [   35, 3, 2, 4 ];
-   nb_lvl2{2} = [   3, 1, 4 ];
-   nb_lvl2{3} = [   1, 2, 5, 2 ];
-%  nb_lvl2{4} = [   1, 1  ];
-%  nb_lvl2{5} = [   4, 11  ];
 %
-   nb_blocks_lvl1 =size(nb_lvl2,2);
-   nb_lvl1 = zeros(1,nb_blocks_lvl1);
-   nb_blocks_lvl2 = zeros(1,nb_blocks_lvl1);
-   for i = 1:nb_blocks_lvl1,
-      nb_lvl1(i) = sum( nb_lvl2{i} );
-      nb_blocks_lvl2(i) = size(nb_lvl2{i},2);
-   end
-   n = sum(nb_lvl1);
+   m = 500;
+   n = 410;
+   log10KA = 4;
+%
+   mt = 410;
+   nb_lvl = [64, 32, 8, 2 ];
+%
+   n_lvl = size( nb_lvl, 2);
+%
    if ( m < n ) fprintf('m < n\n'); return; end
-%
-%  we are checking w03
-   mt =  11;
-%
    U = randn(m,n); [U,~]=qr(U,0);
    V = randn(n,n); [V,~]=qr(V,0);
    S = diag( 10.^( linspace( 0, -log10KA, n ) ) );
@@ -41,10 +26,11 @@
 %  [ A, T, Q ] = lila_geqrf_v05_w00_level1( m, n, 1, mt, A, T, Q );
 %  [ A, T, Q ] = lila_geqrf_v05_w01_level1( m, n, 1, mt, A, T, Q );
 %  [ A, T, Q ] = lila_geqrf_v05_w02_level1( m, n, 1, mt, A, T, Q );
-%  [ A, T, Q ] = lila_geqrf_v05_w03_level1( m, n, 1, mt, A, T, Q );
+  [ A, T, Q ] = lila_geqrf_v05_w03_level1( n_lvl, 1, nb_lvl, m, n, 1, mt, A, T, Q );
+%  [ A, T, Q ] = lila_geqrf_v05_w04_level1( m, n, 1, mt, A, T, Q );
 %
-   [ A, T ] = lila_geqrf_u05_w03_level1( m, n, 1, mt, A, T );
-   [ Q ] = lila_orgqrf_v05_w03( m, n, 1, mt, A, T, Q );
+%   [ A, T ] = lila_geqrf_u05_w03_level1( m, n, 1, mt, A, T );
+%   [ Q ] = lila_orgqrf_v05_w03( m, n, 1, mt, A, T, Q );
 %
    TT = lapack_larft( A );
    V = tril(A(1:m,1:n),-1)+eye(m,n);
