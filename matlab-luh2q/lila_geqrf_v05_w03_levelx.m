@@ -13,8 +13,8 @@
    if ( nb > n ) vb = n; else vb = nb; end;
 %
    if (i_lvl == n_lvl+1)
-%  [ A, T, Q ] = lila_geqr2_v05_w03( m, vb, i, mt, A, T, Q );
-   [ A, T, Q ] = lila_geqr2_v05_q00( m, vb, i, mt, A, T, Q );
+%  [ A, T, Q ] = lila_geqr2_v05_w03_a( m, vb, i, mt, A, T, Q );
+   [ A, T, Q ] = lila_geqr2_v05_w03_b( m, vb, i, mt, A, T, Q );
    else
    [ A, T, Q ] = lila_geqrf_v05_w03_levelx( n_lvl, i_lvl, nb_lvl, m, vb, i, mt, A, T, Q );
    end
@@ -31,8 +31,8 @@
    [ A ] = lila_ormqrf_v05_w03( m, vb, kb, i, ilo, mt, A, T );
 %
    if (i_lvl == n_lvl+1)
-%  [ A, T, Q ] = lila_geqr2_v05_w03( m, vb, ilo, mt, A, T, Q );
-   [ A, T, Q ] = lila_geqr2_v05_q00( m, vb, ilo, mt, A, T, Q );
+%  [ A, T, Q ] = lila_geqr2_v05_w03_a( m, vb, ilo, mt, A, T, Q );
+   [ A, T, Q ] = lila_geqr2_v05_w03_b( m, vb, ilo, mt, A, T, Q );
    else
    [ A, T, Q ] = lila_geqrf_v05_w03_levelx( n_lvl, i_lvl, nb_lvl, m, vb, ilo, mt, A, T, Q );
    end

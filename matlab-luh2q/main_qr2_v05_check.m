@@ -24,20 +24,16 @@
    T = randn(mt,n);
 %  T = zeros(mt,n);
 %
-   [ A, T, Q ] = lila_geqr2_v05_q00(m, nl, i, mt, A, T, Q);
+   [ A, T, Q ] = lila_geqr2_v05_w03_b(m, nl, i, mt, A, T, Q);
 %
    ilo = i;
    ihi = i+nl-1;
    ml = m-i+1;
 %
    R = triu(A(ilo:ihi,ilo:ihi));
-%  TT = lapack_larft( A(i:m,ilo:ihi) );  V = tril(A(i:m,ilo:ihi),-1)+eye(ml,nl);  HH = eye(ml,ml) - V * TT * V';
    fprintf('(1)');
    fprintf('       ||Q''Q - I|| = %e', norm(Q(i:m,ilo:ihi)'*Q(i:m,ilo:ihi) - eye(nl), 'fro'));
    fprintf('       ||A - Q*R|| = %e', norm(As(i:m,ilo:ihi) - Q(i:m,ilo:ihi)*R, 'fro'));
-%  fprintf('       ||H''*H-I|| = %e',norm(HH'*HH-eye(ml),'fro'))
-%  fprintf('       ||tril(H''*As)|| = %e',norm(tril(HH'*As(i:m,ilo:ihi),-1),'fro')/nrmA);
-%  fprintf('       ||triu(H''*As)-R|| = %e',norm(triu(HH'*As(i:m,ilo:ihi))-triu(A(i:m,ilo:ihi)),'fro')/nrmA);
    fprintf('\n');
 %
    Q = randn(m,n);
@@ -67,5 +63,3 @@
    fprintf('       ||tril(H''*As)|| = %e',norm(tril(R_(1:ml,1:nl),-1)/nrmA));
    fprintf('   ||triu(H''*As)-R|| = %e',norm((triu(R_(1:nl,1:nl))-R)/nrmA));
    fprintf('\n');
-
-

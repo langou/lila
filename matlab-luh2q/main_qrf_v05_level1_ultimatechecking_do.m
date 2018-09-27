@@ -1,5 +1,5 @@
 %
-function [ check ] = main_qrf_v05_manylevels_ultimatechecking_do( m, n, mt, log10KA  )
+function [ check ] = main_qrf_v05_level1_ultimatechecking_do( m, n, mt, log10KA  )
 %
    global nb_lvl1;
    global ii_lvl2;
@@ -38,6 +38,9 @@ function [ check ] = main_qrf_v05_manylevels_ultimatechecking_do( m, n, mt, log1
    R = triu(A(1:n,1:n));
    check(5) = norm(Q(1:m,1:n)'*Q(1:m,1:n) - eye(n), 'fro');
    check(6) = norm(As(1:m,1:n) - Q(1:m,1:n)*R(1:n,1:n), 'fro') / norm(As(1:m,1:n), 'fro');
+
+
+triu(H'*As)-triu(A)
 %
 
 end

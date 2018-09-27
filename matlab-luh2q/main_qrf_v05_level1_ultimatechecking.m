@@ -6,7 +6,7 @@
    threshold = 1e-12;
    extrarows_max = 1;
    mt_max = 50;
-   log10KA_max = 10;
+   log10KA_max = 1.50;
    nb_blocks_lvl1_max = 5;
    nb_blocks_lvl2_max = 6;
    sz_blocks_lvl3_max = 10;
@@ -44,7 +44,7 @@
 %
    fprintf(' %4d %4d %4d %4d',test,m,n,mt);
 %
-   [check] = main_qrf_v05_manylevels_ultimatechecking_do( m, n, mt, log10KA );
+   [check] = main_qrf_v05_level1_ultimatechecking_do( m, n, mt, log10KA );
 %
    fprintf(' %6.1e', check(1));
    fprintf(' %6.1e', check(2));

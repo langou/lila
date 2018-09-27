@@ -3,7 +3,7 @@
 %
    [ A ] = lapack_geqr2( m, n, i, A );   
 %
-%   [ T ] = lila_larft_v05_w00( m, n, i, mt, A, T );   
+   [ T ] = rand( 1, n );
 %
    [ Q ] = lila_orgqrf_v05_w00( m, n, i, mt, A, T, Q );
 %

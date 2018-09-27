@@ -33,7 +33,7 @@
 %
    [ A, T, Q ] = lila_geqrf_v05_w02_level2( m, nb(k), ilo(k), mt, A, T, Q );
 %
-   [ T ] = lila_larft_connect_v05_w02( m, nb(k), ilo(k), mt, A, T  );   
+   [ T ] = lila_larft_connect_v05_w02( m, nb(k), ilo(k), mt, A, T );  
 %
    [ Q ] = lila_ormqrbz_v05_w02( m, nb(k), ihi(k-1)-ilo(1)+1, ilo(1), ilo(k), mt, A, T, Q );
 %

@@ -21,13 +21,10 @@
    TT = lapack_larft( A );
    V = tril(A(1:m,1:n),-1)+eye(m,n);
    H = eye(m,m) - V * TT * V';
+   R = triu(A(1:n,1:n));
    fprintf('||H''*H-I|| = %d',norm(H'*H-eye(m),'fro'))
    fprintf('                 ||tril(H''*As)|| = %d',norm(tril(H'*As,-1),'fro')/norm(A,'fro'))
    fprintf('              ||triu(H''*As)-R|| = %d\n\n',norm(triu(H'*As)-triu(A),'fro')/norm(A,'fro'))
-   fprintf('||qr(As)-A|| = %d',norm(qr(As,0)-A,'fro')/norm(As,'fro'))
-   R = triu(A(1:n,1:n));
    fprintf('               ||Q''Q - I|| = %e', norm(Q(1:m,1:n)'*Q(1:m,1:n) - eye(n), 'fro'));
    fprintf('                  ||A - Q*R|| / || A || = %e\n\n', norm(As(1:m,1:n) - Q(1:m,1:n)*R(1:n,1:n), 'fro') / norm(As(1:m,1:n), 'fro'));
 %
-%
-%   [1:n;T]

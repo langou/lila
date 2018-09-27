@@ -24,14 +24,11 @@
 %
    Q = zeros(m,n);
    T = zeros(mt,n);
-%  [ A, T, Q ] = lila_geqrf_v05_w00_level1( m, n, 1, mt, A, T, Q );
-%  [ A, T, Q ] = lila_geqrf_v05_w01_level1( m, n, 1, mt, A, T, Q );
-%  [ A, T, Q ] = lila_geqrf_v05_w02_level1( m, n, 1, mt, A, T, Q );
-  [ A, T, Q ] = lila_geqrf_v05_w03_level1( n_lvl, 1, nb_lvl, m, n, 1, mt, A, T, Q );
-%  [ A, T, Q ] = lila_geqrf_v05_w04_level1( m, n, 1, mt, A, T, Q );
 %
-%   [ A, T ] = lila_geqrf_u05_w03_level1( m, n, 1, mt, A, T );
-%   [ Q ] = lila_orgqrf_v05_w03( m, n, 1, mt, A, T, Q );
+  [ A, T, Q ] = lila_geqrf_v05_w03_levelx( n_lvl, 1, nb_lvl, m, n, 1, mt, A, T, Q );
+%
+%  [ A, T ] = lila_geqrf_u05_w03_level1( m, n, 1, mt, A, T );
+%  [ Q ] = lila_orgqrf_v05_w03( m, n, 1, mt, A, T, Q );
 %
    TT = lapack_larft( A );
    V = tril(A(1:m,1:n),-1)+eye(m,n);
@@ -43,5 +40,3 @@
    R = triu(A(1:n,1:n));
    fprintf('               ||Q''Q - I|| = %e', norm(Q(1:m,1:n)'*Q(1:m,1:n) - eye(n), 'fro'));
    fprintf('                  ||A - Q*R|| / || A || = %e\n\n', norm(As(1:m,1:n) - Q(1:m,1:n)*R(1:n,1:n), 'fro') / norm(As(1:m,1:n), 'fro'));
-%
-%   [1:n;T]
