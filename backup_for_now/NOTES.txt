@@ -1,0 +1,105 @@
+
+Papers
+
+The key idea is to have a reprentation for the T matrix that is consistent at (and understood by) all levels.
+We want to do many-level blocking but need to choose one block size.
+Example: 
+ALGORITHMIC BLOCKING (MT) is 120
+USER BLOCKING is 10, 10, 10, 18, 19, 7, 5, etc.
+ARCHITECTURE BLOKCING is 2000, 400, 90, 32, 8
+
+
+
+
+* software paper on the new subroutines
+
+  - present the interface, design choices
+
+  - present the test suite
+
+  - present three ways to program the code
+
+    o one block of columns at a time
+
+    o many levels of blocking
+
+    o recursive code for QR factorization
+
+  - present also the cons and pros of the new approach with timing experiments
+
+  - comparison with state of the arts
+
+    o LAPACK
+
+      ^ it can be said that everything we have been doing can be done with LAPACK by rewriting the code
+
+      ^ since LAPACK recompute T at each call of each subrroutines, it is very easy for LAPACK to change the NB to whatever  
+
+      ^ coupling of the algorithmic block size, with the user block size
+
+    o internal blocking in PLASMA
+
+      ^ kind of a similar idea where there is two levels of blocking (NB and IB), however we ``connect`` the IB together
+        so that many NB are compatible. This is a key idea to enable ``many levels of blocking`` (as opposed to only two)
+        the facilty in PLASMA design is that the lowest level of block (IB) is MT.
+        we break this facility with our software
+        the main idea is that MT is not the lowest level of blocking, but the highest.
+        we can block above MT and below MT.
+
+    o recursive of paper of Gustavson
+
+      ^ the main structure is about the same
+
+      ^ we are adding the mt to limit the number of flops
+
+      ^ and we are able to break the recusion in three ways, four ways, etc. instead of limiting with a recursion that divides by 2
+
+      ^ for recursion, easy with mt=n, easy with mt=1, not obvious otherwise
+
+  - main feature of the new Householder QR fatorization suite
+
+    o controlled limit on the flops with mt
+
+    o we pass the T in all of our subroutines (as opposed to recompute it)
+
+    o compact WY T representation "that extends naturally" no matter where we work
+
+  - consequences of these features
+
+    o decoupling of the algorithmic block size, with the user block size
+
+    o we can block to a smaller size than MT and still have an MT blocking at the higher level
+
+    o we can do recursion with MT independent of the leaf recursion size (only possible before with MT=1 or MT=N)
+
+  - extensions (list of things we plan on doing, one day)
+
+    o 1D data distribution and with MPI
+
+    o MGS and the T matrix of MGS (for Stephen and Kasia)
+
+  - extensions (list of things we dream on doing but will not do)
+
+    o Given V, T1 and mt1 and a new mt2, give the corresponding T2 (reusing information in T1)
+
+    o RFP format for storage of the T matrix
+
+    o French and Wise explain how to do recursion in both dimension (columns and rows)
+      this means writing all these routines for TT
+
+* paper on Householder reconstruction
+
+  - code the Householder reconstruction algorithm of Demmel
+
+  - study the reconstruction quality as a function of the quality of Q + proof
+
+  - two applications
+
+    o use CholeskyQR to construct Q, then reconstruct to get V (and H and T), then apply V (block Gram-Schmidt process)
+
+    o write a ``better`` [Q1,R1] = qrinsert(Q,R,n+1,X,'col') subroutines where X is a block of vectors
+
+  - try to break other block Gram-Schmidt algorithm
+
+
+    
