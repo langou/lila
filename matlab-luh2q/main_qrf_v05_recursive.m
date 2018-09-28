@@ -16,7 +16,7 @@
 %
    Q = randn(m,n);
    T = zeros(mt,n);
-   [ A, T, Q ] = lila_geqrf_v05_recursive( m, n, 1, mt, A, T, Q );
+   [ A, T, Q ] = lila_geqrf_recursive( m, n, 1, mt, A, T, Q );
 %
    TT = lapack_larft( A );
    V = tril(A(1:m,1:n),-1)+eye(m,n);

@@ -38,8 +38,10 @@
       nb_lvl1(i) = sum( nb_lvl2{i} );
       nb_blocks_lvl2(i) = size(nb_lvl2{i},2);
    end
+%
    n = sum(nb_lvl1);
 %
+   m = n + ( ceil(rand(1)*(extrarows_max+1))-1 );
    m = n + ( ceil(rand(1)*(extrarows_max+1))-1 );
 %
    fprintf(' %4d %4d %4d %4d',test,m,n,mt);
