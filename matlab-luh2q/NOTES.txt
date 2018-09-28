@@ -101,5 +101,14 @@ ARCHITECTURE BLOKCING is 2000, 400, 90, 32, 8
 
   - try to break other block Gram-Schmidt algorithm
 
+* Things we did not do and could have done
+  - we do not have coded the IB blocking
+  - we do not have ORMQRF ( ) that can be applied to a block on the side, like A,IA,JA and B,IB,JB
+    this is a problem because B needs to be ``next`` to A. Which is not necessarily convenient
+    This is a pretty big code update
+  - we do not have routines to convert from one T representation to the other. Could be fun to write.
+  - 
+    
+
 
     
