@@ -33,7 +33,7 @@
 %
    [ A, T, Q ] = lila_geqrf_manylevels_level2_w01_flopsave( m, nb(k), ilo(k), mt, A, T, Q );
 %
-   [ Q ] = lila_ormqrbz_v05_w01( m, nb(k), ihi(k-1)-ilo(1)+1, ilo(1), ilo(k), mt, A, T, Q );
+   [ Q ] = lila_ormqrbz_v05_w01_flopsave( m, nb(k), ihi(k-1)-ilo(1)+1, ilo(1), ilo(k), mt, A, T, Q );
 %
    end
 %
