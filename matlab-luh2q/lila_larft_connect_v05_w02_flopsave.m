@@ -17,7 +17,7 @@
     ldt = -1;
 %
     T(1:i-1,i:i+n-1) = A(i:i+n-1,1:i-1)';
-    [ T ] = blas_trmm ( 'R', 'L', 'N', 'U', i-1, n, (+1.0e+00), A, i, i, ldt, T, 1, i, ldt );
+    [ T ] = blas_trmm ( 'R', 'L', 'N', 'U', i-1, n, (+1.0e+00), A, i, i, lda, T, 1, i, ldt );
     [ T ] = blas_gemm ( 'T', 'N', i-1, n, m-n-i+1, (+1.0e+00), A, i+n, 1, lda, A, i+n, i, lda, (+1.0e+00), T, 1, i, ldt );
     [ T ] = blas_trmm ( 'L', 'U', 'N', 'N', i-1, n, (-1.0e+00), T, 1, 1, ldt, T, 1, i, ldt );
     [ T ] = blas_trmm ( 'R', 'U', 'N', 'N', i-1, n, (+1.0e+00), T, i, i, ldt, T, 1, i, ldt );

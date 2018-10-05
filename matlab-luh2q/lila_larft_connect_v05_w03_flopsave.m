@@ -24,16 +24,9 @@
     ldt = -1;
 %
    T(1:itlo-1,jtlo:jthi) = A(jtlo:jthi,jtlo-itlo+1:jtlo-1)';
-   [ T ] = blas_trmm ( 'R', 'L', 'N', 'U', itlo-1, vb, (+1.0e+00), A, jtlo, jtlo-itlo+1, ldt, T, 1, jtlo, ldt );
+   [ T ] = blas_trmm ( 'R', 'L', 'N', 'U', itlo-1, vb, (+1.0e+00), A, jtlo, jtlo, ldt, T, 1, jtlo, ldt );
    [ T ] = blas_gemm ( 'T', 'N', itlo-1, vb, m-jthi, (+1.0e+00), A, jthi+1, jtlo-(itlo)+1, lda, A, jthi+1, jtlo, lda, (+1.0e+00), T, 1, jtlo, ldt );
-%%%%%%
    [ T ] = blas_trmm ( 'L', 'U', 'N', 'N', itlo-1, vb, (-1.0e+00), T, 1, jtlo-(itlo)+1, ldt, T, 1, jtlo, ldt );
-%  T(1:itlo-1,jtlo:jthi) = - T(1:itlo-1,jtlo-(itlo)+1:jtlo-1) * T(1:itlo-1,jtlo:jthi) ;
-%
    [ T ] = blas_trmm ( 'R', 'U', 'N', 'N', itlo-1, vb, (+1.0e+00), T, itlo, jtlo, ldt, T, 1, jtlo, ldt );
-%     T(1:itlo-1,jtlo:jthi) = T(1:itlo-1,jtlo:jthi) * T(itlo:ithi,jtlo:jthi);
-%%%%%%
-
-
 
    end

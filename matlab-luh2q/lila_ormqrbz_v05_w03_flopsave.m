@@ -48,21 +48,15 @@
 %        work(1:vb,1:n) = T(itlo:ithi,jtlo:jthi) * work(1:vb,1:n);
 %        work(1:ml,1:n) = (tril(A(ialo:iahi,jalo:jahi), -1) + eye(ml,vb)) * work(1:vb,1:n);
 %        Q(iblo:ibhi,jblo:jbhi) = Q(iblo:ibhi,jblo:jbhi) - work(1:ml,1:n);
-%%%%%%
-% for reference
-%%%%%%
+%
 %        work = zeros(ml,n);
 %        work(1:vb,1:n) = (tril(A(ialo:jahi,jalo:jahi), -1) + eye(vb,vb))' * Q(iblo:iblo+vb-1,jblo:jbhi);
 %        work(1:vb,1:n) = A(jahi+1:iahi,jalo:jahi)' * Q(iblo+vb:ibhi,jblo:jbhi);
 %        work(1:vb,1:n) = T(itlo:ithi,jtlo:jthi) * work(1:vb,1:n);
-%%%%%%%
-%  Stuck trying to break this one apart
 %        work(1:ml,1:n) = (tril(A(ialo:iahi,jalo:jahi), -1) + eye(ml,vb)) * work(1:vb,1:n);
 %        work(1:vb,1:vb) = (tril(A(ialo:ialo+vb-1,jalo:jahi), -1) + eye(vb,vb)) * work(1:vb,1:vb);
 %        work(vb+1:ml,vb+1:n) = A(ialo+vb:iahi,jalo:jahi) * work(1:vb,vb+1:n);
-%%%%%%%
 %        Q(iblo:ibhi,jblo:jbhi) = Q(iblo:ibhi,jblo:jbhi) - work(1:ml,1:n);
-%%%%%
 %
         lda = -1;
         ldb = -1;

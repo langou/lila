@@ -65,13 +65,9 @@
          ldwork = -1;
 %
         work = A(iblo:iblo+vb-1,jblo:jbhi);
-        [ work ] = blas_trmm( 'L', 'L', 'T', 'U', vb, n, (+1.0e00), A, jalo, -1, lda, work, 1, 1, ldwork );
+        [ work ] = blas_trmm( 'L', 'L', 'T', 'U', vb, n, (+1.0e00), A, jalo, jalo, lda, work, 1, 1, ldwork );
         [ work ] = blas_gemm( 'T', 'N', vb, n, m-jahi, (+1.0e00), A, jahi+1, jalo, lda, A, iblo+vb, jblo, lda, (+1.00e00), work, 1, 1, ldwork );
-
-%       I had to change something in blas_trmm to get this to work ....
-%         work(1:vb,1:n)              =  T(itlo:ithi,jtlo:jthi)' * work(1:vb,1:n);
         [ work ] = blas_trmm( 'L', 'U', 'T', 'N', vb, n, (+1.0e00), T, itlo, jtlo, ldt, work, 1, 1, ldwork );
-
         [ A ] = blas_gemm( 'N', 'N', m-vb-iblo+1, n, vb, (-1.0e00), A, jahi+1, jalo, lda, work, 1, 1, ldwork, (+1.00e00), A, iblo+vb, jblo, lda );
         [ work ] = blas_trmm( 'L', 'L', 'N', 'U', vb, n, (-1.0e00), A, ialo, jalo, lda, work, 1, 1, ldwork );
         A(iblo:iblo+vb-1,jblo:jbhi) =  A(iblo:iblo+vb-1,jblo:jbhi) + work;
