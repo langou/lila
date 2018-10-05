@@ -15,10 +15,10 @@
 %        nb_lvl2{i}(1,j) = 6;
 %     end
 %  end
-   nb_lvl2{1} = [ 4 3 1 ];
-   nb_lvl2{2} = [ 6 5 7 ];
-   nb_lvl2{3} = [ 6 10 4 2 ];
-   mt = -1;
+   nb_lvl2{1} = [ 4 3 11 4 ];
+   nb_lvl2{2} = [ 9 5 7 5 8 ];
+   nb_lvl2{3} = [ 6 10 3 4 2 ];
+   mt = 10;
 %
    nb_lvl1 = zeros(1,nb_blocks_lvl1);
    nb_blocks_lvl2 = zeros(1,nb_blocks_lvl1);
@@ -28,7 +28,7 @@
    end
    n = sum(nb_lvl1);
 %
-   m = 60;
+   m = 85;
 %
    U = randn(m,n); [U,~]=qr(U,0);
    V = randn(n,n); [V,~]=qr(V,0);
@@ -40,9 +40,9 @@
    Q = zeros(m,n);
    T = zeros(mt,n);
 %  [ A, T, Q ] = lila_geqrf_manylevels_level1_w00( m, n, 1, mt, A, T, Q );
-   [ A, T, Q ] = lila_geqrf_manylevels_level1_w01_flopsave( m, n, 1, mt, A, T, Q );
+%   [ A, T, Q ] = lila_geqrf_manylevels_level1_w01_flopsave( m, n, 1, mt, A, T, Q );
 %  [ A, T, Q ] = lila_geqrf_manylevels_level1_w02_flopsave( m, n, 1, mt, A, T, Q );
-%  [ A, T, Q ] = lila_geqrf_manylevels_level1_w03( m, n, 1, mt, A, T, Q );
+  [ A, T, Q ] = lila_geqrf_manylevels_level1_w03_flopsave( m, n, 1, mt, A, T, Q );
 %
 %
    TT = lapack_larft( A );

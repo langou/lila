@@ -38,11 +38,16 @@
 %   A(ii+1:m,j:j+n-1) = A(ii+1:m,j:j+n-1) - [ A(ii+1:m,ii) ] * work(1,1:n);
 %   end
 %
+   lda = -1;
+   ldwork = -1;
     for ii = i:i+k-1, 
     work(1,1:n) = A(ii,j:j+n-1);
     work(1,1:n) = ( work(1,1:n)' + A(ii+1:m,j:j+n-1)' * ( A(ii+1:m,ii) ) )';
+%    [ work ] = blas_gemm( 'T', 'N', 1, n, m, (+1.0e+00), A, ii+1, j, lda, A, ii+1, ii, lda, (+1.0e+00), work, 1, 1, ldwork )
     work(1,1:n) = T(1,ii) * work(1,1:n);
     A(ii,j:j+n-1) = A(ii,j:j+n-1) - work(1,1:n);
-    A(ii+1:m,j:j+n-1) = A(ii+1:m,j:j+n-1) - [ A(ii+1:m,ii) ] * work(1,1:n);
+%    A(ii+1:m,j:j+n-1) = A(ii+1:m,j:j+n-1) - [ A(ii+1:m,ii) ] * work(1,1:n);
+    [ A ] = blas_gemm( 'N', 'N', m-ii, n, 1, (-1.0e+00), A, ii+1, ii, lda, work, 1, 1, ldwork, (+1.0e+00), A, ii+1, j, lda );
+
     end
 %

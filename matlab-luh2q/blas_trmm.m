@@ -15,11 +15,14 @@ function [ B ] = blas_trmm ( side, uplo, transa, diag, m, n, alpha, A, ia, ja, l
    case 'LLNU'
       B(ib:ib+m-1,jb:jb+n-1) = alpha * ((tril(A(ia:ia+m-1,ia:ia+m-1),-1)+eye(m,m))*B(ib:ib+m-1,jb:jb+n-1));
    case 'LUTN'
-      B(ib:ib+m-1,jb:jb+n-1) = alpha * (triu(A(ia:ia+m-1,ia:ia+m-1)))'*B(ib:ib+m-1,jb:jb+n-1);
+%      B(ib:ib+m-1,jb:jb+n-1) = alpha * (triu(A(ia:ia+m-1,ia:ia+m-1)))'*B(ib:ib+m-1,jb:jb+n-1);
+      B(ib:ib+m-1,jb:jb+n-1) = alpha * (triu(A(ia:ia+m-1,ja:ja+m-1)))'*B(ib:ib+m-1,jb:jb+n-1);
    case 'LUNN'
-      B(ib:ib+m-1,jb:jb+n-1) = alpha * (triu(A(ia:ia+m-1,ia:ia+m-1)))*B(ib:ib+m-1,jb:jb+n-1);
+%      B(ib:ib+m-1,jb:jb+n-1) = alpha * (triu(A(ia:ia+m-1,ia:ia+m-1)))*B(ib:ib+m-1,jb:jb+n-1);
+      B(ib:ib+m-1,jb:jb+n-1) = alpha * (triu(A(ia:ia+m-1,ja:ja+m-1)))*B(ib:ib+m-1,jb:jb+n-1);
    case 'RUNN'
-      B(ib:ib+m-1,jb:jb+n-1) = alpha * B(ib:ib+m-1,jb:jb+n-1) * (triu(A(ia:ia+n-1,ia:ia+n-1)));
+%      B(ib:ib+m-1,jb:jb+n-1) = alpha * B(ib:ib+m-1,jb:jb+n-1) * (triu(A(ia:ia+n-1,ia:ia+n-1)));
+      B(ib:ib+m-1,jb:jb+n-1) = alpha * B(ib:ib+m-1,jb:jb+n-1) * (triu(A(ia:ia+n-1,ja:ja+n-1)));
    case 'RLNU'
       B(ib:ib+m-1,jb:jb+n-1) = alpha * B(ib:ib+m-1,jb:jb+n-1) * (tril(A(ia:ia+n-1,ia:ia+n-1),-1)+eye(n,n));
    otherwise

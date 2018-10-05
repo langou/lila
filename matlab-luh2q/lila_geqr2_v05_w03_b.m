@@ -17,6 +17,7 @@
 %
 %     Householder reconstruction
 %
+   lda = -1;
    A(i:m,i:i+n-1) = Q(i:m,i:i+n-1); 
    D = -eye(n,n);
 %
@@ -30,7 +31,8 @@
       end
       A(i+k-1,i+k-1) = 1 + A(i+k-1,i+k-1);
       A(i+k:m,i+k-1) = A(i+k:m,i+k-1) / A(i+k-1,i+k-1);
-      A(i+k:m,i+k:i+n-1) = A(i+k:m,i+k:i+n-1) - A(i+k:m,i+k-1) * A(i+k-1,i+k:i+n-1);
+%      A(i+k:m,i+k:i+n-1) = A(i+k:m,i+k:i+n-1) - A(i+k:m,i+k-1) * A(i+k-1,i+k:i+n-1);
+      [ A ] = blas_gemm( 'N', 'N', m-i-k+1, n-k, 1, (-1.00e00), A, i+k, i+k-1, lda, A, i+k-1, i+k, lda, (+1.00e00), A, i+k, i+k, lda );
    end
 %
 %    Construction of T with the structure of mt

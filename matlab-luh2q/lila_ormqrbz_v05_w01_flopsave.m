@@ -35,10 +35,13 @@
 %        Q(ii+1:m,j:j+n-1) = Q(ii+1:m,j:j+n-1) - [ A(ii+1:m,ii) ] * work(1,1:n);
 %     end
 %
+      lda = -1;
+      ldq = -1;
       for ii = i+k-1:-1:i,
          Q(ii,j:j+n-1) = A(ii+1:m,ii)' * Q(ii+1:m,j:j+n-1);
          Q(ii,j:j+n-1) = - T(1,ii) * Q(ii,j:j+n-1);
-         Q(ii+1:m,j:j+n-1) = Q(ii+1:m,j:j+n-1) + A(ii+1:m,ii) * Q(ii,j:j+n-1);
+%         Q(ii+1:m,j:j+n-1) = Q(ii+1:m,j:j+n-1) + A(ii+1:m,ii) * Q(ii,j:j+n-1);
+         [ Q ] = blas_gemm( 'N', 'N', m-ii, n, 1, (+1.0e00), A, ii+1, ii, lda, Q, ii, j, ldq, (+1.0e00), Q, ii+1, j, ldq );
       end
 %
    end

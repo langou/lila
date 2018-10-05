@@ -2,8 +2,8 @@
    fprintf('\n');
    clear
 %
-   m = 31;
-   n =  21;
+   m = 81;
+   n =  51;
    log10KA = 1.5;
    i = 3;
    nl = 13;
@@ -21,10 +21,11 @@
    nrmA = norm(As,'fro');
 %
    Q = randn(m,n);
-   T = randn(mt,n);
-%  T = zeros(mt,n);
+%   T = randn(mt,n);
+   T = zeros(mt,n);
 %
-   [ A, T, Q ] = lila_geqr2_v05_w03_b(m, nl, i, mt, A, T, Q);
+%   [ A, T, Q ] = lila_geqr2_v05_w03_b(m, nl, i, mt, A, T, Q);
+   [ A, T, Q ] = lila_qr2_recursive(m, nl, i, mt, A, T, Q);
 %
    ilo = i;
    ihi = i+nl-1;
