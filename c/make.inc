@@ -1,0 +1,9 @@
+LOADER = gfortran
+CC = gcc
+OPTS = -Wall
+INCLUDECBLAS = /Users/langou/Documents/repositories/lapack.git/CBLAS/include/
+INCLUDELAPACKE = /Users/langou/Documents/repositories/lapack.git/LAPACKE/include/
+LIBLAPACKE = /Users/langou/Documents/repositories/lapack.git/liblapacke.a
+LIBLAPACK = /Users/langou/Documents/repositories/lapack.git/liblapack.a
+LIBCBLAS = /Users/langou/Documents/repositories/lapack.git/libcblas.a
+LIBBLAS = /Users/langou/Documents/repositories/lapack.git/librefblas.a

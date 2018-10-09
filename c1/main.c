@@ -1,19 +1,14 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/time.h>
-#include "cblas.h"
-#include "lapacke.h"
-
-extern int lila_dge_qr_wq_vr0( int m, int n, int i, double *A, int lda, double *T, int ldt, double *Q, int ldq );
+#include "lila.h"
 
 int main(int argc, char ** argv) {
 
-	int i, j, info, lda, ldq, ldt, m, n;
+	int i, j, info, lda, ldq, ldt, m, n, mt;
 	double *A, *Q, *As, *T, *work=NULL;
 	double normA, normR;
 	double elapsed_refL, perform_refL;
 	struct timeval tp;
+	int n_lvl;
+	int *nb_lvl;
 
 	srand(0);
 
@@ -21,6 +16,11 @@ int main(int argc, char ** argv) {
     	n = 15;
 	lda = -1;
 	ldq = -1;
+
+	mt = -1;
+	n_lvl = 1;
+	nb_lvl = (int *) malloc(n_lvl * sizeof(int));
+	nb_lvl[0] = 10;
 
 	for(i = 1; i < argc; i++){
 		if( strcmp( *(argv + i), "-ldq") == 0) {
@@ -39,6 +39,18 @@ int main(int argc, char ** argv) {
 			n  = atoi( *(argv + i + 1) );
 			i++;
 		}
+		if( strcmp( *(argv + i), "-n_lvl") == 0) {
+			n_lvl  = atoi( *(argv + i + 1) );
+			i++;
+			free( nb_lvl );
+			nb_lvl = (int *) malloc(n_lvl * sizeof(int));
+ 			for(j = 0; j < n_lvl; j++, i++) nb_lvl[j] = atoi( *(argv + i + 1) );
+		}
+		if( strcmp( *(argv + i), "-mt") == 0) {
+			mt  = atoi( *(argv + i + 1) );
+			i++;
+		}
+
 	}
 
 	if( lda < 0 ) lda = m;
@@ -50,6 +62,11 @@ int main(int argc, char ** argv) {
 	printf("lda = %4d, ",lda);
 	printf("ldq = %4d, ",ldq);
 	printf("\n");
+	printf("n_lvl = %4d ( ",n_lvl);
+ 	for(j = 0; j < n_lvl; j++) printf(" %4d ",nb_lvl[j]);
+	printf(")");
+	printf("\n");
+
 
 	A = (double *) malloc(lda * n * sizeof(double));
 	As = (double *) malloc(lda * n * sizeof(double));
@@ -69,8 +86,19 @@ int main(int argc, char ** argv) {
 	gettimeofday(&tp, NULL);
 	elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-//	lila_dge_qr_wq_vL0( m, n, 0, A, lda, T, ldt, Q, ldq );
-	lila_dge_qr_wq_vr0( m, n, 0, A, lda, T, ldt, Q, ldq );
+//	lila_dge_qr_wq_vL0( m, n, 0, mt, A, lda, T, ldt, Q, ldq );
+//	lila_dge_qr_wq_vr0( m, n, 0, mt, A, lda, T, ldt, Q, ldq );
+//	lila_dge_qr_wq_manylevels_vr0( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, Q, ldq );
+
+	int lwork;
+	lwork = 19200;
+	work = (double *) malloc( 19200 * sizeof(double));
+
+//lila_dge_qr_wq_manylevels_INTERCEPT_level1_vr0( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+
+lila_dge_qr_wq_levelx_w00( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+
+	free(work);
 
 	gettimeofday(&tp, NULL);
 	elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -85,6 +113,7 @@ int main(int argc, char ** argv) {
 
 	printf("LAPACK        :: time = %f   GFlop/sec = %f   res = %e \n", elapsed_refL, perform_refL, normR / normA );
 
+	free( nb_lvl );
 	free( T );
 	free( Q );
 	free( A );
