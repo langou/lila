@@ -1,0 +1,10 @@
+#include <Accelerate/Accelerate.h>
+
+/usr/local/bin/gcc -framework Accelerate xxx.c 
+
+
+Gustavson proposes to do ( A, T ). We propose ( A, T and Q ).
+
+
+change interface for A,ia,ja, B,ib,jb
+
