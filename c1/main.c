@@ -67,7 +67,6 @@ int main(int argc, char ** argv) {
 	printf(")");
 	printf("\n");
 
-
 	A = (double *) malloc(lda * n * sizeof(double));
 	As = (double *) malloc(lda * n * sizeof(double));
 	Q = (double *) malloc(ldq * n * sizeof(double));
@@ -96,7 +95,8 @@ int main(int argc, char ** argv) {
 
 //lila_dge_qr_wq_manylevels_INTERCEPT_level1_vr0( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 
-lila_dge_qr_wq_levelx_w00( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+//lila_dge_qr_wq_levelx_w00( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+lila_dge_qr_wq_levelx_w02( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 
 	free(work);
 
@@ -117,6 +117,7 @@ lila_dge_qr_wq_levelx_w00( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, Q, ldq
 	free( T );
 	free( Q );
 	free( A );
+	free( As );
 
 	return 0;
 }
