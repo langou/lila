@@ -9,11 +9,11 @@
    R(1:n,1:n) = chol( R(1:n,1:n), 'upper' ); 
    Q(i:m,i:i+n-1) = Q(i:m,i:i+n-1) / R(1:n,1:n);
 %
-   R2(1:n,1:n) = Q(i:m,i:i+n-1)'*Q(i:m,i:i+n-1); 
-   R2(1:n,1:n) = chol( R2(1:n,1:n), 'upper' ); 
-   Q(i:m,i:i+n-1) = Q(i:m,i:i+n-1) / R2(1:n,1:n);
-   R(1:n,1:n) = R2(1:n,1:n) * R(1:n,1:n);
-   clear R2
+%  R2(1:n,1:n) = Q(i:m,i:i+n-1)'*Q(i:m,i:i+n-1); 
+%  R2(1:n,1:n) = chol( R2(1:n,1:n), 'upper' ); 
+%  Q(i:m,i:i+n-1) = Q(i:m,i:i+n-1) / R2(1:n,1:n);
+%  R(1:n,1:n) = R2(1:n,1:n) * R(1:n,1:n);
+%  clear R2
 %
 %     Householder reconstruction
 %
