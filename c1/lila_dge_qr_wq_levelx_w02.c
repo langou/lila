@@ -37,7 +37,7 @@ int lila_dge_qr_wq_levelx_w02( int n_lvl, int i_lvl, int *nb_lvl, int m, int n, 
 		info = lila_dge_qr_wq_levelx_w02( n_lvl, i_lvl+1, nb_lvl, m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 	}
 
-	lila_dge_qr_larft_connect_w02( m, k, j, mt, A, lda, T, ldt );
+	lila_dge_qr_larft_connect_w02( m, vb, j, mt, A, lda, T, ldt );
 
 	info = lila_dge_qr_ormqrbz_w02( m, vb, k, i, j, mt, A, lda, Q, ldq, T, ldt, work, lwork );
  

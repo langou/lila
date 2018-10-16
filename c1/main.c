@@ -17,10 +17,13 @@ int main(int argc, char ** argv) {
 	lda = -1;
 	ldq = -1;
 
-	mt = -1;
+	mt = 10;
 	n_lvl = 1;
 	nb_lvl = (int *) malloc(n_lvl * sizeof(int));
 	nb_lvl[0] = 10;
+
+	double *TTT;
+	int llldddttt;
 
 	for(i = 1; i < argc; i++){
 		if( strcmp( *(argv + i), "-ldq") == 0) {
@@ -72,6 +75,10 @@ int main(int argc, char ** argv) {
 	Q = (double *) malloc(ldq * n * sizeof(double));
 	T = (double *) malloc(ldt * n * sizeof(double));
 
+//	llldddttt = ldt;	
+	llldddttt = mt;	
+	TTT = (double *) malloc(llldddttt * n * sizeof(double));
+
  	for(i = 0; i < lda * n; i++)
 		*(A + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
 
@@ -97,7 +104,10 @@ int main(int argc, char ** argv) {
 
 //lila_dge_qr_wq_levelx_w00( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 //lila_dge_qr_wq_levelx_w02( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork );
-lila_dge_qr_wq_levelx_w03( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+//lila_dge_qr_wq_levelx_w03( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+lila_dge_qr_wq_levelx_w03( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, TTT, llldddttt, Q, ldq, work, lwork );
+
+free(TTT);
 
 	free(work);
 

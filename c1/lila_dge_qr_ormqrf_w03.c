@@ -1,6 +1,6 @@
 #include "lila.h"
 
-int lila_dge_qr_ormqrf_w03( int m, int n, int k, int i, int j, int mt, double *A, int lda, double *T, int ldt, double *work, int lwork ){
+int lila_dge_qr_ormqrf_w03( int m, int n, int k, int i, int j, int mt, double *A, int lda, double *T, int ldt, double *TTT, int llldddttt, double *work, int lwork ){
 
 	double *Aii, *Tii, *Aij;
 	int ml, vb;
@@ -19,6 +19,9 @@ int lila_dge_qr_ormqrf_w03( int m, int n, int k, int i, int j, int mt, double *A
 	Aij = A + i + j*lda;
 	Tii = T + i + i*ldt;
 
+	double *TTTii;
+	TTTii = TTT + (i % mt) + i*ldt;
+
 	ldwork = mt;
 
 	ml = m - i;
@@ -29,25 +32,43 @@ int lila_dge_qr_ormqrf_w03( int m, int n, int k, int i, int j, int mt, double *A
 
 	while( not_done == 1 ){
 
-		printf("i=%d, mt=%d   (i %% mt)= %d, vb = mt - (i %% mt ) = %d, jalo = %d, j = %d\n",i,mt,(i % mt),vb,jalo,j);
-
 		for( jjj = 0; jjj < n; jjj++ ){
 			for( iii = 0; iii < vb; iii++ ){
 				work[ iii + jjj * ldwork ] = Aij[ iii + jjj * lda  ];
 			}
 		}
 
- 		cblas_dtrmm( CblasColMajor, CblasLeft, CblasLower, CblasTrans, CblasUnit, vb, n, (1.0e+00), Aii, lda, work, ldwork );
- 		cblas_dgemm( CblasColMajor, CblasTrans, CblasNoTrans, vb, n, ml-vb, (1.0e+00), Aii+vb, lda, Aij+vb, lda, (1.0e+00), work, ldwork );
+		cblas_dtrmm( CblasColMajor, CblasLeft, CblasLower, CblasTrans, CblasUnit, vb, n, (1.0e+00), Aii, lda, work, ldwork );
+		cblas_dgemm( CblasColMajor, CblasTrans, CblasNoTrans, vb, n, ml-vb, (1.0e+00), Aii+vb, lda, Aij+vb, lda, (1.0e+00), work, ldwork );
 		cblas_dtrmm( CblasColMajor, CblasLeft, CblasUpper, CblasTrans, CblasNonUnit, vb, n, (1.0e+00), Tii, ldt, work, ldwork );
 		cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans, ml-vb, n, vb, (-1.0e+00), Aii+vb, lda, work, ldwork, (1.0e+00), Aij+vb, lda );
 		cblas_dtrmm( CblasColMajor, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, vb, n, (+1.0e+00), Aii, lda, work, ldwork );
+
 
 		for( jjj = 0; jjj < n; jjj++ ){
 			for( iii = 0; iii < vb; iii++ ){
 				Aij[ iii + jjj * lda  ] -= work[ iii + jjj * ldwork ];
 			}
 		}
+
+
+//		int info;
+//		int jjj;
+//		double *V;
+//		int vl;
+//		double *tau;
+//		double normV_square;
+//		tau = (double *) malloc( vb * sizeof(double));
+//		for(jjj = 0, vl=ml-1, V = Aii+1; jjj < vb; jjj++,vl--,V+=(lda+1) ){
+//			normV_square = ( 1.0e+00 ) + cblas_ddot( vl, V, 1, V, 1 );
+//			tau[jjj] = ( 2.0e+00 ) / normV_square ;
+//		}
+//		info = LAPACKE_dlarft_work ( LAPACK_COL_MAJOR, 'F', 'C', ml, vb, Aii, lda, tau, Tii, ldt);
+
+//		ldwork = n;
+//		info = LAPACKE_dlarfb_work ( LAPACK_COL_MAJOR, 'L', 'T', 'F', 'C', ml, n, vb, Aii, lda, Tii, ldt, Aij, lda, work, ldwork );
+
+//		free( tau );
 
 		if ( jj + vb - 1 == k ) {
 
@@ -59,17 +80,17 @@ int lila_dge_qr_ormqrf_w03( int m, int n, int k, int i, int j, int mt, double *A
 
 		} else {
 
-			ml = ml-vb;
+			ml -= vb;
 
-			jalo = jalo+vb;
+			jj += vb;
 
-			jj = jj + vb;
- 
-			if ( ( jj + mt - 1 ) <= k ) vb = mt; else vb = k-jj+1;
+			Aii += vb * ( lda + 1 );
+			Aij += vb;
+			Tii += vb * ( ldt + 1 );
 
-			Aij = A + jalo + jalo*lda;
-			Aij = A + jalo + j*lda;
-			Tii = T + jalo + jalo*ldt;
+			TTTii += vb * ldt ;
+
+			if ( ( jj + mt - 1 ) <= k ) vb = mt; else vb = k - jj + 1;
 
 		}
 
