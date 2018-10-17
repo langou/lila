@@ -39,8 +39,9 @@ int lila_dge_qr_wq_levelx_w03( int n_lvl, int i_lvl, int *nb_lvl, int m, int n, 
 
 	lila_dge_qr_larft_connect_w02( m, vb, j, mt, A, lda, T, ldt );
 
-	//lila_dge_qr_larft_connect_w03( m, vb, j, mt, A, lda, TTT, llldddttt );
+	lila_dge_qr_larft_connect_w03( m, vb, j, mt, A, lda, TTT, llldddttt );
 
+/*
 	int i1, j1;
 	for( i1 = 0; i1 < j+vb ; i1++){
 	for( j1 = 0; j1 < j+vb ; j1++){
@@ -69,9 +70,13 @@ int lila_dge_qr_wq_levelx_w03( int n_lvl, int i_lvl, int *nb_lvl, int m, int n, 
 
 	//printf(" %10.7f", TTT[ 0 ] );
 	//printf("\n");
+*/
 
 
 	info = lila_dge_qr_ormqrbz_w00( m, vb, k, i, j, mt, A, lda, Q, ldq, T, ldt, work, lwork );
+
+//	info = lila_dge_qr_ormqrbz_w03( m, vb, k, i, j, mt, A, lda, Q, ldq, T, ldt, work, lwork );
+
  
 	k += vb;
 	j += vb;

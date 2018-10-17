@@ -1,0 +1,58 @@
+#include "lila.h"
+
+int lila_dge_qr_ormqrbz_w03( int m, int n, int k, int i, int j, int mt, double *A, int lda, double *Q, int ldq, double *T, int ldt, double *work, int lwork ){
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	return 0;
+}
+
+
+/*
+	double *Aii, *Qij;
+	int ml;
+	double *Tii;
+	int ldwork;
+	
+	Aii = A + i + i*lda;
+	Qij = Q + i + j*ldq;
+	ml = m - i;
+
+	ldwork = k;
+
+	Tii = T + i + i*ldt;
+
+ 	cblas_dgemm( CblasColMajor, CblasTrans, CblasNoTrans, k, n, m-k-i, (1.0e+00), Aii+k, lda, Qij+k, lda, (0.0e+00), work, ldwork );
+
+	cblas_dtrmm( CblasColMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, k, n, (1.0e+00), Tii, ldt, work, ldwork );
+
+	LAPACKE_dlacpy( LAPACK_COL_MAJOR, 'A', k, n, work, ldwork, Qij, ldq );
+
+	cblas_dtrmm( CblasColMajor, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, k, n, (-1.0e+00), Aii, lda, Qij, ldq );
+
+	cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans, m-k-i, n, k, (-1.0e+00), Aii+k, lda, work, ldwork, (1.0e+00), Qij+k, ldq );
+
+	return 0;
+
+*/
