@@ -2,45 +2,45 @@
 
 int lila_dlarft_w03( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *tau ){
 
-	double *Tij, *Aii;
+	double *Tki, *Aii;
+	double *T0j, *Ajj;
 	int vb, info;
-	int jtlo, ml;
+	int k, j, ml;
 
-	jtlo = i;
+	k = i % mt;
 
-	Tij = T + (i%mt) + i*ldt;
+	Tki = T + k + i*ldt;
 	Aii = A + i + i*lda;
 
 	ml = m - i;
 
-	vb = mt - (i%mt);
-	if ( vb > n ) vb = n;
+	vb = mt - k; if ( vb > n ) vb = n;
 
-	info = LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', ml, vb, Aii, lda, tau, Tij, ldt);
+	info = LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', ml, vb, Aii, lda, tau, Tki, ldt);
 
-	jtlo += vb;
+	j = i + vb;
 
-	Aii += ( vb*(1+lda) ) ;
-	Tij = T + jtlo*ldt;
+	Ajj = A + j + j*lda;
+	T0j = T + j*ldt;
 	tau += vb;
 
 	ml -= vb;
 
-	if( jtlo+mt >= i+n ) vb = n - ( jtlo - i ); else vb = mt;
+	if( j + mt >= i + n ) vb = n - ( j - i ); else vb = mt;
 
 	while( vb != 0 ){
 
-		info = LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', ml, vb, Aii, lda, tau, Tij, ldt);
+		info = LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', ml, vb, Ajj, lda, tau, T0j, ldt);
 		
-		jtlo += vb;
+		j += vb;
 
-		Aii += ( vb*(1+lda) ) ;
-		Tij += ( vb*ldt );
+		Ajj += ( vb + vb * lda ) ;
+		T0j += ( vb*ldt );
 		tau += vb;
 
 		ml -= vb;
 
-		if( jtlo+mt >= i+n ) vb = n - ( jtlo - i ); else vb = mt;
+		if( j + mt >= i + n ) vb = n - ( j - i ); else vb = mt;
 
 	}
 
