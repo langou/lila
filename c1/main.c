@@ -12,12 +12,12 @@ int main(int argc, char ** argv) {
 
 	srand(0);
 
-    	m = 20;
-    	n = 15;
+    	m = 30;
+    	n = 17;
 	lda = -1;
 	ldq = -1;
 
-	mt = 10;
+	mt = 9;
 	n_lvl = 1;
 	nb_lvl = (int *) malloc(n_lvl * sizeof(int));
 	nb_lvl[0] = 10;
@@ -104,9 +104,12 @@ int main(int argc, char ** argv) {
 //lila_dge_qr_wq_manylevels_INTERCEPT_level1_vr0( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 
 //lila_dge_qr_wq_levelx_w00( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork );
-lila_dge_qr_wq_levelx_w02( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+//lila_dge_qr_wq_levelx_w02( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 //lila_dge_qr_wq_levelx_w03( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 //lila_dge_qr_wq_levelx_w03( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, TTT, llldddttt, Q, ldq, work, lwork );
+
+lila_dgeqr2_recursive( m, n, 0, mt, A, lda, T, ldt, TTT, llldddttt, Q, ldq, work, lwork );
+
 
 free(TTT);
 

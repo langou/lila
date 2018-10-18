@@ -72,10 +72,9 @@ int lila_dge_qr_wq_levelx_w03( int n_lvl, int i_lvl, int *nb_lvl, int m, int n, 
 	//printf("\n");
 */
 
+//	info = lila_dge_qr_ormqrbz_w00( m, vb, k, i, j, mt, A, lda, Q, ldq, T, ldt, work, lwork );
+	info = lila_dge_qr_ormqrbz_w03( m, vb, k, i, j, mt, A, lda, Q, ldq, TTT, llldddttt, work, lwork );
 
-	info = lila_dge_qr_ormqrbz_w00( m, vb, k, i, j, mt, A, lda, Q, ldq, T, ldt, work, lwork );
-
-//	info = lila_dge_qr_ormqrbz_w03( m, vb, k, i, j, mt, A, lda, Q, ldq, T, ldt, work, lwork );
 
  
 	k += vb;
