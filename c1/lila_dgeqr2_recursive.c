@@ -27,7 +27,6 @@ int lila_dgeqr2_recursive( int m, int n, int i, int mt, double *A, int lda, doub
 	lila_dge_qr_larft_connect_w03( m, nb2, i+nb1, mt, A, lda, TTT, llldddttt );
 
 	info = lila_dge_qr_ormqrbz_w00( m, nb2, nb1, i, i+nb1, mt, A, lda, Q, ldq, T, ldt, work, lwork );
-
 //	This one will need to wait until I get it working completely.
 //	info = lila_dge_qr_ormqrbz_w03( m, nb2, nb1, i, i+nb1, mt, A, lda, Q, ldq, TTT, llldddttt, work, lwork );
 	}
