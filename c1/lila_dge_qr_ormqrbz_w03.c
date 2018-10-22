@@ -7,7 +7,6 @@ int lila_dge_qr_ormqrbz_w03( int m, int n, int k, int i, int j, int mt, double *
 
 	vb = ((i+k) % mt); if (vb == 0) vb = mt; if ( vb > k ) vb = k;
 
-///////////
 //	This is the logic that follows the code in matlab
 	Aii = A + (i+k-vb) + (i+k-vb)*lda;
 	Qij = Q + (i+k-vb) + j*ldq;
@@ -23,7 +22,6 @@ int lila_dge_qr_ormqrbz_w03( int m, int n, int k, int i, int j, int mt, double *
 
 	ml = m - i - k + vb;
 	printf("i = %d, k = %d, vb = %d, itlo = %d, ml = %d,\n",i,k,vb,itlo,ml);
-/////////////
 
 	not_done = 1;
 
