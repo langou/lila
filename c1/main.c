@@ -108,7 +108,7 @@ int main(int argc, char ** argv) {
 //lila_dge_qr_wq_levelx_w03( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 lila_dge_qr_wq_levelx_w03( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, TTT, llldddttt, Q, ldq, work, lwork );
 
-//lila_dgeqr2_recursive( m, n, 0, mt, A, lda, T, ldt, TTT, llldddttt, Q, ldq, work, lwork );
+//lila_dgeqrf_recursive( m, n, 0, mt, A, lda, T, ldt, TTT, llldddttt, Q, ldq, work, lwork );
 
 
 free(TTT);
