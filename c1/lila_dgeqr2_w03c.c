@@ -1,10 +1,10 @@
 #include "lila.h"
 
-int lila_dgeqr2( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *TTT, int llldddttt, double *Q, int ldq, double *work, int lwork ){
+int lila_dgeqr2_w03c( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *TTT, int llldddttt, double *Q, int ldq, double *work, int lwork ){
 
 	int info ; 
 	double *tau=NULL;
-	double *Aii, *Tii, *Qii;
+	double *Aii, *Tii, *Qii, *TTTii;
 	int ml, ii, accum;
 
 	tau = (double *) malloc( n * sizeof(double));
@@ -12,8 +12,28 @@ int lila_dgeqr2( int m, int n, int i, int mt, double *A, int lda, double *T, int
 	Aii = A + i*lda + i;
 	Qii = Q + i*ldq + i;
 	Tii = T + i*ldt + i;
+	TTTii = TTT + (i % mt) + i*llldddttt;
 
 	ml = m - i;
+
+	double normA;
+	double ttt;
+
+  	normA = cblas_dnrm2( ml, Aii, 1);
+
+  	cblas_dcopy( ml, Aii, 1, Qii, 1);
+
+//  	cblas_dscal( ml, ( 1.0e+00 / normA ), Qii, 1);
+
+  	LAPACKE_dlarfg( ml, Qii, Qii+1, 1, &ttt );
+
+	info = lila_dgeqr2_w03b( m, 1, i, mt, A, lda, T, ldt, TTT, llldddttt, Q, ldq, work, lwork ); // This function doesn't have TTT llldddttt in the interface
+
+printf("===> %f ", ttt);
+printf("|| %f || %f\n", *Tii, *TTTii);
+
+	return 0;
+
 
 //// LARFG  /////////////////
 

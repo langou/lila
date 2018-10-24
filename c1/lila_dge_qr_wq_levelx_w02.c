@@ -15,7 +15,7 @@ int lila_dge_qr_wq_levelx_w02( int n_lvl, int i_lvl, int *nb_lvl, int m, int n, 
 	if( i_lvl == n_lvl-1 ){
 	printf("vb (level %d) = %d\n", i_lvl, vb );
 //	info = lila_dge_qr_wq_w02( m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );
-	info = lila_dgeqr2_w02b( m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+//	info = lila_dgeqr2_w02b( m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork ); ////// NEED TO PUT THIS BACK //////
 	} else {
 	printf("vb (level %d) = %d\n", i_lvl, vb );
 	info = lila_dge_qr_wq_levelx_w02( n_lvl, i_lvl+1, nb_lvl, m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );

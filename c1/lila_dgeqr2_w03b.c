@@ -1,6 +1,6 @@
 #include "lila.h"
 
-int lila_dgeqr2_w02b( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork ){
+int lila_dgeqr2_w03b( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *TTT, int llldddttt, double *Q, int ldq, double *work, int lwork ){
 
 	int info ; 
 	double *tau=NULL;
@@ -36,6 +36,10 @@ int lila_dgeqr2_w02b( int m, int n, int i, int mt, double *A, int lda, double *T
 	info = LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, ml, n, Aii, lda, tau, work, lwork );
 
 	info = LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', ml, n, Aii, lda, tau, Tii, ldt);
+
+/////////  This should create the good TTT now
+
+	info = lila_dlarft_w03( m, n, i, mt, A, lda, TTT, llldddttt, tau);
 
 //////////
 

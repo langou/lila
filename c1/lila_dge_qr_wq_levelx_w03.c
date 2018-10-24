@@ -27,7 +27,7 @@ int lila_dge_qr_wq_levelx_w03( int n_lvl, int i_lvl, int *nb_lvl, int m, int n, 
 
 	if ( j+nb > i+n ) vb = i+n-j; else vb = nb; 
 
-	info = lila_dge_qr_ormqrf_w03( m, vb, k, i, j, mt, A, lda, T, ldt, TTT, llldddttt, work, lwork );
+	info = lila_dge_qr_ormqrf_w03( m, vb, k, i, j, mt, A, lda, TTT, llldddttt, work, lwork );
 
 	if( i_lvl == n_lvl-1 ){
 		printf("vb (level %d) = %d\n", i_lvl, vb );

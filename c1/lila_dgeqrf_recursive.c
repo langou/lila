@@ -9,8 +9,8 @@ int lila_dgeqrf_recursive( int m, int n, int i, int mt, double *A, int lda, doub
 
 		printf(" i = %d, (leaf) n = %d,\n", i,n);
 
-//		info = lila_dge_qr_wq_w03( m, n, i, mt, A, lda, T, ldt, TTT, llldddttt, Q, ldq, work, lwork );
-		info = lila_dgeqr2_w02b( m, n, i, mt, A, lda, T, ldt, TTT, llldddttt, Q, ldq, work, lwork ); // This function doesn't have TTT llldddttt in the interface
+//		info = lila_dgeqr2_w02b( m, n, i, mt, A, lda, T, ldt, TTT, llldddttt, Q, ldq, work, lwork );
+		info = lila_dgeqr2_w03c( m, n, i, mt, A, lda, T, ldt, TTT, llldddttt, Q, ldq, work, lwork );
 
 	} else {
 
@@ -20,7 +20,7 @@ int lila_dgeqrf_recursive( int m, int n, int i, int mt, double *A, int lda, doub
 
 	info = lila_dgeqrf_recursive( m, nb1, i, mt, A, lda, T, ldt, TTT, llldddttt, Q, ldq, work, lwork );
 
-	info = lila_dge_qr_ormqrf_w03( m, nb2, nb1, i, i+nb1, mt, A, lda, T, ldt, TTT, llldddttt, work, lwork );
+	info = lila_dge_qr_ormqrf_w03( m, nb2, nb1, i, i+nb1, mt, A, lda, TTT, llldddttt, work, lwork );
 
 	info = lila_dgeqrf_recursive( m, nb2, i+nb1, mt, A, lda, T, ldt, TTT, llldddttt, Q, ldq, work, lwork );
 
