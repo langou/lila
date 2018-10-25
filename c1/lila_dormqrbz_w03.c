@@ -1,6 +1,6 @@
 #include "lila.h"
 
-int lila_dge_qr_ormqrbz_w03( int m, int n, int k, int i, int j, int mt, double *A, int lda, double *Q, int ldq, double *T, int ldt, double *work, int lwork ){
+int lila_dormqrbz_w03( int m, int n, int k, int i, int j, int mt, double *A, int lda, double *Q, int ldq, double *T, int ldt, double *work, int lwork ){
 
 	double *Aii, *Qij, *Tii;
 	int vb, jj, not_done, ldwork, ml;
@@ -9,7 +9,7 @@ int lila_dge_qr_ormqrbz_w03( int m, int n, int k, int i, int j, int mt, double *
 	int ithi;
 	int jtlo;
 
-	int info;
+//	int info;
 
 	vb = ((i+k) % mt); if (vb == 0) vb = mt; ithi = vb; if ( vb > k ) vb = k;
 	itlo = ithi - vb;

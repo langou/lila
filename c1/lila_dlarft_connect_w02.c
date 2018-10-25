@@ -1,6 +1,6 @@
 #include "lila.h"
 
-int lila_dge_qr_larft_connect_w02( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt ){
+int lila_dlarft_connect_w02( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt ){
 
 	double *Aii, *Ai0, *Tii, *T0i;
 	int ii, jj;

@@ -2,13 +2,15 @@
 
 int main(int argc, char ** argv) {
 
-	int i, j, info, lda, ldq, ldt, m, n, mt;
+	int i, j, info, lda, ldq, ldt, m, n, mt, w;
 	double *A, *Q, *As, *T, *work=NULL;
 	double normA, normR;
 	double elapsed_refL, perform_refL;
 	struct timeval tp;
 	int n_lvl;
 	int *nb_lvl;
+	char mode;
+	double norm_orth;
 
 	srand(0);
 
@@ -21,6 +23,8 @@ int main(int argc, char ** argv) {
 	n_lvl = 1;
 	nb_lvl = (int *) malloc(n_lvl * sizeof(int));
 	nb_lvl[0] = 10;
+	w = 3;
+	mode = 'r';
 
 	for(i = 1; i < argc; i++){
 		if( strcmp( *(argv + i), "-ldq") == 0) {
@@ -50,30 +54,51 @@ int main(int argc, char ** argv) {
 			mt  = atoi( *(argv + i + 1) );
 			i++;
 		}
-
+		if( strcmp( *(argv + i), "-mode") == 0) {
+			if( strcmp( *(argv + i + 1), "levelx") == 0)    mode = 'l';
+			if( strcmp( *(argv + i + 1), "recursive") == 0) mode = 'r';
+			i++;
+		}
+		if( strcmp( *(argv + i), "-w") == 0) {
+			w  = atoi( *(argv + i + 1) );
+			i++;
+		}
 	}
 
 	if( lda < 0 ) lda = m;
 	if( ldq < 0 ) ldq = m;
-	ldt = n;
+
+	if ( ( mode == 'l' )&&( w == 2 ) ) printf("dgeqrf_levelx_w02    | ");
+	if ( ( mode == 'l' )&&( w == 3 ) ) printf("dgeqrf_levelx_w03    | ");
+	if ( ( mode == 'r' )&&( w == 2 ) ) printf("dgeqrf_recursive_w02 | ");
+	if ( ( mode == 'r' )&&( w == 3 ) ) printf("dgeqrf_recursive_w03 | ");
 
 	printf("m = %4d, ",m);
 	printf("n = %4d, ",n);
 	printf("lda = %4d, ",lda);
 	printf("ldq = %4d, ",ldq);
-	printf("mt = %4d, ",mt);
-	printf("\n");
+	if ( w == 3 ) printf("mt = %4d, ",mt); else printf("           "); 
+//	printf("\n");
+	if ( mode == 'l' ) {
 	printf("n_lvl = %4d ( ",n_lvl);
  	for(j = 0; j < n_lvl; j++) printf(" %4d ",nb_lvl[j]);
 	printf(")");
-	printf("\n");
+	if ( n_lvl == 1 ) {
+	printf("            ");
+	}
+	if ( n_lvl == 2 ) {
+	printf("      ");
+	}
+	}
+	if ( mode == 'r' ) {
+	printf("                                  ");
+	}
+	printf("  ");
+//	printf("\n");
 
 	A = (double *) malloc(lda * n * sizeof(double));
 	As = (double *) malloc(lda * n * sizeof(double));
 	Q = (double *) malloc(ldq * n * sizeof(double));
-	T = (double *) malloc(ldt * n * sizeof(double));
-
-//	llldddttt = ldt;	
 
  	for(i = 0; i < lda * n; i++)
 		*(A + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
@@ -85,53 +110,111 @@ int main(int argc, char ** argv) {
 
 	normA = LAPACKE_dlange_work(LAPACK_COL_MAJOR, 'F', m, n, A, lda, work );
 
-	gettimeofday(&tp, NULL);
-	elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+	if ( ( mode == 'l' )&&( w == 2 ) ){
 
-//	lila_dge_qr_wq_vL0( m, n, 0, mt, A, lda, T, ldt, Q, ldq );
-//	lila_dge_qr_wq_vr0( m, n, 0, mt, A, lda, T, ldt, Q, ldq );
-//	lila_dge_qr_wq_manylevels_vr0( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, Q, ldq );
+	ldt = n;
+	T = (double *) malloc(ldt * n * sizeof(double));
 
 	int lwork;
 	lwork = 1920000;
 	work = (double *) malloc( 1920000 * sizeof(double));
 
-//	lila_dge_qr_wq_manylevels_INTERCEPT_level1_vr0( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+	gettimeofday(&tp, NULL);
+	elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-//	lila_dge_qr_wq_levelx_w00( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork );
-//	lila_dge_qr_wq_levelx_w02( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork );
-
-
-
-	double *T_w03;
-	int ldt_w03;
-
-	ldt_w03 = mt;
-	T_w03 = (double *) malloc(ldt_w03 * n * sizeof(double));
-
-//	lila_dge_qr_wq_levelx_w03( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork );
-	lila_dge_qr_wq_levelx_w03( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T_w03, ldt_w03, Q, ldq, work, lwork );
-//	lila_dgeqrf_recursive_w03( m, n, 0, mt, A, lda, T_w03, ldt_w03, Q, ldq, work, lwork );
-
-	free(T_w03);
-
-	free(work);
+	lila_dgeqrf_levelx_w02( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 
 	gettimeofday(&tp, NULL);
 	elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+
+	free( work );
+	free( T );
+	}
+
+	if ( ( mode == 'l' )&&( w == 3 ) ){
+
+	ldt = mt;
+	T = (double *) malloc(ldt * n * sizeof(double));
+
+	int lwork;
+	lwork = 1920000;
+	work = (double *) malloc( 1920000 * sizeof(double));
+
+	gettimeofday(&tp, NULL);
+	elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+
+	lila_dgeqrf_levelx_w03( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+
+	gettimeofday(&tp, NULL);
+	elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+
+	free( work );
+	free( T );
+	}
+
+	if ( ( mode == 'r' )&&( w == 2 ) ){
+
+	ldt = n;
+	T = (double *) malloc(ldt * n * sizeof(double));
+
+	int lwork;
+	lwork = 1920000;
+	work = (double *) malloc( 1920000 * sizeof(double));
+
+	gettimeofday(&tp, NULL);
+	elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+
+	lila_dgeqrf_recursive_w02( m, n, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+
+	gettimeofday(&tp, NULL);
+	elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+
+	free( work );
+	free( T );
+	}
+
+	if ( ( mode == 'r' )&&( w == 3 ) ){
+
+	ldt = mt;
+	T = (double *) malloc(ldt * n * sizeof(double));
+
+	int lwork;
+	lwork = 1920000;
+	work = (double *) malloc( 1920000 * sizeof(double));
+
+	gettimeofday(&tp, NULL);
+	elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+
+	lila_dgeqrf_recursive_w03( m, n, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+
+	gettimeofday(&tp, NULL);
+	elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+
+	free( work );
+	free( T );
+	}
+
+	work = (double *) malloc(n * n * sizeof(double));
+
+	info = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'A', n, n, (0e+00), (1e+00), work, n );
+
+	cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, n, m, 1.0e+00, Q, ldq, -1.0e+00, work, n );
+
+	norm_orth = LAPACKE_dlange_work( LAPACK_COL_MAJOR, 'F', n, n, work, n, NULL );
+
+	free( work );
 
 	cblas_dtrmm( CblasColMajor, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, m, n, (1.0e+00), A, lda, Q, ldq );
 
  	for(i = 0; i < m; i++) for(j = 0; j < n; j++) As[i+j*lda] -= Q[i+j*ldq];
 
-	normR = LAPACKE_dlange_work(LAPACK_COL_MAJOR, 'F', m, n, As, lda, work );
+	normR = LAPACKE_dlange_work( LAPACK_COL_MAJOR, 'F', m, n, As, lda, work );
 
 	perform_refL = ( 4.0e+00 * ((double) m) * ((double) n) * ((double) n) - 4.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_refL / 1.0e+9 ;
 
-	printf("LAPACK        :: time = %f   GFlop/sec = %f   res = %e \n", elapsed_refL, perform_refL, normR / normA );
+	printf("| time = %f   GFlop/sec = %f   res = %e    orth = %e \n", elapsed_refL, perform_refL, normR / normA, norm_orth );
 
 	free( nb_lvl );
-	free( T );
 	free( Q );
 	free( A );
 	free( As );

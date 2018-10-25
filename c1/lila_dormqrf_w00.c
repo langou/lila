@@ -1,6 +1,6 @@
 #include "lila.h"
 
-int lila_dge_qr_ormqrf_w00( int m, int n, int k, int i, int j, int mt, double *A, int lda, double *T, int ldt, double *work, int lwork ){
+int lila_dormqrf_w00( int m, int n, int k, int i, int j, int mt, double *A, int lda, double *T, int ldt, double *work, int lwork ){
 
 	int info, vl, ml, jj;
 	double normV_square;
