@@ -5,6 +5,8 @@ int lila_dge_qr_ormqrbz_w03( int m, int n, int k, int i, int j, int mt, double *
 	double *Aii, *Qij, *Tii;
 	int vb, jj, not_done, ldwork, itlo, ml;
 
+	int info;
+
 	vb = ((i+k) % mt); if (vb == 0) vb = mt; if ( vb > k ) vb = k;
 
 //	This is the logic that follows the code in matlab
@@ -31,6 +33,8 @@ int lila_dge_qr_ormqrbz_w03( int m, int n, int k, int i, int j, int mt, double *
 	LAPACKE_dlacpy( LAPACK_COL_MAJOR, 'A', k, vb, work, ldwork, Qij, ldq ); // k, vb    or    vb, vb   ?
 	cblas_dtrmm( CblasColMajor, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, vb, n, (-1.0e+00), Aii, lda, Qij, ldq );
 	cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans, m-i-vb, n, vb, (-1.0e+00), Aii+vb, lda, work, ldwork, (1.0e+00), Qij+vb, ldq );
+
+	info = LAPACKE_dlarfb_work ( LAPACK_COL_MAJOR, 'L', 'N', 'F', 'C', ml, n, k, Aii, lda, Tii, ldt, Qij, ldq, work, ldwork );
 
 	while ( not_done == 1 ){
 
