@@ -1,6 +1,6 @@
 #include "lila.h"
 
-int lila_dgeqr2_w03c( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *TTT, int llldddttt, double *Q, int ldq, double *work, int lwork ){
+int lila_dgeqr1_w03a( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *TTT, int llldddttt, double *Q, int ldq, double *work, int lwork ){
 
 	double *Aii, *Tii, *Qii, *TTTii;
 	int ml;

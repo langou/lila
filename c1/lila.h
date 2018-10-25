@@ -26,7 +26,9 @@ extern int lila_dge_qr_ormqrf_w03( int m, int n, int k, int i, int j, int mt, do
 extern int lila_dgeqr2_w02b( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
 
 extern int lila_dgeqr2_w03b( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *TTT, int llldddttt, double *Q, int ldq, double *work, int lwork );
-extern int lila_dgeqr2_w03c( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *TTT, int llldddttt, double *Q, int ldq, double *work, int lwork );
+
+extern int lila_dgeqr1_w03a( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *TTT, int llldddttt, double *Q, int ldq, double *work, int lwork );
+extern int lila_dgeqr1_w03b( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *TTT, int llldddttt, double *Q, int ldq, double *work, int lwork );
 
 extern int lila_dge_qr_wq_w02( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
 extern int lila_dge_qr_wq_w03( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *TTT, int llldddttt, double *Q, int ldq, double *work, int lwork );

@@ -7,8 +7,6 @@ int lila_dgeqr2_w03b( int m, int n, int i, int mt, double *A, int lda, double *T
 	double *Aii, *Tii, *Qii;
 	int ml;
 
-	int i1, j1;
-
 	tau = (double *) malloc( n * sizeof(double));
 
 	Aii = A + i*lda + i;
