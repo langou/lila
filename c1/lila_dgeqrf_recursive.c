@@ -9,9 +9,9 @@ int lila_dgeqrf_recursive( int m, int n, int i, int mt, double *A, int lda, doub
 
 		printf(" i = %d, (leaf) n = %d,\n", i,n);
 
-		info = lila_dgeqr1_w03a( m, n, i, mt, A, lda, T, ldt, TTT, llldddttt, Q, ldq, work, lwork );
+//		info = lila_dgeqr1_w03a( m, n, i, mt, A, lda, T, ldt, TTT, llldddttt, Q, ldq, work, lwork );
 //		info = lila_dgeqr1_w03b( m, n, i, mt, A, lda, T, ldt, TTT, llldddttt, Q, ldq, work, lwork );
-//		info = lila_dgeqr2_w03b( m, n, i, mt, A, lda, T, ldt, TTT, llldddttt, Q, ldq, work, lwork );
+		info = lila_dgeqr2_w03b( m, n, i, mt, A, lda, T, ldt, TTT, llldddttt, Q, ldq, work, lwork );
 
 	} else {
 
@@ -29,8 +29,8 @@ int lila_dgeqrf_recursive( int m, int n, int i, int mt, double *A, int lda, doub
 	lila_dge_qr_larft_connect_w02( m, nb2, i+nb1, mt, A, lda, T, ldt );
 	lila_dge_qr_larft_connect_w03( m, nb2, i+nb1, mt, A, lda, TTT, llldddttt );
 
-	info = lila_dge_qr_ormqrbz_w00( m, nb2, nb1, i, i+nb1, mt, A, lda, Q, ldq, T, ldt, work, lwork );
-//	info = lila_dge_qr_ormqrbz_w03( m, nb2, nb1, i, i+nb1, mt, A, lda, Q, ldq, TTT, llldddttt, work, lwork );
+//	info = lila_dge_qr_ormqrbz_w00( m, nb2, nb1, i, i+nb1, mt, A, lda, Q, ldq, T, ldt, work, lwork );
+	info = lila_dge_qr_ormqrbz_w03( m, nb2, nb1, i, i+nb1, mt, A, lda, Q, ldq, TTT, llldddttt, work, lwork );
 
 	}
 

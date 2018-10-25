@@ -5,24 +5,30 @@ int lila_dge_qr_ormqrbz_w03( int m, int n, int k, int i, int j, int mt, double *
 	double *Aii, *Qij, *Tii;
 	int vb, jj, not_done, ldwork, ml;
 
+	int itlo;
+	int ithi;
+	int jtlo;
+
 	int info;
 
-	vb = ((i+k) % mt); if (vb == 0) vb = mt; if ( vb > k ) vb = k;
+	vb = ((i+k) % mt); if (vb == 0) vb = mt; ithi = vb; if ( vb > k ) vb = k;
+	itlo = ithi - vb;
+	jtlo = (i+k-vb);
 
-	Aii = A + (i+k-vb) + (i+k-vb)*lda; 
-	Qij = Q + (i+k-vb) + j*ldq;
-	Tii = T + (i % mt) + (i+k-vb)*ldt;
+	Aii = A + jtlo + jtlo*lda; 
+	Qij = Q + jtlo + j*ldq;
+	Tii = T + itlo + jtlo*ldt ;
 
-	ldwork = k;
+	ldwork = n;
 
 	ml = m - (i+k-vb);
-	printf("i = %d, k = %d, vb = %d, ml = %d,\n",i,k,vb,ml);
+	printf("   => itlo = %d ===> i = %d, k = %d, vb = %d, ml = %d, T(%d,%d)\n",itlo,i,k,vb,ml,itlo,jtlo);
 
 	not_done = 1;
 
 	jj = 1;
 
- 	cblas_dgemm( CblasColMajor, CblasTrans, CblasNoTrans, vb, n, ml-vb, (1.0e+00), Aii+vb, lda, Qij+vb, lda, (0.0e+00), work, ldwork );
+	cblas_dgemm( CblasColMajor, CblasTrans, CblasNoTrans, vb, n, ml-vb, (1.0e+00), Aii+vb, lda, Qij+vb, lda, (0.0e+00), work, ldwork );
 	cblas_dtrmm( CblasColMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, vb, n, (1.0e+00), Tii, ldt, work, ldwork );
 	LAPACKE_dlacpy( LAPACK_COL_MAJOR, 'A', vb, n, work, ldwork, Qij, ldq );
 	cblas_dtrmm( CblasColMajor, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, vb, n, (-1.0e+00), Aii, lda, Qij, ldq );
@@ -45,11 +51,9 @@ int lila_dge_qr_ormqrbz_w03( int m, int n, int k, int i, int j, int mt, double *
 
 			jj += vb;
 
-			if ( ( jj + mt - 1 ) <= k ) vb = mt; else vb = k - jj + 1; 
+			if ( ( jj + mt - 1 ) <= k ) vb = mt; else { vb = k - jj + 1; Tii += ( i % mt ) ; }
 
 			ml += vb;
-
-			printf("vb = %d, k = %d\n", vb, k);
 
 			Aii -= vb + vb*lda ;
 			Qij -= vb;
