@@ -2,11 +2,8 @@
 
 int lila_dgeqr2_w03c( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *TTT, int llldddttt, double *Q, int ldq, double *work, int lwork ){
 
-	int info ; 
-	double *tau=NULL;
 	double *Aii, *Tii, *Qii, *TTTii;
-	int ml, ii, accum;
-
+	int ml;
 
 	Aii = A + i*lda + i;
 	Qii = Q + i*ldq + i;
@@ -20,7 +17,7 @@ int lila_dgeqr2_w03c( int m, int n, int i, int mt, double *A, int lda, double *T
 
 	cblas_dscal( ml, ( 1.0e+00 / (*Aii) ), Qii, 1);
 
-//	as long as we want to maintain T
+//	as long as we need to maintain T as well as TTT, these two lines will go away at some point
 	Tii = T + i*ldt + i;
 	(*Tii) = (*TTTii);
 

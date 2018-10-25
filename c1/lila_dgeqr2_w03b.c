@@ -41,12 +41,6 @@ int lila_dgeqr2_w03b( int m, int n, int i, int mt, double *A, int lda, double *T
 
 	info = lila_dlarft_w03( m, n, i, mt, A, lda, TTT, llldddttt, tau);
 
-double  *TTTii;
-TTTii = TTT + (i % mt) + i*llldddttt;
-printf("===> xxxxxxxx ");
-printf("|| %f || %f\n", *Tii, *TTTii);
-
-
 //////////
 
 //  	info = dgeqr3( ml, n, Aii, lda, Tii, ldt );

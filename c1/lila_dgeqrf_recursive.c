@@ -9,8 +9,10 @@ int lila_dgeqrf_recursive( int m, int n, int i, int mt, double *A, int lda, doub
 
 		printf(" i = %d, (leaf) n = %d,\n", i,n);
 
-//		info = lila_dgeqr2_w02b( m, n, i, mt, A, lda, T, ldt, TTT, llldddttt, Q, ldq, work, lwork );
-		info = lila_dgeqr2_w03c( m, n, i, mt, A, lda, T, ldt, TTT, llldddttt, Q, ldq, work, lwork );
+		info = lila_dgeqr2_w03b( m, n, i, mt, A, lda, T, ldt, TTT, llldddttt, Q, ldq, work, lwork );
+
+//		w03c only works for ( n=1 ), this is made on purpose, this is the special purpose code for the special leaf case (n=1)
+//		info = lila_dgeqr2_w03c( m, n, i, mt, A, lda, T, ldt, TTT, llldddttt, Q, ldq, work, lwork );
 
 	} else {
 
