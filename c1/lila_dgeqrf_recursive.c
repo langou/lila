@@ -20,6 +20,7 @@ int lila_dgeqrf_recursive( int m, int n, int i, int mt, double *A, int lda, doub
 
 	info = lila_dgeqrf_recursive( m, nb1, i, mt, A, lda, T, ldt, TTT, llldddttt, Q, ldq, work, lwork );
 
+//	info = lila_dge_qr_ormqrf_w00( m, nb2, nb1, i, i+nb1, mt, A, lda, TTT, llldddttt, work, lwork );
 	info = lila_dge_qr_ormqrf_w03( m, nb2, nb1, i, i+nb1, mt, A, lda, TTT, llldddttt, work, lwork );
 
 	info = lila_dgeqrf_recursive( m, nb2, i+nb1, mt, A, lda, T, ldt, TTT, llldddttt, Q, ldq, work, lwork );
