@@ -110,7 +110,7 @@ int main(int argc, char ** argv) {
 	T_w03 = (double *) malloc(ldt_w03 * n * sizeof(double));
 
 //	lila_dge_qr_wq_levelx_w03( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork );
-	lila_dge_qr_wq_levelx_w03( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, T_w03, ldt_w03, Q, ldq, work, lwork );
+	lila_dge_qr_wq_levelx_w03( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T_w03, ldt_w03, Q, ldq, work, lwork );
 //	lila_dgeqrf_recursive_w03( m, n, 0, mt, A, lda, T_w03, ldt_w03, Q, ldq, work, lwork );
 
 	free(T_w03);
