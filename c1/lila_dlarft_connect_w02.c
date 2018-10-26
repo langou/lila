@@ -1,24 +1,28 @@
 #include "lila.h"
 
-int lila_dlarft_connect_w02( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt ){
+int lila_dlarft_connect_w02( int m, int n, int i, int j, int mt, double *A, int lda, double *T, int ldt ){
 
-	double *Aii, *Ai0, *Tii, *T0i;
+	double *Aii, *Aij, *Tii, *Tji, *Tjj;
 	int ii, jj;
 
 	Aii = A + i + i*lda;
 	Tii = T + i + i*ldt;
-	T0i = T + i*ldt;
-	Ai0 = A + i;
+
+	Aij = A + i + j*lda;
+	Tji = T + j + i*ldt;
+	Tjj = T + j + j*ldt;
 
 	for( jj = 0; jj < n; jj++ ){
-	for( ii = 0; ii < i; ii++ ){
-		T0i[ ii + jj * ldt ] = Ai0[  jj + ii * lda  ];
+	for( ii = 0; ii < i-j; ii++ ){
+		Tji[ ii + jj * ldt ] = Aij[  jj + ii * lda  ];
 	}}
 
-	cblas_dtrmm ( CblasColMajor, CblasRight, CblasLower, CblasNoTrans, CblasUnit, i, n, (+1.0e+00), Aii, lda, T0i, ldt );
-	cblas_dgemm ( CblasColMajor, CblasTrans, CblasNoTrans, i, n, m-n-i, (+1.0e+00), Ai0+n, lda, Aii+n, lda, (+1.0e+00), T0i, ldt );
-	cblas_dtrmm ( CblasColMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, i, n, (-1.0e+00), T, ldt, T0i, ldt );
-	cblas_dtrmm ( CblasColMajor, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, i, n, (+1.0e+00), Tii, ldt, T0i, ldt );
+	cblas_dtrmm ( CblasColMajor, CblasRight, CblasLower, CblasNoTrans, CblasUnit, i-j, n, (+1.0e+00), Aii, lda, Tji, ldt );
+	cblas_dgemm ( CblasColMajor, CblasTrans, CblasNoTrans, i-j, n, m-n-i, (+1.0e+00), Aij+n, lda, Aii+n, lda, (+1.0e+00), Tji, ldt );
+	cblas_dtrmm ( CblasColMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, i-j, n, (-1.0e+00), Tjj, ldt, Tji, ldt );
+	cblas_dtrmm ( CblasColMajor, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, i-j, n, (+1.0e+00), Tii, ldt, Tji, ldt );
+
+//	printf("\n                                      >> j = %2d,   i-j = nb1 = %2d, nb2 = %2d,  m = %2d,  m-n-i = %2d\n",j, i-j,n,m,m-n-i);
 
 	return 0;
 

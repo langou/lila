@@ -14,8 +14,8 @@ int main(int argc, char ** argv) {
 
 	srand(0);
 
-    	m = 30;
-    	n = 17;
+    	m = 31;
+    	n = 15;
 	lda = -1;
 	ldq = -1;
 

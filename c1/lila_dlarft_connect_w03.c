@@ -1,35 +1,39 @@
 #include "lila.h"
 
-int lila_dlarft_connect_w03( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt ){
+int lila_dlarft_connect_w03( int m, int n, int i, int j, int mt, double *A, int lda, double *T, int ldt ){
 
-	double *Aii, *Aij, *T0j, *T0i, *Tmodi;
-	int vb, itlo, ithi, jtlo, jthi, jj, ii;
+	double *Aii, *Aij, *Tjj, *Tji, *Tmodi;
+	int vb, itlo, jtlo, jj, ii, wb;
 
+
+	itlo = ( i % mt );
 	vb = mt - (i%mt);
-	if( vb > n ) vb = n;
 
-	itlo = (i%mt);
-	ithi = itlo+vb;
-	jtlo = i;
-	jthi = jtlo + vb;
+	if( vb > n ) vb = n;
+	if ((j/mt) == (i/mt)) wb = i - j; else wb = (mt - (j%mt));
+//	if( itlo != 0 ) {
+
 
 	Aii = A + i + i*lda;
-	Aij = A + i + (jtlo - itlo)*lda;
-	
-	T0j = T + (jtlo - itlo)*ldt;
-	T0i = T + jtlo*ldt;
-	Tmodi = T + itlo + jtlo*ldt;
+	Tmodi = T + itlo + i*ldt;
+
+	Aij = A + i + (i-wb)*lda;
+	Tji = T + (itlo-wb) + i*ldt;
+	Tjj = T + (itlo-wb) + (i-wb)*ldt;
 
 	for( jj = 0; jj < vb; jj++ ){
-		for( ii = 0; ii < itlo; ii++ ){
-			T0i[ ii + jj * ldt ] = Aij[  jj + ii * lda  ];
+		for( ii = 0; ii < wb; ii++ ){
+			Tji[ ii + jj * ldt ] = Aij[  jj + ii * lda  ];
 		}
 	}
+	
+	cblas_dtrmm ( CblasColMajor, CblasRight, CblasLower, CblasNoTrans, CblasUnit, wb, vb, (+1.0e+00), Aii, lda, Tji, ldt );
+	cblas_dgemm ( CblasColMajor, CblasTrans, CblasNoTrans, wb, vb, m-vb-i, (+1.0e+00), Aij+vb, lda, Aii+vb, lda, (+1.0e+00), Tji, ldt );
+	cblas_dtrmm ( CblasColMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, wb, vb, (-1.0e+00), Tjj, ldt, Tji, ldt );
+	cblas_dtrmm ( CblasColMajor, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, wb, vb, (+1.0e+00), Tmodi, ldt, Tji, ldt );
 
-	cblas_dtrmm ( CblasColMajor, CblasRight, CblasLower, CblasNoTrans, CblasUnit, itlo, vb, (+1.0e+00), Aii, lda, T0i, ldt );
-	cblas_dgemm ( CblasColMajor, CblasTrans, CblasNoTrans, itlo, vb, m-vb-i, (+1.0e+00), Aij+vb, lda, Aii+vb, lda, (+1.0e+00), T0i, ldt );
-	cblas_dtrmm ( CblasColMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, itlo, vb, (-1.0e+00), T0j, ldt, T0i, ldt );
-	cblas_dtrmm ( CblasColMajor, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, itlo, vb, (+1.0e+00), Tmodi, ldt, T0i, ldt );
+
+//	}
 
 	return 0;
 

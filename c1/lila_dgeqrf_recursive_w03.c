@@ -9,8 +9,8 @@ int lila_dgeqrf_recursive_w03( int m, int n, int i, int mt, double *A, int lda, 
 //		printf(" i = %d, (leaf) n = %d,\n", i,n);
 
 //		info = lila_dgeqr1_w03a( m, n, i, mt, A, lda, T, ldt, Q, ldq, work, lwork );
-//		info = lila_dgeqr1_w03b( m, n, i, mt, A, lda, T, ldt, Q, ldq, work, lwork );
-		info = lila_dgeqr2_w03b( m, n, i, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+		info = lila_dgeqr1_w03b( m, n, i, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+//		info = lila_dgeqr2_w03b( m, n, i, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 
 	} else {
 
@@ -25,7 +25,34 @@ int lila_dgeqrf_recursive_w03( int m, int n, int i, int mt, double *A, int lda, 
 
 	info = lila_dgeqrf_recursive_w03( m, nb2, i+nb1, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 
-	info = lila_dlarft_connect_w03( m, nb2, i+nb1, mt, A, lda, T, ldt );
+
+
+
+//	int jjj, iii;
+//	printf("T before the connect\n");
+//	for( iii = 0; iii < mt; iii++){
+//		for( jjj = 0; jjj < 15; jjj++){
+//			printf("% 5.3f,   ", T[ iii + jjj*ldt]);
+//		}
+//	printf("\n");
+//	}
+
+	info = lila_dlarft_connect_w03( m, nb2, i+nb1, i, mt, A, lda, T, ldt );
+	
+//	printf(" T after the connect\n");
+//	for( iii = 0; iii < mt; iii++){
+//		for( jjj = 0; jjj < 15; jjj++){
+//			printf("% 5.3f,   ", T[ iii + jjj*ldt]);
+//		}
+//	printf("\n");
+//	}
+//	printf("\n");
+
+
+
+
+
+
 
 //	info = lila_dormqrbz_w00( m, nb2, nb1, i, i+nb1, mt, A, lda, Q, ldq, T, ldt, work, lwork );
 	info = lila_dormqrbz_w03( m, nb2, nb1, i, i+nb1, mt, A, lda, Q, ldq, T, ldt, work, lwork );
