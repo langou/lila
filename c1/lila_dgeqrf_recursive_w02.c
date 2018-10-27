@@ -26,7 +26,7 @@ int lila_dgeqrf_recursive_w02( int m, int n, int i, int mt, double *A, int lda, 
 
 //	printf("                      T is of size %2dx%2d\n",i+nb1,nb2);
 	info = lila_dlarft_connect_w02( m, nb2, i+nb1, i, mt, A, lda, T, ldt );
-	printf("                      T is of size %2dx%2d\n",i+nb1,nb2);
+//	printf("                      T is of size %2dx%2d\n",i+nb1,nb2);
 
 //	info = lila_dormqrbz_w00( m, nb2, nb1, i, i+nb1, mt, A, lda, Q, ldq, T, ldt, work, lwork );
 	info = lila_dormqrbz_w02( m, nb2, nb1, i, i+nb1, mt, A, lda, Q, ldq, T, ldt, work, lwork );

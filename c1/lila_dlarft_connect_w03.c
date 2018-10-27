@@ -5,14 +5,13 @@ int lila_dlarft_connect_w03( int m, int n, int i, int j, int mt, double *A, int 
 	double *Aii, *Aij, *Tjj, *Tji, *Tmodi;
 	int vb, itlo, jtlo, jj, ii, wb;
 
-
 	itlo = ( i % mt );
 	vb = mt - (i%mt);
 
 	if( vb > n ) vb = n;
 	if ((j/mt) == (i/mt)) wb = i - j; else wb = (mt - (j%mt));
-//	if( itlo != 0 ) {
 
+	if( itlo != 0 ) {
 
 	Aii = A + i + i*lda;
 	Tmodi = T + itlo + i*ldt;
@@ -32,8 +31,7 @@ int lila_dlarft_connect_w03( int m, int n, int i, int j, int mt, double *A, int 
 	cblas_dtrmm ( CblasColMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, wb, vb, (-1.0e+00), Tjj, ldt, Tji, ldt );
 	cblas_dtrmm ( CblasColMajor, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, wb, vb, (+1.0e+00), Tmodi, ldt, Tji, ldt );
 
-
-//	}
+	}
 
 	return 0;
 
