@@ -1,3 +1,16 @@
+
+
+How do get from Q to V in the one vector case? This is pretty easy. And i think this explains LU.
+Think about the
+
+Work on this LARFT that improves stability 
+what matters is
+how ``H * ( I in small world)`` so H is orthogonal.
+And then look at representatiity
+plot in term of condition number
+rpve
+
+
 #include <Accelerate/Accelerate.h>
 
 /usr/local/bin/gcc -framework Accelerate xxx.c 
