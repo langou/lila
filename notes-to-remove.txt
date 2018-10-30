@@ -1,4 +1,8 @@
 
+Think about the pop for MGS, MGS basically runs Householder in the small world
+so that it never have to push and pop. Is that it?  Can we use this insight to
+do something about it? 
+
 
 How do get from Q to V in the one vector case? This is pretty easy. And i think this explains LU.
 Think about the
