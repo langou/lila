@@ -51,6 +51,7 @@
    itlo = mod(itlo+vb-1,mt)+1;
    jtlo = jtlo+vb;
 %
+
    if( jtlo+mt-1 >= i+n-1 ) vb = i+n-1+1-jtlo; else, vb = mt; end
    ithi = itlo+vb-1;
    jthi = jtlo+vb-1;
