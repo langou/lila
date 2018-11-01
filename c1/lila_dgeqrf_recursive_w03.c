@@ -4,7 +4,7 @@ int lila_dgeqrf_recursive_w03( int m, int n, int i, int mt, double *A, int lda, 
 
 	int info, nb1, nb2; 
 
-	if ( n < 20 ) {
+	if ( n < 100 ) {
 
 //		printf(" i = %d, (leaf) n = %d,\n", i,n);
 
@@ -35,7 +35,7 @@ int lila_dgeqrf_recursive_w03( int m, int n, int i, int mt, double *A, int lda, 
 
 
 
-//	int jjj, iii;
+	int jjj, iii;
 //	printf("T before the connect\n");
 //	for( iii = 0; iii < mt; iii++){
 //		for( jjj = 0; jjj < 15; jjj++){
@@ -46,9 +46,10 @@ int lila_dgeqrf_recursive_w03( int m, int n, int i, int mt, double *A, int lda, 
 
 	info = lila_dlarft_connect_w03( m, nb2, i+nb1, i, mt, A, lda, T, ldt );
 	
+//	printf("\n");
 //	printf(" T after the connect\n");
 //	for( iii = 0; iii < mt; iii++){
-//		for( jjj = 0; jjj < 15; jjj++){
+//		for( jjj = 0; jjj < 20; jjj++){
 //			printf("% 5.3f,   ", T[ iii + jjj*ldt]);
 //		}
 //	printf("\n");

@@ -24,7 +24,9 @@ extern int lila_dgeqr2_w03b( int m, int n, int i, int mt, double *A, int lda, do
 extern int lila_dlarft_connect_w02( int m, int n, int i, int j, int mt, double *A, int lda, double *T, int ldt );
 extern int lila_dlarft_connect_w03( int m, int n, int i, int j, int mt, double *A, int lda, double *T, int ldt );
 
-extern int lila_dlarft_w03( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *tau);
+extern int lila_dlarft_w03( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *tau );
+extern int lila_dlarft_w03_b( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt );
+
 
 extern int lila_dormqrbz_w00( int m, int n, int k, int i, int j, int mt, double *A, int lda, double *Q, int ldq, double *T, int ldt, double *work, int lwork );
 extern int lila_dormqrbz_w02( int m, int n, int k, int i, int j, int mt, double *A, int lda, double *Q, int ldq, double *T, int ldt, double *work, int lwork );
