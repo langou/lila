@@ -21,6 +21,12 @@ lila_dormqrbz_w00.o: lila_dormqrbz_w00.c
 lila_dormqrf_w00.o: lila_dormqrf_w00.c
 	$(CC) -c $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) lila_dormqrf_w00.c
 
+lila_dorghr.o: lila_dorghr.c
+	$(CC) -c $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) lila_dorghr.c
+
+lila_dorgh2.o: lila_dorgh2.c
+	$(CC) -c $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) lila_dorgh2.c
+
 lila_dormqrf_w02.o: lila_dormqrf_w02.c
 	$(CC) -c $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) lila_dormqrf_w02.c
 
@@ -87,8 +93,9 @@ xmain_dgeqrf.exe: main_dgeqrf.o
 xmain_dgemm.exe: main_dgemm.o
 	$(LOADER) -o $@ main_dgemm.o $(LIBLAPACKE) $(LIBLAPACK) $(LIBCBLAS) $(LIBBLAS) $(LIBS) 
 
-xmain.exe: main.o dgeqr3.o lila_dgeqrf_levelx_w00.o lila_dgeqrf_levelx_w02.o lila_dormqrf_w02.o lila_dormqrbz_w02.o lila_dgeqr2_w02a.o lila_dlarft_connect_w02.o lila_dormqrf_w00.o lila_dormqrbz_w00.o lila_dgeqrf_levelx_w03.o lila_dormqrf_w03.o lila_dlarft_connect_w03.o lila_dlarft_w03.o lila_dgeqr2_w03a.o lila_dormqrbz_w03.o  lila_dgeqr2_w02b.o lila_dgeqrf_recursive_w02.o lila_dgeqrf_recursive_w03.o lila_dgeqr1_w03a.o lila_dgeqr1_w03b.o lila_dgeqr2_w03b.o lila_dlarft_w03_b.o lila_dgetrf_b.o
-	$(LOADER) -o $@ main.o dgeqr3.o lila_dgeqrf_levelx_w00.o lila_dgeqrf_levelx_w02.o lila_dormqrf_w02.o lila_dormqrbz_w02.o lila_dgeqr2_w02a.o lila_dlarft_connect_w02.o lila_dormqrf_w00.o lila_dormqrbz_w00.o lila_dgeqrf_levelx_w03.o lila_dormqrf_w03.o lila_dlarft_connect_w03.o lila_dlarft_w03.o lila_dgeqr2_w03a.o lila_dormqrbz_w03.o lila_dgeqr2_w02b.o lila_dgeqrf_recursive_w02.o lila_dgeqrf_recursive_w03.o lila_dgeqr1_w03a.o lila_dgeqr1_w03b.o lila_dgeqr2_w03b.o lila_dlarft_w03_b.o lila_dgetrf_b.o $(LIBLAPACKE) $(LIBLAPACK) $(LIBCBLAS) $(LIBBLAS) $(LIBS) 
+xmain.exe: main.o dgeqr3.o lila_dgeqrf_levelx_w00.o lila_dgeqrf_levelx_w02.o lila_dormqrf_w02.o lila_dormqrbz_w02.o lila_dgeqr2_w02a.o lila_dlarft_connect_w02.o lila_dormqrf_w00.o lila_dormqrbz_w00.o lila_dgeqrf_levelx_w03.o lila_dormqrf_w03.o lila_dlarft_connect_w03.o lila_dlarft_w03.o lila_dgeqr2_w03a.o lila_dormqrbz_w03.o  lila_dgeqr2_w02b.o lila_dgeqrf_recursive_w02.o lila_dgeqrf_recursive_w03.o lila_dgeqr1_w03a.o lila_dgeqr1_w03b.o lila_dgeqr2_w03b.o lila_dlarft_w03_b.o lila_dgetrf_b.o lila_dorghr.o lila_dorgh2.o
+	$(LOADER) -o $@ main.o dgeqr3.o lila_dgeqrf_levelx_w00.o lila_dgeqrf_levelx_w02.o lila_dormqrf_w02.o lila_dormqrbz_w02.o lila_dgeqr2_w02a.o lila_dlarft_connect_w02.o lila_dormqrf_w00.o lila_dormqrbz_w00.o lila_dgeqrf_levelx_w03.o lila_dormqrf_w03.o lila_dlarft_connect_w03.o lila_dlarft_w03.o lila_dgeqr2_w03a.o lila_dormqrbz_w03.o lila_dgeqr2_w02b.o lila_dgeqrf_recursive_w02.o lila_dgeqrf_recursive_w03.o lila_dgeqr1_w03a.o lila_dgeqr1_w03b.o lila_dgeqr2_w03b.o lila_dlarft_w03_b.o lila_dgetrf_b.o lila_dorghr.o lila_dorgh2.o $(LIBLAPACKE) $(LIBLAPACK) $(LIBCBLAS) $(LIBBLAS) $(LIBS) 
 
 clean:
-	rm -f xmain.exe xmain_dgemm.exe xmain_dgeqrf.exe main.o main_dgemm.o main_dgeqrf.o dgeqr3.o lila_dgeqrf_levelx_w00.o lila_dgeqrf_levelx_w02.o lila_dormqrf_w02.o lila_dormqrbz_w02.o lila_dgeqr2_w02a.o lila_dlarft_connect_w02.o lila_dormqrf_w00.o lila_dormqrbz_w00.o lila_dgeqrf_levelx_w03.o lila_dormqrf_w03.o lila_dlarft_connect_w03.o lila_dlarft_w03.o lila_dgeqr2_w03a.o lila_dormqrbz_w03.o lila_dgeqr2_w02b.o lila_dgeqrf_recursive_w02.o lila_dgeqrf_recursive_w03.o lila_dgeqr1_w03a.o lila_dgeqr1_w03b.o lila_dgeqr2_w03b.o lila_dlarft_w03_b.o lila_dgetrf_b.o
+	rm -f xmain.exe xmain_dgemm.exe xmain_dgeqrf.exe main.o main_dgemm.o main_dgeqrf.o dgeqr3.o lila_dgeqrf_levelx_w00.o lila_dgeqrf_levelx_w02.o lila_dormqrf_w02.o lila_dormqrbz_w02.o lila_dgeqr2_w02a.o lila_dlarft_connect_w02.o lila_dormqrf_w00.o lila_dormqrbz_w00.o lila_dgeqrf_levelx_w03.o lila_dormqrf_w03.o lila_dlarft_connect_w03.o lila_dlarft_w03.o lila_dgeqr2_w03a.o lila_dormqrbz_w03.o lila_dgeqr2_w02b.o lila_dgeqrf_recursive_w02.o lila_dgeqrf_recursive_w03.o lila_dgeqr1_w03a.o lila_dgeqr1_w03b.o lila_dgeqr2_w03b.o lila_dlarft_w03_b.o lila_dgetrf_b.o lila_dorghr.o lila_dorgh2.o
+

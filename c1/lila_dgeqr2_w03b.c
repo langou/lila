@@ -3,10 +3,8 @@
 int lila_dgeqr2_w03b( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork ){
 
 	int info ; 
-	double *Aii, *Ajj, *Qii, *R;
+	double *Aii, *Ajj, *Qii;
 	int ml, i1, j1;
-
-	R = work; // need an n-by-n workspace
 
 	Aii = A + i*lda + i;
 	Qii = Q + i*ldq + i;
@@ -16,25 +14,18 @@ int lila_dgeqr2_w03b( int m, int n, int i, int mt, double *A, int lda, double *T
 //  This block computes the Cholesky QR
 	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', ml, n, Aii, lda, Qii, ldq ); 
 
-	cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, n, ml, 1.0e+00, Qii, ldq, 0e+00, R, n );
-	info = LAPACKE_dpotrf( LAPACK_COL_MAJOR, 'U', n, R, n ); 
-	cblas_dtrsm( CblasColMajor, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, ml, n, 1.0e+00, R, n, Qii, ldq );
+	cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, n, ml, 1.0e+00, Qii, ldq, 0e+00, Aii, lda );
+	info = LAPACKE_dpotrf( LAPACK_COL_MAJOR, 'U', n, Aii, lda ); 
+	cblas_dtrsm( CblasColMajor, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, ml, n, 1.0e+00, Aii, lda, Qii, ldq );
 
 //   LU and construct T
 
-	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', ml, n, Qii, ldq, Aii, lda );
-	lila_dgetrf_b( m, n, i, mt, A, lda, Q, ldq, R, lwork );
+//	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', ml, n, Qii, ldq, Aii, lda );
+//	lila_dgetrf_b( m, n, i, mt, A, lda, Q, ldq, R, lwork );
+//	info = lila_dlarft_w03_b( m, n, i, mt, A, lda, T, ldt );
 
-	info = lila_dlarft_w03_b( m, n, i, mt, A, lda, T, ldt );
+	lila_dorghr( m, n, i, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 
-//  Put back the good R
-
-	for( i1 = 0; i1 < ml ; i1++){
-		for( j1 = 0; j1 < n ; j1++){
-			if( i1 <= j1 ) Aii[ i1 + j1*lda ] = R[ i1 + j1*n ];
-		}
-	}
-	
 	return 0;
 
 }
