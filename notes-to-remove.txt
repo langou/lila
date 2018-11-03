@@ -1,4 +1,12 @@
 
+construction of T from Demmel is not stable, can we do a similar construction
+in the standard case? What is he doing? Where does this construction comes
+from? 
+
+Needs to count these flops in Householder for my claim
+
+What CG? Can CG keep the orthogonality if we use Householder reflectors somewhere? It sounds that reflecting to have a smaller matrix is a better idea than projecting. We have the zero on top that essentially prevent us from losing orthogonality
+
 Think about the pop for MGS, MGS basically runs Householder in the small world
 so that it never have to push and pop. Is that it?  Can we use this insight to
 do something about it? 
