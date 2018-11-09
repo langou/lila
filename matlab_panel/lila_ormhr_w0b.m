@@ -1,5 +1,5 @@
 %
-   function [ A, T ] = lila_ormhr_w0b( m, n, i, j, mt, A, T, Q, D )
+   function [ A, T ] = lila_ormhr_w0b( m, n, i, j, A, T, Q, D )
 %
       work = zeros( i-1, n);
 %

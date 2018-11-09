@@ -1,5 +1,5 @@
 %
-   function [ A, T, Q, D ] = lila_orgh2_w0b_panel( m, n, j, mt, A, T, Q, D )
+   function [ A, T, Q, D ] = lila_orgh2_w0b_panel( m, n, j, A, T, Q, D )
 %
       for k = 1:n,
 %

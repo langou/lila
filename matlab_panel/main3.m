@@ -35,10 +35,10 @@
 
 %      [ A, T, Q, D ] = lila_geqr2_w0b_panel( m, n, 1, A, T, Q, D );
 %
-      [ A, T, Q, D ] = lila_orghr_w0b_panel( m, ni(1), 1, 1, mt, A, T, Q, D );
-      [ A, T, Q, D ] = lila_orghr_w0b_panel( m, ni(2), 1, ni(1)+1, mt, A, T, Q, D );
-      [ A, T, Q, D ] = lila_orghr_w0b_panel( m, ni(3), ni(1)+ni(2)+1, ni(1)+ni(2)+1, mt, A, T, Q, D );
-      [ A, T, Q, D ] = lila_orghr_w0b_panel( m, ni(4), ni(1)+ni(2)+1, ni(1)+ni(2)+ni(3)+1, mt, A, T, Q, D );
+      [ A, T, Q, D ] = lila_orghr_w0b_panel( m, ni(1), 1, 1, A, T, Q, D );
+      [ A, T, Q, D ] = lila_orghr_w0b_panel( m, ni(2), 1, ni(1)+1, A, T, Q, D );
+      [ A, T, Q, D ] = lila_orghr_w0b_panel( m, ni(3), ni(1)+ni(2)+1, ni(1)+ni(2)+1, A, T, Q, D );
+      [ A, T, Q, D ] = lila_orghr_w0b_panel( m, ni(4), ni(1)+ni(2)+1, ni(1)+ni(2)+ni(3)+1, A, T, Q, D );
 
 
 
