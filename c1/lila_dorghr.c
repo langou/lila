@@ -1,68 +1,110 @@
 #include "lila.h"
 
-int lila_dorghr( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork ){
+int lila_dorghr( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork, int *S ){
 
-	int info; 
-	double *Aii, *Qii;
-	int ml;
-	double *Tki;
-	int vb, k, j;
-	int *S;
-	int i1, j1;
-	double *TTT, *Asave;
-	double *zork;
-
-	int *Svb;
-	zork = (double *) malloc(n * n * sizeof(double));
-	S = (int *) malloc(n * sizeof(int));
-	TTT = (double *) malloc(n * n * sizeof(double));
-	Asave = (double *) malloc(lda * n * sizeof(double));
+	double *Aj0, *Ajj, *Tij, *Ti0;
+	int j, k, i1;
+	j = i;
 
 
 	printf("\n entering now \n");
+	printf("j = %d, n = %d, m = %d\n",j,n,m);
 
-	ml = m - i;
-	k = i % mt;
-	vb = mt - k; if ( vb > n ) vb = n;
-
-	Aii = A + i*lda + i;
-	Qii = Q + i*ldq + i;
-	Tki = T + k + i*ldt;
-
-	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n, Aii, lda, Asave + i + i*lda, lda ); 
-
-	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'L', ml-1, n, Qii+1, ldq, Asave + i+1 + i*lda, lda ); 
-	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', n, n, Qii, ldq, TTT, n ); // Copy Q into T for dorgh2
-	lila_dorgh2( ml, n, mt, Asave + i + i*lda, lda, TTT, n, NULL, -1, work, lwork, S );
-
-//	for( j1 = i; j1 < m; j1++){
-//		for( i1 = i; i1 < i+vb; i1++){
-//			if(i1<j1) printf(" %+9.4e ", Asave[ j1 + i1*lda ]); else printf("  0.00000    ");
-//		}
-//		printf("\n");
-//	}
-//	printf("\n");
+	if( i < 8 ){
+	
+	i = 0;
+	Aj0 = A + j;
+	Ajj = A + j + j*lda;
+	Tij = T + i + j*ldt;
+	Ti0 = T + i;
 
 
-	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'L', ml-1, vb, Qii+1, ldq, Aii+1, lda ); 
-	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', vb, vb, Qii, ldq, Tki, ldt ); // Copy Q into T for dorgh2
+	lila_ormhr_w0b( m, n, 0, j, A, lda, T, ldt, Q, ldq, S );
+	lila_dorgh2( m, n, j, mt, A, lda, T, ldt, Q, ldq, work, lwork, S );
 
-	lila_dorgh2( ml, vb, mt, Aii, lda, Tki, ldt, NULL, -1, work, lwork, S );
-
-	printf("\n");
-
-	for( i1 = 0; i1 < vb ; i1++){
-
-		if ( S[ i1 ] == -1 ){
-
-			//for( j1 = i1; j1 < n ; j1++) Aii[ i1 + j1*lda ] = - Aii[ i1 + j1*lda ];
-			//for( j1 = 0; j1 < ml ; j1++) Qii[ j1 + i1*ldq ] = - Qii[ j1 + i1*ldq ];
+//	Make-shift connect
+	for( k = i; k < j-1; k++){
+		for( i1 = j; i1 < j+n-1; i1++){
+		cblas_dgemm( CblasColMajor, CblasNoTrans, CblasTrans, j-0, n, j, (-1.0e+00), Ti0, ldt, Aj0, lda, (+1.0e+00), Tij, ldt ); 
+		cblas_dtrsm( CblasColMajor, CblasRight, CblasLower, CblasTrans, CblasUnit, j-0, n, (+1.0e+00), Ajj, lda, Tij, ldt ); 
 		}
-
 	}
 
-	Svb = S + vb;
+	} else {
 
+	i = 8;
+	Aj0 = A + j;
+	Ajj = A + j + j*lda;
+	Tij = T + i + j*ldt;
+	Ti0 = T + i;
+
+
+//	lila_ormhr_w0b( m, n, 8, j, A, lda, T, ldt, Q, ldq, S );
+//	lila_dorgh2( m, n, j, mt, A, lda, T, ldt, Q, ldq, work, lwork, S );
+//
+//	Make-shift connect
+//	for( k = i; k < j-1; k++){
+//		for( i1 = j; i1 < j+n-1; i1++){
+//		cblas_dgemm( CblasColMajor, CblasNoTrans, CblasTrans, j-8, n, j, (-1.0e+00), Ti0, ldt, Aj0, lda, (+1.0e+00), Tij, ldt ); 
+//		cblas_dtrsm( CblasColMajor, CblasRight, CblasLower, CblasTrans, CblasUnit, j-8, n, (+1.0e+00), Ajj, lda, Tij, ldt ); 
+//		}
+//	}
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+//	int info; 
+//	double *Aii, *Qii;
+//	int ml;
+//	double *Tki;
+//	int vb, k, j;
+//	int i1, j1;
+//	double *TTT, *Asave;
+//	double *zork;
+//	int *Svb;
+
+//	zork = (double *) malloc(n * n * sizeof(double));
+//	TTT = (double *) malloc(n * n * sizeof(double));
+//	Asave = (double *) malloc(lda * n * sizeof(double));
+
+//	ml = m - i;
+//	k = i % mt;
+//	vb = mt - k; if ( vb > n ) vb = n;
+
+//	Aii = A + i*lda + i;
+//	Qii = Q + i*ldq + i;
+//	Tki = T + k + i*ldt;
+
+//	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n, Aii, lda, Asave + i + i*lda, lda ); 
+//	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'L', ml-1, n, Qii+1, ldq, Asave + i+1 + i*lda, lda ); 
+//	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', n, n, Qii, ldq, TTT, n );
+//	lila_dorgh2( m, n, 0, mt, Asave + i + i*lda, lda, TTT, n, NULL, -1, work, lwork, S );
+
+//	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'L', ml-1, vb, Qii+1, ldq, Aii+1, lda ); 
+//	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', vb, vb, Qii, ldq, Tki, ldt );
+ 
+//	lila_dorgh2( m, vb, 0, mt, Aii, lda, Tki, ldt, NULL, -1, work, lwork, S );
+
+//	lila_dorgh2( m, n, j, mt, A, lda, T, ldt, Q, ldq, work, lwork, S );
+
+//	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n, Aii, lda, Asave + i + i*lda, lda ); 
+//	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'L', ml-1, n, Qii+1, ldq, Asave + i+1 + i*lda, lda ); 
+//	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', n, n, Qii, ldq, TTT, n );
+//	lila_dorgh2( m, n, 0, mt, Asave + i + i*lda, lda, TTT, n, NULL, -1, work, lwork, S );
+
+/*
+
+
+	Svb = S + vb;
 	j = i + vb;
 	ml -= vb;
 
@@ -80,35 +122,20 @@ int lila_dorghr( int m, int n, int i, int mt, double *A, int lda, double *T, int
 
 	while( vb != 0 ){
 
-//printf("\n     We're  in  the  while %d, j=%d, %d, m=%d, vb=%d  \n\n", i, j, k, m, vb);
+		info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', j-i, vb, Qij, ldq, work, j-i ); 
 
-
-		info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', j-i, vb, Qij, ldq, work, j-i ); // Copy top part of Qi into work
-
-		info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m-j, vb, Qjj, ldq, zork, m-j ); // Copy lower part of Qj into zork
+		info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m-j, vb, Qjj, ldq, zork, m-j ); 
 
 		// the -1 is a cheat
-		cblas_dtrsm( CblasColMajor, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, j-i, vb, -1.0e+00, Aii, lda, work, j-i ); // Update work with L \ Qi
+		cblas_dtrsm( CblasColMajor, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, j-i, vb, -1.0e+00, Aii, lda, work, j-i ); 
 
-		cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans, m-j, vb, j-i, (-1.0e+00), Aji, lda, work, j-i, (+1.0e+00), zork, m-j ); // Update zork with Qj - L*Qi
+		cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans, m-j, vb, j-i, (-1.0e+00), Aji, lda, work, j-i, (+1.0e+00), zork, m-j ); 
 
-		info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'L', m-j-1, vb, zork+1, m-j, Ajj+1, lda );  // Copy the updated part of zork into the lower part of A
+		info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'L', m-j-1, vb, zork+1, m-j, Ajj+1, lda ); 
 
-		info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', vb, vb, Qjj, ldq, T0j, ldt ); // Copy Q into T for dorgh2
+		info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', vb, vb, Qjj, ldq, T0j, ldt ); 
 
-		lila_dorgh2( m-j, vb, mt, Ajj, lda, T0j, ldt, NULL, -1, work, lwork, Svb );
-
-
-	//for( i1 = 0; i1 < vb ; i1++){
-
-		//if ( Svb[ i1 ] == -1 ){
-
-			//for( j1 = i1; j1 < n-j ; j1++) Ajj[ i1 + j1*lda ] = - Ajj[ i1 + j1*lda ];
-			//for( j1 = 0; j1 < m-i ; j1++) Qij[ j1 + i1*ldq ] = - Qij[ j1 + i1*ldq ];
-
-		//}
-
-	//}
+		lila_dorgh2( m-j, vb, 0, mt, Ajj, lda, T0j, ldt, NULL, -1, work, lwork, Svb );
 
 		j += vb;
 
@@ -125,11 +152,10 @@ int lila_dorghr( int m, int n, int i, int mt, double *A, int lda, double *T, int
 		if( j+mt >= i+n ) vb = n-(j-i); else vb = mt;
 	
 	}
-
-	free( zork );
-	free(S);
-	free(TTT);
-	free(Asave);
+*/
+//	free( zork );
+//	free(TTT);
+//	free(Asave);
 
 	return 0;
 

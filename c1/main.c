@@ -2,7 +2,7 @@
 
 int main(int argc, char ** argv) {
 
-	int i, j, info, lda, ldq, ldt, m, n, mt, w;
+	int i, j, info, lda, ldq, ldt, m, n, mt, w, *S;
 	double *A, *Q, *As, *T, *work=NULL;
 	double normA, normR;
 	double elapsed_refL, perform_refL;
@@ -11,6 +11,7 @@ int main(int argc, char ** argv) {
 	int *nb_lvl;
 	char mode;
 	double norm_orth;
+	S = (int *) malloc(n * sizeof(int));
 
 	srand(0);
 
@@ -143,7 +144,7 @@ int main(int argc, char ** argv) {
 	gettimeofday(&tp, NULL);
 	elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-	lila_dgeqrf_levelx_w03( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+	lila_dgeqrf_levelx_w03( n_lvl, 0, nb_lvl, m, n, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork, S );
 
 	gettimeofday(&tp, NULL);
 	elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -218,6 +219,7 @@ int main(int argc, char ** argv) {
 	free( Q );
 	free( A );
 	free( As );
+	free( S );
 
 	return 0;
 }
