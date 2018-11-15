@@ -24,15 +24,22 @@
       D = -zeros(n,1);
       A = rand(m,n);
 
-      [ Q, R ] = Cholesky_qr( Q );
+%      [ Q, R ] = Cholesky_qr( Q );
+%      for ii=1:n,
+%         for jj=ii:n,
+%           A(ii,jj) = R(ii,jj);
+%         end
+%      end
+
+
+
+     [ Q, R ] = Cholesky_qr( Q );
       for ii=1:n,
          for jj=ii:n,
            A(ii,jj) = R(ii,jj);
          end
       end
 
-%      [ A, T, Q, D ] = lila_geqr2_w0b_panel( m, n, 1, A, T, Q, D );
-%
       [ A, T, Q, D ] = lila_orghr_w0b_panel( m, ni(1), 1, 1, A, T, Q, D );
       [ A, T, Q, D ] = lila_orghr_w0b_panel( m, ni(2), 1, ni(1)+1, A, T, Q, D );
       [ A, T, Q, D ] = lila_orghr_w0b_panel( m, ni(3), ni(1)+ni(2)+1, ni(1)+ni(2)+1, A, T, Q, D );

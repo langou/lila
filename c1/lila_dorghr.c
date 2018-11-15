@@ -1,26 +1,23 @@
 #include "lila.h"
 
-int lila_dorghr( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork, int *S ){
+int lila_dorghr( int m, int n, int i, int j, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork, int *S ){
 
 	double *Aj0, *Ajj, *Tij, *Ti0;
-	int j, k, i1;
-	j = i;
+	int k, i1;
 
 
 	printf("\n entering now \n");
-	printf("j = %d, n = %d, m = %d\n",j,n,m);
+	printf("i = %d, j = %d, n = %d, m = %d\n",i,j,n,m);
 
-	if( i < 8 ){
-	
 	i = 0;
 	Aj0 = A + j;
 	Ajj = A + j + j*lda;
 	Tij = T + i + j*ldt;
 	Ti0 = T + i;
 
+	lila_ormhr_w0b( m, n, i, j, A, lda, T, ldt, Q, ldq, S );
 
-	lila_ormhr_w0b( m, n, 0, j, A, lda, T, ldt, Q, ldq, S );
-	lila_dorgh2( m, n, j, mt, A, lda, T, ldt, Q, ldq, work, lwork, S );
+	lila_dorgh2( m, n, i, j, mt, A, lda, T, ldt, Q, ldq, work, lwork, S );
 
 //	Make-shift connect
 	for( k = i; k < j-1; k++){
@@ -30,26 +27,15 @@ int lila_dorghr( int m, int n, int i, int mt, double *A, int lda, double *T, int
 		}
 	}
 
-	} else {
+//	printf("\n");
+//    for( k = 0; k < j+n; k++){
+//	for( i1 = 0; i1 < j+n; i1++){
+//	   printf(" %+5.2f ", T[ k + i1*ldt ] );
+//	} 
+//	printf("\n");
+//   } 
 
-	i = 8;
-	Aj0 = A + j;
-	Ajj = A + j + j*lda;
-	Tij = T + i + j*ldt;
-	Ti0 = T + i;
 
-
-//	lila_ormhr_w0b( m, n, 8, j, A, lda, T, ldt, Q, ldq, S );
-//	lila_dorgh2( m, n, j, mt, A, lda, T, ldt, Q, ldq, work, lwork, S );
-//
-//	Make-shift connect
-//	for( k = i; k < j-1; k++){
-//		for( i1 = j; i1 < j+n-1; i1++){
-//		cblas_dgemm( CblasColMajor, CblasNoTrans, CblasTrans, j-8, n, j, (-1.0e+00), Ti0, ldt, Aj0, lda, (+1.0e+00), Tij, ldt ); 
-//		cblas_dtrsm( CblasColMajor, CblasRight, CblasLower, CblasTrans, CblasUnit, j-8, n, (+1.0e+00), Ajj, lda, Tij, ldt ); 
-//		}
-//	}
-	}
 
 
 

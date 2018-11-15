@@ -11,7 +11,6 @@ int main(int argc, char ** argv) {
 	int *nb_lvl;
 	char mode;
 	double norm_orth;
-	S = (int *) malloc(n * sizeof(int));
 
 	srand(0);
 
@@ -100,6 +99,8 @@ int main(int argc, char ** argv) {
 	A = (double *) malloc(lda * n * sizeof(double));
 	As = (double *) malloc(lda * n * sizeof(double));
 	Q = (double *) malloc(ldq * n * sizeof(double));
+	S = (int *) malloc(n * sizeof(int));
+
 
  	for(i = 0; i < lda * n; i++)
 		*(A + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
@@ -148,6 +149,15 @@ int main(int argc, char ** argv) {
 
 	gettimeofday(&tp, NULL);
 	elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+
+
+//	int k, i1;
+//	for( k = 0; k < n; k++){
+//	for( i1 = 0; i1 < n; i1++){
+//	   printf(" %+5.2f ", T[ k + i1*ldt ] );
+//	} 
+//	printf("\n");
+//	} 
 
 	free( work );
 	free( T );
