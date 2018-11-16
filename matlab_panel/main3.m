@@ -5,6 +5,9 @@
    m = 23;
    ni = [ 4, 4, 4, 4 ];
    n = sum(ni);
+
+   n = 16;
+   nb = 4;
    log10KA = 1;
 %
    if ( m < n ) fprintf('m < n\n'); return; end
@@ -40,15 +43,23 @@
          end
       end
 
-      [ A, T, Q, D ] = lila_orghr_w0b_panel( m, ni(1), 1, 1, A, T, Q, D );
-      [ A, T, Q, D ] = lila_orghr_w0b_panel( m, ni(2), 1, ni(1)+1, A, T, Q, D );
-      [ A, T, Q, D ] = lila_orghr_w0b_panel( m, ni(3), ni(1)+ni(2)+1, ni(1)+ni(2)+1, A, T, Q, D );
-      [ A, T, Q, D ] = lila_orghr_w0b_panel( m, ni(4), ni(1)+ni(2)+1, ni(1)+ni(2)+ni(3)+1, A, T, Q, D );
+%      [ A, T, Q, D ] = lila_orghr_w0b_panel( m, ni(1), 1, 1, A, T, Q, D );
+%      [ A, T, Q, D ] = lila_orghr_w0b_panel( m, ni(2), 1, ni(1)+1, A, T, Q, D );
+%      [ A, T, Q, D ] = lila_orghr_w0b_panel( m, ni(3), ni(1)+ni(2)+1, ni(1)+ni(2)+1, A, T, Q, D );
+%      [ A, T, Q, D ] = lila_orghr_w0b_panel( m, ni(4), ni(1)+ni(2)+1, ni(1)+ni(2)+ni(3)+1, A, T, Q, D );
 
-	fprintf('n = %d, i = %d, j = %d\n',ni(1), 1, 1);
-	fprintf('n = %d, i = %d, j = %d\n',ni(2), 1, ni(1)+1);
-	fprintf('n = %d, i = %d, j = %d\n',ni(3), ni(1)+ni(2)+1, ni(1)+ni(2)+1 );
-	fprintf('n = %d, i = %d, j = %d\n',ni(4), ni(1)+ni(2)+1, ni(1)+ni(2)+ni(3)+1);
+      i = 1; j = 1;
+      if( nb > n ), vb = n; else vb = nb; end
+      [ A, T, Q, D ] = lila_orghr_w0b_panel( m, vb, i, j, A, T, Q, D );
+      j = j+vb;
+      if( j+nb > n ) vb = n-j; else vb = nb; end
+      while( vb~= 0 )
+	T
+         [ A, T, Q, D ] = lila_orghr_w0b_panel( m, vb, i, j, A, T, Q, D );
+         j = j+vb;
+         if( j+nb > n ) vb = n-j; else vb = nb; end
+      end
+
 %
 %  Checks
 %

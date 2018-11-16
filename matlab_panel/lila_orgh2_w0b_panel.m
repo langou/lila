@@ -33,7 +33,6 @@
          end
       end
 %
-m
       for k = 1:n,
          if (D(j+k-1) == -1),
            Q(1:m,j+k-1) = - Q(1:m,j+k-1);
