@@ -8,13 +8,13 @@
    for i = 1:n-1, A(i+1,i) = 2.0e+00; end
    x = ones(n,1)-1e-1*(1:n)';
    M = eye(n)+1e-1*diag(1:n);
-   restrt = 3;
-   max_it = 10;
-   tol = 1e-4;
+   restrt = 1;
+   max_it = 100;
+   tol = 1e-10;
    b = ones(n,1);
 %
-   [ x, arnoldi_res, true_res, orth_level, repres_level ] ...
+   [ x, arnoldi_res, true_res, orth_level, repres_level, cond_level ] ...
          = gmres__( A, x, b, M, restrt, max_it, tol );
 %
-   fprintf('                                                                                                                   check = %6.2e\n', norm(M\( b-A*x ),2)/norm(b,2));
+   fprintf('                                                                                                                                          check = %6.2e\n', norm(M\( b-A*x ),2)/norm(b,2));
 
