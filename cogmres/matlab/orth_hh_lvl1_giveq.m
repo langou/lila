@@ -1,5 +1,5 @@
 %
-   function [ a ] = orth_hh_lvl1_giveq( V, tau, a )
+   function [ a ] = orth_hh_lvl1_giveq( V, tau )
 %
       m = size(V,1);
       j = size(V,2);
