@@ -87,18 +87,19 @@ int lila_dorgh2_w03( int m, int n, int i, int j, int mt, double *A, int lda, dou
 
 		} else {
 
-			if(jj == 1) Tjj = Tjj - (j%mt) + vb*ldt;
+			if(jj == 1) Tjj = Tjj - (j%mt) + vb*ldt; 
 
 			ml -= vb;
 			jj += vb;
 
 			Ajj += vb * ( lda + 1 );
 			Sj += vb;
-			if(jj != 1+vb) Tjj = Tjj + vb*ldt; // This may need to account for moving in the rows too?
+
+			if(jj != 1+vb) Tjj = Tjj + vb*ldt; 
+
 			if ( ( jj + mt - 1 ) <= n ) vb = mt; else vb = n - jj + 1;
 
 		}
-
 
 	}
 

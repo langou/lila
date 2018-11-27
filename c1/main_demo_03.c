@@ -2,7 +2,7 @@
 
 int main(int argc, char ** argv){
 
-	int m, n, mt, nb, vb, k, l, i, j, lda, ldq, ldt, info, lwork;
+	int m, n, mt, nb, vb, i, j, lda, ldq, ldt, info, lwork;
 	int *S;
 	double *A, *As, *T, *Q, *work=NULL;
 	double normA, elapsed_refL, perform_refL;
@@ -88,15 +88,23 @@ int main(int argc, char ** argv){
 	i = 0;
 	j = 0;
 	if ( nb > n ) vb = n; else vb = nb;
-		lila_ormhr_w03( m, vb, i, j, mt, A, lda, T, ldt, Q, ldq, S );
-		lila_dorgh2_w03( m, vb, i, j, mt, A, lda, T, ldt, Q, ldq, work, lwork, S );
+
+		lila_dorghr_w03( m, vb, i, j, mt, A, lda, T, ldt, Q, ldq, work, lwork, S );
+
+//		lila_ormhr_w03( m, vb, i, j, mt, A, lda, T, ldt, Q, ldq, S );
+//		lila_dorgh2_w03( m, vb, i, j, mt, A, lda, T, ldt, Q, ldq, work, lwork, S );
 		j += vb;
+
 	if ( j+nb > n ) vb = n-j; else vb = nb;
 	while( vb!=0 ){
-		lila_ormhr_w03( m, vb, i, j, mt, A, lda, T, ldt, Q, ldq, S );
-		lila_dorgh2_w03( m, vb, i, j, mt, A, lda, T, ldt, Q, ldq, work, lwork, S );
+
+//		lila_ormhr_w03( m, vb, i, j, mt, A, lda, T, ldt, Q, ldq, S );
+//		lila_dorgh2_w03( m, vb, i, j, mt, A, lda, T, ldt, Q, ldq, work, lwork, S );
+		lila_dorghr_w03( m, vb, i, j, mt, A, lda, T, ldt, Q, ldq, work, lwork, S );
 		info = lila_dlarft_connect_w03(m, vb, j, i, mt, A, lda, T, ldt );
+//						      ^  ^   i and j are switched (that was our mind before)
 		j += vb;
+
 	if ( j+nb > n ) vb = n-j; else vb = nb;
 	}
 
