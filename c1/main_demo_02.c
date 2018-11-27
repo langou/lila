@@ -90,17 +90,10 @@ int main(int argc, char ** argv){
 	while( vb!=0 ){
 		lila_ormhr_w0b( m, vb, i, j, A, lda, T, ldt, Q, ldq, S );
 		lila_dorgh2( m, vb, i, j, -1, A, lda, T, ldt, Q, ldq, work, lwork, S );
-		cblas_dgemm( CblasColMajor, CblasNoTrans, CblasTrans, j-i, vb, j, (-1.0e+00), T+i, ldt, A+j, lda, (+1.0e+00), T+i+j*ldt, ldt ); 
-		cblas_dtrsm( CblasColMajor, CblasRight, CblasLower, CblasTrans, CblasUnit, j-i, vb, (+1.0e+00), A+j+j*lda, lda, T+i+j*ldt, ldt ); 
+		info = lila_dlarft_connect_w02(m, vb, j, 0, -1, A, lda, T, ldt );
 		j += vb;
 	if ( j+nb > n ) vb = n-j; else vb = nb;
 	}
-
-
-//for( i=0;i<n;i++){
-//for( j=0;j<n;j++){
-//printf("%+5.1e ", T[i+j*ldt]);}printf("\n");}
-
 
 	gettimeofday(&tp, NULL);
 	elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -130,31 +123,31 @@ int main(int argc, char ** argv){
 	norm_repres_1 = norm_repres_1 / normA;
 	free( work );
 
-//	Check Q^TA = R by looking at zeros below nxn-block 
+//	Check H^TA = R by looking at zeros below nxn-block 
 	RR = (double *) malloc(m * n * sizeof(double));
 	work = (double *) malloc(m * m * sizeof(double));
 	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n, As, lda, RR, m );
-	//if( m > n )  lila_dormqrf_z02( m, n, n, 0, 0, -1, A, lda, RR, m, T, ldt, work, lwork ); // This is to check to T
-	if( m > n )  lila_dormqrf_z00( m, n, n, 0, 0, -1, A, lda, RR, m, T, ldt, work, lwork );
-	if( m == n ) lila_dormqrf_z00( m, n, n-1, 0, 0, -1, A, lda, RR, m, T, ldt, work, lwork );
+	if( m >= n )  lila_dormqrf_z02( m, n, n, 0, 0, -1, A, lda, RR, m, T, ldt, work, lwork ); 
+//	if( m > n )  lila_dormqrf_z00( m, n, n, 0, 0, -1, A, lda, RR, m, T, ldt, work, lwork );
+//	if( m == n ) lila_dormqrf_z00( m, n, n-1, 0, 0, -1, A, lda, RR, m, T, ldt, work, lwork );
 	free( work );
 
 	if( m > n )  norm_repres_2_1 = LAPACKE_dlantr_work(LAPACK_COL_MAJOR, 'F', 'L', 'N', m-1, n, RR+1, m, NULL );
 	if( m == n ) norm_repres_2_1 = LAPACKE_dlantr_work(LAPACK_COL_MAJOR, 'F', 'L', 'N', m-1, n-1, RR+1, m, NULL );
 
-//	Check that R computed in A is the same generated from Q^TA
+//	Check that R computed in A is the same generated from H^TA
 	work = (double *) malloc(n * n * sizeof(double));
  	for(i = 0; i < n; i++) for(j = 0; j < n; j++) work[i+j*n] = A[i+j*lda] - RR[i+j*m];
 	norm_repres_2_2 = LAPACKE_dlantr_work(LAPACK_COL_MAJOR, 'F', 'U', 'N', n, n, work, n, NULL );
 	free( work );
 	free( RR );
 
-//	Applies Q to identity to generate H
+//	Applies V to identity to construct H
 	HH = (double *) malloc(m * m * sizeof(double));
 	info = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'A', m, m, (0e+00), (1e+00), HH, m );
 	work = (double *) malloc(m * m * sizeof(double));
-	if( m > n )  lila_dormqrf_z00( m, m, n, 0, 0, -1, A, lda, HH, m, T, ldt, work, lwork );
-	if( m == n ) lila_dormqrf_z00( m, m, n-1, 0, 0, -1, A, lda, HH, m, T, ldt, work, lwork );
+	if( m >= n )  lila_dormqrf_z00( m, m, n, 0, 0, -1, A, lda, HH, m, T, ldt, work, lwork );
+	//if( m == n ) lila_dormqrf_z00( m, m, n-1, 0, 0, -1, A, lda, HH, m, T, ldt, work, lwork );
 	free( work );
 
 //	Check H^TH = I

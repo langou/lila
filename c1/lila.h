@@ -33,6 +33,9 @@ extern int lila_dlarft_connect_w03( int m, int n, int i, int j, int mt, double *
 extern int lila_dlarft_w03( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *tau );
 extern int lila_dlarft_w03_b( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt );
 
+extern int lila_ormhr_w03( int m, int n, int i, int j, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, int *S );
+extern int lila_dorgh2_w03( int m, int n, int i, int j, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork, int *S );
+
 extern int lila_ormhr_w0b( int m, int n, int i, int j, double *A, int lda, double *T, int ldt, double *Q, int ldq, int *S );
 extern int lila_dorgh2( int m, int n, int i, int j, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork, int *S );
 extern int lila_dorghr( int m, int n, int i, int j, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork, int *S );

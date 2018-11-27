@@ -50,24 +50,6 @@ int lila_dormqrf_w03( int m, int n, int k, int i, int j, int mt, double *A, int 
 			}
 		}
 
-//		int info;
-//		int jjj;
-//		double *V;
-//		int vl;
-//		double *tau;
-//		double normV_square;
-//		tau = (double *) malloc( vb * sizeof(double));
-//		for(jjj = 0, vl=ml-1, V = Aii+1; jjj < vb; jjj++,vl--,V+=(lda+1) ){
-//			normV_square = ( 1.0e+00 ) + cblas_ddot( vl, V, 1, V, 1 );
-//			tau[jjj] = ( 2.0e+00 ) / normV_square ;
-//		}
-//		info = LAPACKE_dlarft_work ( LAPACK_COL_MAJOR, 'F', 'C', ml, vb, Aii, lda, tau, Tii, ldt);
-
-//		ldwork = n;
-//		info = LAPACKE_dlarfb_work ( LAPACK_COL_MAJOR, 'L', 'T', 'F', 'C', ml, n, vb, Aii, lda, Tii, ldt, Aij, lda, work, ldwork );
-
-//		free( tau );
-
 		if ( jj + vb - 1 == k ) {
 
 			not_done = 0; 
