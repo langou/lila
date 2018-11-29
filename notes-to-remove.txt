@@ -1,4 +1,7 @@
 
+
+LAPCK is limited to roght looking algroithmm, cannot  really doleft looking by reconstructing each time 
+
 construction of T from Demmel is not stable, can we do a similar construction
 in the standard case? What is he doing? Where does this construction comes
 from? 

@@ -3,7 +3,7 @@
 int lila_dlarft_connect_w03( int m, int n, int i, int j, int mt, double *A, int lda, double *T, int ldt ){
 
 	double *Aii, *Aij, *Tjj, *Tji, *Tmodi;
-	int vb, itlo, jtlo, jj, ii, wb;
+	int vb, itlo, jj, ii, wb;
 
 	itlo = ( i % mt );
 	vb = mt - (i%mt);

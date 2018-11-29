@@ -2,17 +2,18 @@
 
 int main(int argc, char ** argv){
 
-	int m, n, nb, vb, k, l, i, j, lda, ldq, ldt, info, lwork;
+	int m, n, mt, nb, vb, i, j, l, lda, ldq, ldt, info, lwork;
 	int *S;
 	double *A, *As, *T, *Q, *work=NULL;
 	double normA, elapsed_refL, perform_refL;
 	struct timeval tp;
 
-	srand(0);  // What does this do?
+	srand(0); 
 
     	m = 30;
     	n = 20;
 	nb = 5;
+	mt = n;
 	lda = -1;
 	ldq = -1;
 
@@ -37,6 +38,11 @@ int main(int argc, char ** argv){
 			nb  = atoi( *(argv + i + 1) );
 			i++;
 		}
+		if( strcmp( *(argv + i), "-mt") == 0) {
+			mt  = atoi( *(argv + i + 1) );
+			i++;
+		}
+
 	}
 
 	if( lda < 0 ) lda = m;
@@ -45,6 +51,7 @@ int main(int argc, char ** argv){
 	printf("m = %4d; ",m);
 	printf("n = %4d; ",n);
 	printf("nb = %4d; ",nb);
+	printf("mt = %4d; ",mt);
 	printf("lda = %4d; ",lda);
 	printf("ldq = %4d; ",ldq);
 	printf("\n");
@@ -63,11 +70,11 @@ int main(int argc, char ** argv){
 	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n, A, lda, As, lda );
 	normA = LAPACKE_dlange_work(LAPACK_COL_MAJOR, 'F', m, n, A, lda, work );
 
-	ldt = n;
+	ldt = mt;
 	T = (double *) malloc(ldt * n * sizeof(double));
 
 	lwork = 1920000;
-	work = (double *) malloc( 1920000 * sizeof(double));
+	work = (double *) malloc( lwork * sizeof(double));
 
 	gettimeofday(&tp, NULL);
 	elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -80,20 +87,54 @@ int main(int argc, char ** argv){
 
 
 
+
+	double *TTT, *AAA, *QQQ;
+	int *SSS;
+	TTT = (double *) malloc(n * n * sizeof(double));
+	AAA = (double *) malloc(lda * n * sizeof(double));
+	QQQ = (double *) malloc(ldq * n * sizeof(double));
+	SSS = (int *) malloc(n * sizeof(int));
+	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n, A, lda, AAA, lda ); 
+	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n, Q, ldq, QQQ, ldq ); 
+
+
+
+
+	printf("\n");
 	i = 0;
 	j = 0;
+	l = 0;
 	if ( nb > n ) vb = n; else vb = nb;
-		lila_ormhr_w0b( m, vb, i, j, A, lda, T, ldt, Q, ldq, S );
-		lila_dorgh2( m, vb, i, j, -1, A, lda, T, ldt, Q, ldq, work, lwork, S );
-		j += vb;
+
+		lila_dorghr_w03( m, vb, i, j, l, mt, A, lda, T, ldt, Q, ldq, work, lwork, S );
+
+		lila_ormhr_w0b( m, vb, i, j, AAA, lda, TTT, n, QQQ, ldq, SSS );
+		lila_dorgh2( m, vb, i, j, -1, AAA, lda, TTT, n, QQQ, ldq, work, lwork, SSS );
+		info = lila_dlarft_connect_w02(m, vb, j, 0, -1, AAA, lda, TTT, n );
+
+		j = vb;
+
 	if ( j+nb > n ) vb = n-j; else vb = nb;
 	while( vb!=0 ){
-		lila_ormhr_w0b( m, vb, i, j, A, lda, T, ldt, Q, ldq, S );
-		lila_dorgh2( m, vb, i, j, -1, A, lda, T, ldt, Q, ldq, work, lwork, S );
-		info = lila_dlarft_connect_w02(m, vb, j, 0, -1, A, lda, T, ldt );
+
+		lila_dorghr_w03( m, vb, i, j, l, mt, A, lda, T, ldt, Q, ldq, work, lwork, S );
+
+		lila_ormhr_w0b( m, vb, i, j, AAA, lda, TTT, n, QQQ, ldq, SSS );
+		lila_dorgh2( m, vb, i, j, -1, AAA, lda, TTT, n, QQQ, ldq, work, lwork, SSS );
+		info = lila_dlarft_connect_w02(m, vb, j, 0, -1, AAA, lda, TTT, n );
+
 		j += vb;
+
 	if ( j+nb > n ) vb = n-j; else vb = nb;
 	}
+
+printf("\n");
+for(i = 0; i < mt; i++){ for(j = 0; j < n; j++){ printf(" %+5.1e ", T[ i + j*ldt]); } printf("\n"); }
+printf("\n");
+
+printf("\n");
+for(i = 0; i < n; i++){ for(j = 0; j < n; j++){ printf(" %+5.1e ", TTT[ i + j*n]); } printf("\n"); }
+printf("\n");
 
 	gettimeofday(&tp, NULL);
 	elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -127,9 +168,9 @@ int main(int argc, char ** argv){
 	RR = (double *) malloc(m * n * sizeof(double));
 	work = (double *) malloc(m * m * sizeof(double));
 	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n, As, lda, RR, m );
-	if( m >= n )  lila_dormqrf_z02( m, n, n, 0, 0, -1, A, lda, RR, m, T, ldt, work, lwork ); 
-//	if( m > n )  lila_dormqrf_z00( m, n, n, 0, 0, -1, A, lda, RR, m, T, ldt, work, lwork );
-//	if( m == n ) lila_dormqrf_z00( m, n, n-1, 0, 0, -1, A, lda, RR, m, T, ldt, work, lwork );
+//	if( m >= n )  lila_dormqrf_z03( m, n, n, 0, 0, mt, A, lda, RR, m, T, ldt, work, lwork ); 
+	if( m > n )  lila_dormqrf_z00( m, n, n, 0, 0, -1, A, lda, RR, m, T, ldt, work, lwork );
+	if( m == n ) lila_dormqrf_z00( m, n, n-1, 0, 0, -1, A, lda, RR, m, T, ldt, work, lwork );
 	free( work );
 
 	if( m > n )  norm_repres_2_1 = LAPACKE_dlantr_work(LAPACK_COL_MAJOR, 'F', 'L', 'N', m-1, n, RR+1, m, NULL );
@@ -204,6 +245,11 @@ int main(int argc, char ** argv){
 	free( Q );
 	free( T );
 	free( S );
+
+	free( AAA );
+	free( QQQ );
+	free( TTT );
+	free( SSS );
 
 	return 0;
 }
