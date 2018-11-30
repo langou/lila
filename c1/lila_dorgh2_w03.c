@@ -7,8 +7,6 @@ int lila_dorgh2_w03( int m, int n, int i, int j, int l, int mt, double *A, int l
 	int *Sj;
 	int k, i1;
 
-//	printf("(2) -           (j%%mt) = %3d, i = %3d, j = %3d, vb = %3d, ml = %3d \n", j%mt, i, j, n, m);
-
 	Tjj = T + (j % mt) + j*ldt;
 	T0j = T + j*ldt;
 
@@ -34,11 +32,11 @@ int lila_dorgh2_w03( int m, int n, int i, int j, int l, int mt, double *A, int l
 
 		for( k = 0; k < n; k++ ){
 			if ( Sj[ k ] == -1 ){
-				for( i1 = n; i1 < m; i1++) Ajj[ i1 + k*lda ] = - Ajj[ i1 + k*lda ];
+				for( i1 = n; i1 < m-j; i1++) Ajj[ i1 + k*lda ] = - Ajj[ i1 + k*lda ];
 			}
 		}
 
-		cblas_dtrsm( CblasColMajor, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, m-n, n, 1.0e+00, Tjj, ldt, Ajj + n, lda );
+		cblas_dtrsm( CblasColMajor, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, m-j-n, n, 1.0e+00, Tjj, ldt, Ajj + n, lda );
 
 		for( k = 0; k < n; k++ ){
 			if ( Sj[ k ] == -1 ){
@@ -52,7 +50,7 @@ int lila_dorgh2_w03( int m, int n, int i, int j, int l, int mt, double *A, int l
 		}
 		for( k = 0; k < n; k++ ){
 			if ( Sj[ k ] == -1 ){
-				for( i1 = 0; i1 < m-i+j; i1++) Q0j[ i1 + k*ldq ] = - Q0j[ i1 + k*ldq ]; 
+				for( i1 = 0; i1 < m-i; i1++) Q0j[ i1 + k*ldq ] = - Q0j[ i1 + k*ldq ]; 
 			}
 		}
 		for( k = 0; k < n; k++ ){
