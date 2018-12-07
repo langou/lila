@@ -131,17 +131,17 @@ int main(int argc, char ** argv){
 //	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n, AAA, lda, A, lda ); 
 //	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n, QQQ, ldq, Q, ldq ); 
 
-printf("\nAAA - A =");
-for(i = 0; i < m; i++){ for(j = 0; j < n; j++){ AAA[ i + j*lda] = AAA[ i + j*lda] - A[ i + j*lda]; }  }
-printf("\n");
-for(i = 0; i < m; i++){ for(j = 0; j < n; j++){ printf(" %+5.1e ", AAA[ i + j*lda]); } printf("\n"); }
-printf("\n");
+//printf("\nAAA - A =");
+//for(i = 0; i < m; i++){ for(j = 0; j < n; j++){ AAA[ i + j*lda] = AAA[ i + j*lda] - A[ i + j*lda]; }  }
+//printf("\n");
+//for(i = 0; i < m; i++){ for(j = 0; j < n; j++){ printf(" %+5.1e ", AAA[ i + j*lda]); } printf("\n"); }
+//printf("\n");
 
-printf("\nQQQ - Q = ");
-for(i = 0; i < m; i++){ for(j = 0; j < n; j++){ QQQ[ i + j*lda] = QQQ[ i + j*lda] - Q[ i + j*lda]; }  }
-printf("\n");
-for(i = 0; i < m; i++){ for(j = 0; j < n; j++){ printf(" %+5.1e ", QQQ[ i + j*lda]); } printf("\n"); }
-printf("\n");
+//printf("\nQQQ - Q = ");
+//for(i = 0; i < m; i++){ for(j = 0; j < n; j++){ QQQ[ i + j*lda] = QQQ[ i + j*lda] - Q[ i + j*lda]; }  }
+//printf("\n");
+//for(i = 0; i < m; i++){ for(j = 0; j < n; j++){ printf(" %+5.1e ", QQQ[ i + j*lda]); } printf("\n"); }
+//printf("\n");
 
 
 printf("\n");

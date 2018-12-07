@@ -14,6 +14,7 @@ int lila_dorgh2_w03( int m, int n, int i, int j, int l, int mt, double *A, int l
 	Q0j = Q + j*ldq;
 	Sj = S + j;
 
+printf("(j%%mt) = %3d, mt = %3d, n = %3d,\n",j%mt,mt,n);
 
 		for( k = 0; k < n; k++ ){
 			Tkk = Tjj + k + k*ldt;

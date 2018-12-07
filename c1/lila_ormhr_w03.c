@@ -37,8 +37,6 @@ int lila_ormhr_w03( int m, int n, int i, int j, int l, int mt, double *A, int ld
 
 
 
-
-
 	double *work2;
 	int kk, lwork2;
 
@@ -49,11 +47,8 @@ int lila_ormhr_w03( int m, int n, int i, int j, int l, int mt, double *A, int ld
 	lwork2 = j-l;
 	work2 = (double *) malloc(lwork2 * n * sizeof(double));
 
-//	printf("\n"); 
+	printf("\n"); 
 	printf(" j-l = %3d, l-i = %3d, kk = %3d, k = %3d, n = %3d\n",j-l,l-i,kk,k,n); 
-
-
-
 
 
 
