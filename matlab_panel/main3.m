@@ -54,7 +54,6 @@
       j = j+vb;
       if( j+nb > n ) vb = n-j; else vb = nb; end
       while( vb~= 0 )
-	T
          [ A, T, Q, D ] = lila_orghr_w0b_panel( m, vb, i, j, A, T, Q, D );
          j = j+vb;
          if( j+nb > n ) vb = n-j; else vb = nb; end

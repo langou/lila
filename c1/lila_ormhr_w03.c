@@ -5,7 +5,7 @@ int lila_ormhr_w03( int m, int n, int i, int j, int l, int mt, double *A, int ld
 	double *Q0j, *Qij, *Qjj, *Tij, *Tjj, *Ajj, *Aii, *Aij, *Aji;
 	int k, i1, info;
 
-	if ( j > i + l  ) l = i + l; else l = i;
+//	if ( j > i + l  ) l = i + l; else l = i;
 
 	Q0j = Q + j*ldq;
 	Qij = Q + i + j*ldq;
@@ -34,25 +34,12 @@ int lila_ormhr_w03( int m, int n, int i, int j, int l, int mt, double *A, int ld
 		}
 	}
 
-
-
-
 	double *work2;
 	int kk, lwork2;
 
-	if( j - l > mt ) kk = mt; else kk = j - l;
-	k = j - l - kk;
-
-//	lwork2 = k;
 	lwork2 = j-l;
 	work2 = (double *) malloc(lwork2 * n * sizeof(double));
 
-	printf("\n"); 
-	printf(" j-l = %3d, l-i = %3d, kk = %3d, k = %3d, n = %3d\n",j-l,l-i,kk,k,n); 
-
-
-
-	
 //	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', j-l, n, Qlj, ldq, Tlj, ldt ); 
 //	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', k, n, Qlj, ldq, work2, lwork2 ); 
 //	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', kk, n, Qlj, ldq, Tlj, ldt ); 
@@ -91,6 +78,8 @@ int lila_ormhr_w03( int m, int n, int i, int j, int l, int mt, double *A, int ld
 
 	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', l-i, n, work, lwork, Tij, ldt ); 
 
+	free( work2 );
+	
 	return 0;
 
 }

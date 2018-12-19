@@ -6,7 +6,6 @@ int lila_dorghr_w03( int m, int n, int i, int j, int l, int mt, double *A, int l
 
 	vb = mt - ( j % mt );
 	if ( vb > n ) vb = n; 
-//	if ( n < mt ) vb = ; 
 
 	not_done = 1;
 	jj = 1;

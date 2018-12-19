@@ -4,12 +4,19 @@ int lila_dgeqrf_recursive_w03( int m, int n, int i, int mt, double *A, int lda, 
 
 	int info, nb1, nb2; 
 
-	if ( n < 100 ) {
+	if ( n < 5 ) {
 
 //		printf(" i = %d, (leaf) n = %d,\n", i,n);
 
 		info = lila_dgeqr2_w03a( m, n, i, mt, A, lda, T, ldt, Q, ldq, work, lwork );
-//		info = lila_dgeqr2_w03b( m, n, i, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+	int *SSS;
+	SSS = (int *) malloc(m * sizeof(int)); // this is not m in partice, more n, but we refer to SSS starting at j so . . .
+
+
+		info = lila_dgeqr2_w03b( m, n, 0, i, mt, A, lda, T, ldt, Q, ldq, work, lwork, SSS );
+
+	free( SSS );
+
 
 //	if ( n < 2 ) {
 
@@ -35,7 +42,7 @@ int lila_dgeqrf_recursive_w03( int m, int n, int i, int mt, double *A, int lda, 
 
 
 
-	int jjj, iii;
+	//int jjj, iii;
 //	printf("T before the connect\n");
 //	for( iii = 0; iii < mt; iii++){
 //		for( jjj = 0; jjj < 15; jjj++){

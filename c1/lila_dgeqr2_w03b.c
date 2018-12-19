@@ -1,6 +1,6 @@
 #include "lila.h"
 
-int lila_dgeqr2_w03b( int m, int n, int i, int j, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork, int*S ){
+int lila_dgeqr2_w03b( int m, int n, int i, int j, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork, int *S ){
 
 	int info; 
 	double *Ajj, *Qjj;
@@ -19,7 +19,7 @@ int lila_dgeqr2_w03b( int m, int n, int i, int j, int mt, double *A, int lda, do
 	cblas_dtrsm( CblasColMajor, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, ml, n, 1.0e+00, Ajj, lda, Qjj, ldq );
 
 //   LU and construct T
-	lila_dorghr( m, n, i, j, mt, A, lda, T, ldt, Q, ldq, work, lwork, S );
+	lila_dorghr_w03( m, n, i, j, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork, S );
 
 	return 0;
 

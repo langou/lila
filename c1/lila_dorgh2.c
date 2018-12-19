@@ -21,7 +21,8 @@ int lila_dorgh2( int m, int n, int i, int j, int mt, double *A, int lda, double 
 
 		if ( fabs( 1.0e+00 - (*Tkk) ) < fabs( 1.0e+00 + (*Tkk) ) ){
 			for( i1 = 0; i1 < n; i1++) Tjj[ i1 + k*ldt ] = - Tjj[ i1 + k*ldt];
- 	 		Sj[ k ] = - 1;		
+ 	 		Sj[ k ] = - 1;
+ 	 		//Sj[ k ] = 1;
 		} else {
 			Sj[ k ] = 1;		
 		}
@@ -41,7 +42,8 @@ int lila_dorgh2( int m, int n, int i, int j, int mt, double *A, int lda, double 
 
 	for( k = 0; k < n; k++ ){
 		if ( Sj[ k ] == -1 ){
-			for( i1 = 0; i1 < j-1; i1++) T0j[ i1 + k*ldt ] = - T0j[ i1 + k*ldt ];
+		//printf("\n\nHIIIIIII           -------------         YOUR IN THE LOOP \n\n");
+			//for( i1 = 0; i1 < j-1; i1++) T0j[ i1 + k*ldt ] = - T0j[ i1 + k*ldt ];
 		}
 	}
 
