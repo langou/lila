@@ -2,7 +2,7 @@
 
 int main(int argc, char ** argv){
 
-	int m, n, nb, vb, i, j, lda, ldq, ldt, info, lwork;
+	int m, n, nb, vb, mt, i, j, lda, ldq, ldt, info, lwork;
 	double *A, *As, *T, *Q, *work=NULL;
 	double normA, elapsed_refL, perform_refL;
 	struct timeval tp;
@@ -62,6 +62,7 @@ int main(int argc, char ** argv){
 
 	ldt = n;
 	T = (double *) malloc(ldt * n * sizeof(double));
+	mt = -1;
 
 	lwork = 1920000;
 	work = (double *) malloc( 1920000 * sizeof(double));
@@ -71,14 +72,14 @@ int main(int argc, char ** argv){
 
 	j = 0;
 	if ( nb > n ) vb = n; else vb = nb;
-	info = lila_dgeqr2_w02a( m, vb, 0, ldt, A, lda, T, ldt, Q, ldq, work, lwork );
+	info = lila_dgeqr2_w02a( m, vb, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 	j += vb;
 	if ( j+nb > n ) vb = n-j; else vb = nb;
 	while( vb!=0 ){
-	info = lila_dormqrf_w02( m, vb, j, 0, j, ldt, A, lda, T, ldt, work, lwork );
-	info = lila_dgeqr2_w02a( m, vb, j, ldt, A, lda, T, ldt, Q, ldq, work, lwork );
-	info = lila_dlarft_connect_w02(m, vb, j, 0, -1, A, lda, T, ldt );
-	info = lila_dormqrbz_w02( m, vb, j, 0, j, ldt, A, lda, Q, ldq, T, ldt, work, lwork );	
+	info =        lila_dormqrf_z02( m, vb, j, 0, j, mt, A, lda, T, ldt, A, lda, work, lwork );
+	info =        lila_dgeqr2_w02a( m, vb, j,       mt, A, lda, T, ldt, Q, ldq, work, lwork );
+	info = lila_dlarft_connect_w02( m, vb, j, 0,    mt, A, lda, T, ldt );
+	info =       lila_dormqrbz_w02( m, vb, j, 0, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );	
 	j += vb;
 	if ( j+nb > n ) vb = n-j; else vb = nb;
 	}
@@ -113,7 +114,7 @@ int main(int argc, char ** argv){
 	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n, As, lda, RR, m );
 
 	work = (double *) malloc(m * m * sizeof(double));
-	if( m > n )  lila_dormqrf_z02( m, n, n, 0, 0, -1, A, lda, RR, m, T, ldt, work, lwork );
+	if( m > n )  lila_dormqrf_z02( m, n, n, 0, 0, mt, A, lda, T, ldt, RR, m, work, lwork );
 //	if( m > n )  lila_dormqrf_z00( m, n, n, 0, 0, -1, A, lda, RR, m, T, ldt, work, lwork );
 //	if( m == n ) lila_dormqrf_z00( m, n, n-1, 0, 0, -1, A, lda, RR, m, T, ldt, work, lwork );
 	free( work );
