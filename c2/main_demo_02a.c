@@ -7,7 +7,7 @@ int main(int argc, char ** argv){
 	double normA, elapsed_refL, perform_refL;
 	struct timeval tp;
 
-	srand(0);  // What does this do?
+	srand(0);
 
     	m = 30;
     	n = 20;

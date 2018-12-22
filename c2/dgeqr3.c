@@ -1,5 +1,4 @@
-#include "cblas.h"
-#include "lapacke.h"
+#include "lila.h"
 
 int dgeqr3( int m, int n, double *A, int lda, double *T, int ldt ){
 
