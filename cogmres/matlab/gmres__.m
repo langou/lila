@@ -60,6 +60,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    arnoldi_res(1) = abs( s(1) ) / bnrm2;
    true_res(1) = abs( s(1) ) / bnrm2;
+true_res(1)
 %  if ( arnoldi_res(1) < tol ), x=Mr*x; return; end
 %
 %  checks
