@@ -1,25 +1,38 @@
 #include "lila.h"
 
-extern int matvec_A( int n, double *y, double *x );
-extern int matvec_Ml( int n, double *y, double *x );
-
 int main(int argc, char ** argv) {
 
-	int i, n, info;
+	int i, n, info, m, max_it;
 	double *x, *y, *b;
 	double elapsed_refL;
+	double tol;
 	struct timeval tp;
 
 	n = 20;
+	m = 5;
+	max_it = 10;
+	tol = 1.0e-6;
 
 	for(i = 1; i < argc; i++){
+		if( strcmp( *(argv + i), "-tol") == 0) {
+			tol  = atof( *(argv + i + 1) );
+			i++;
+		}
 		if( strcmp( *(argv + i), "-n") == 0) {
 			n  = atoi( *(argv + i + 1) );
 			i++;
 		}
+		if( strcmp( *(argv + i), "-m") == 0) {
+			m  = atoi( *(argv + i + 1) );
+			i++;
+		}
+		if( strcmp( *(argv + i), "-max_it") == 0) {
+			max_it  = atoi( *(argv + i + 1) );
+			i++;
+		}
 	}
 
-	printf("n = %4d; ",n);
+	printf("n = %4d; tol = %5.0e; m = %2d; max_it = %3d; ", n, tol, m, max_it );
 
 	b  = (double *) malloc(n * sizeof(double));
 	x  = (double *) malloc(n * sizeof(double));
@@ -43,6 +56,8 @@ int main(int argc, char ** argv) {
 	gettimeofday(&tp, NULL);
 	elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
+
+	info = dgmres( n, b, x, m, max_it, tol );
 
 ///////
 
