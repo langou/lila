@@ -18,8 +18,6 @@ int lila_dormqrf_z02( int m, int n, int k, int i, int j, int mt, double *A, int 
 	work[ ii + jj * ldwork ] = Bij[  ii + jj * ldb  ];
 	}}
 
-//	printf("ORMQRF  we need work to be of size %2dx%2d\n",k,n);
-
  	cblas_dtrmm( CblasColMajor, CblasLeft, CblasLower, CblasTrans, CblasUnit, k, n, (1.0e+00), Aii, lda, work, ldwork );
  	cblas_dgemm( CblasColMajor, CblasTrans, CblasNoTrans, k, n, m-k-i, (1.0e+00), Aii+k, lda, Bij+k, ldb, (1.0e+00), work, ldwork );
 	cblas_dtrmm( CblasColMajor, CblasLeft, CblasUpper, CblasTrans, CblasNonUnit, k, n, (1.0e+00), Tii, ldt, work, ldwork );
