@@ -2,8 +2,8 @@
 include make.inc
 
 #all:  xmain_demo_02a.exe xmain_demo_03a.exe xmain_middle_02a.exe  xmain_unittest__lila_dgeqrf_w03_l
-#all:  xmain_unittest__lila_dgeqrf_w03_l
-all:  xmain_middle_02a.exe
+all:  xmain_unittest__lila_dgeqrf_w03_l
+#all:  xmain_middle_02a.exe
 
 lila_dgeqrf_w02a.o: lila_dgeqrf_w02a.c
 	$(CC) -c $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) lila_dgeqrf_w02a.c
