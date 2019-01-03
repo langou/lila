@@ -1,6 +1,6 @@
 #include "lila.h"
 
-int lila_dormqrf_z03( int m, int n, int k, int i, int j, int mt, double *A, int lda, double *B, int ldb, double *T, int ldt, double *work, int lwork ){
+int lila_dormqrf_z03( int m, int n, int k, int i, int j, int mt, double *A, int lda, double *T, int ldt, double *B, int ldb, double *work, int lwork ){
 
 	double *Aii, *Bij;
 	double *Tii;
