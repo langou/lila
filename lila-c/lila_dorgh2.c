@@ -1,28 +1,24 @@
 #include "lila.h"
 
-int lila_dorgh2( int m, int n, int i, int j, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork, int* S ){
+int lila_dorgh2( int m, int n, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork, int* S ){
 
-	double *Tjj, *Ajj, *T0j;
+	double *Tjj, *Ajj;
 	double *Tkk, *Q0j;
 	int *Sj;
-	int k, i1, ml;
+	int k, i1;
 
-	ml = m;
+	//Tjj = T + j + j*ldt;
+	//Ajj = A + j + j*lda;
+	//Q0j = Q + j*ldq;
+	//Sj = S + j;
 
-	Tjj = T + j + j*ldt;
-	T0j = T + j*ldt;
-	Ajj = A + j + j*lda;
-	Q0j = Q + j*ldq;
-	Sj = S + j;
 
-//	LU Factorization
 	for( k = 0; k < n; k++ ){
 		Tkk = Tjj + k + k*ldt;
 
 		if ( fabs( 1.0e+00 - (*Tkk) ) < fabs( 1.0e+00 + (*Tkk) ) ){
 			for( i1 = 0; i1 < n; i1++) Tjj[ i1 + k*ldt ] = - Tjj[ i1 + k*ldt];
  	 		Sj[ k ] = - 1;
- 	 		//Sj[ k ] = 1;
 		} else {
 			Sj[ k ] = 1;		
 		}
@@ -48,7 +44,7 @@ int lila_dorgh2( int m, int n, int i, int j, int mt, double *A, int lda, double 
 
 	for( k = 0; k < n; k++ ){
 		if ( Sj[ k ] == -1 ){
-			for( i1 = 0; i1 < m-i; i1++) Q0j[ i1 + k*ldq ] = - Q0j[ i1 + k*ldq ];
+			for( i1 = 0; i1 < m; i1++) Q0j[ i1 + k*ldq ] = - Q0j[ i1 + k*ldq ];
 		}
 	}
 

@@ -1,6 +1,6 @@
 #include "lila.h"
 
-int lila_dgeqrf_w02a( int m, int n, int nb, int i, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork ){
+int lila_dgeqrf_w02a( int m, int n, int i, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork, int nb ){
 
 	int vb, info, mt, k, j;
 

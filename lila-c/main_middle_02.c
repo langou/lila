@@ -69,8 +69,10 @@ int main(int argc, char ** argv){
  	for(i = 0; i < ldq * (n+ii); i++)
 		*(Q + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
 
-	double *Aii;
+	double *Aii, *Qii;
 	Aii = A+ii+ii*lda;
+	Qii = Q+ii+ii*ldq;
+
 	ml = m-ii;
 	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n+ii, A, lda, As, lda );
 	normA = LAPACKE_dlange_work(LAPACK_COL_MAJOR, 'F', ml, n, Aii, lda, work );
@@ -86,7 +88,14 @@ int main(int argc, char ** argv){
 	gettimeofday(&tp, NULL);
 	elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-	lila_dgeqrf_w02a( m, n, nb, ii, A, lda, T, ldt, Q, ldq, work, lwork );
+//	lila_dgeqrf_w02a( m, n, ii, A, lda, T, ldt, Q, ldq, work, lwork, nb );
+
+	// Cholesky QR starting at ii for w02b
+	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', ml, n+ii, Aii, lda, Qii, ldq ); 
+	cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, n+ii, ml, 1.0e+00, Qii, ldq, 0e+00, Aii, lda );
+	info = LAPACKE_dpotrf( LAPACK_COL_MAJOR, 'U', n+ii, Aii, lda ); 
+	cblas_dtrsm( CblasColMajor, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, ml, n+ii, 1.0e+00, Aii, lda, Qii, ldq );
+	lila_dgeqrf_w02b( m, n, ii, A, lda, T, ldt, Q, ldq, work, lwork, nb );
 
 	gettimeofday(&tp, NULL);
 	elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -99,10 +108,9 @@ int main(int argc, char ** argv){
 	double norm_orth_1, norm_repres_1;
 	double *QQ, *RR, *HH, norm_repres_2_1, norm_repres_2_2, norm_orth_2;
 	double norm_orth_3, norm_repres_3, norm_diffQ_3;
-	double *As_ii, *Qii, *Tii;
+	double *As_ii, *Tii;
 
 	As_ii = As+ii+ii*lda;
-	Qii = Q+ii+ii*ldq;
 	Tii = T+ii+ii*ldt;
 
 	lwork = n*n;
