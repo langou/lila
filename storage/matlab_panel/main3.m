@@ -68,9 +68,10 @@
    T1 = T(1:ni(1)+ni(2),1:ni(1)+ni(2));
    T2 = T(ni(1)+ni(2)+1:n,ni(1)+ni(2)+1:n);
 %
-   H1 = ( eye(m) - V(1:m,1:ni(1)+ni(2)) * ( T1 * V(1:m,1:ni(1)+ni(2))' ) );
-   H2 = ( eye(m) - V(1:m,ni(1)+ni(2)+1:n) * ( T2 * V(1:m,ni(1)+ni(2)+1:n)' ) );
-   H  = H1*H2;
+%   H1 = ( eye(m) - V(1:m,1:ni(1)+ni(2)) * ( T1 * V(1:m,1:ni(1)+ni(2))' ) );
+%   H2 = ( eye(m) - V(1:m,ni(1)+ni(2)+1:n) * ( T2 * V(1:m,ni(1)+ni(2)+1:n)' ) );
+%   H  = H1*H2;
+    H = ( eye(m) - V * ( T * V' ) );
 %
    fprintf('\n');
    fprintf('|| Q''*Q - I ||            = % 5.3e\n',norm(Q'*Q-eye(n),'fro'))

@@ -15,7 +15,6 @@ int lila_dorghr_w03( int m, int n, int i, int j, int l, int mt, double *A, int l
 
 		lila_ormhr_w03( m, vb, i, j, l, mt, A, lda, T, ldt, Q, ldq, work, lwork, S );
 		lila_dorgh2_w03( m, vb, i, j, l, mt, A, lda, T, ldt, Q, ldq, work, lwork, S );
-		info = lila_dlarft_connect_w03(m, vb, j, i, mt, A, lda, T, ldt );
 
 		if ( jj + vb - 1 == n ) {
 		

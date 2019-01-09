@@ -108,29 +108,24 @@ int main(int argc, char ** argv){
 
 		lila_dorghr_w03( m, vb, i, j, l, mt, A, lda, T, ldt, Q, ldq, work, lwork, S );
 
-		lila_ormhr_w0b( m, vb, i, j, AAA, lda, TTT, n, QQQ, ldq, SSS );
-		lila_dorgh2( m, vb, i, j, -1, AAA, lda, TTT, n, QQQ, ldq, work, lwork, SSS );
-		info = lila_dlarft_connect_w02(m, vb, j, 0, -1, AAA, lda, TTT, n );
+//		lila_ormhr_w0b( m, vb, i, j, AAA, lda, TTT, n, QQQ, ldq, SSS );
+//		lila_dorgh2( m, vb, i, j, -1, AAA, lda, TTT, n, QQQ, ldq, work, lwork, SSS );
 
 		j = vb;
-
 	if ( j+nb > n ) vb = n-j; else vb = nb;
 	while( vb!=0 ){
 
 		lila_dorghr_w03( m, vb, i, j, l, mt, A, lda, T, ldt, Q, ldq, work, lwork, S );
 
-		lila_ormhr_w0b( m, vb, i, j, AAA, lda, TTT, n, QQQ, ldq, SSS );
-		lila_dorgh2( m, vb, i, j, -1, AAA, lda, TTT, n, QQQ, ldq, work, lwork, SSS );
-		info = lila_dlarft_connect_w02(m, vb, j, 0, -1, AAA, lda, TTT, n );
+//		lila_ormhr_w0b( m, vb, i, j, AAA, lda, TTT, n, QQQ, ldq, SSS );
+//		lila_dorgh2( m, vb, i, j, -1, AAA, lda, TTT, n, QQQ, ldq, work, lwork, SSS );
 
 		j += vb;
 	if ( j+nb > n ) vb = n-j; else vb = nb;
 	}
 
-
-
-	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n, AAA, lda, A, lda ); 
-	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n, QQQ, ldq, Q, ldq ); 
+//	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n, AAA, lda, A, lda ); 
+//	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n, QQQ, ldq, Q, ldq ); 
 
 //printf("\nAAA - A =");
 //for(i = 0; i < m; i++){ for(j = 0; j < n; j++){ AAA[ i + j*lda] = AAA[ i + j*lda] - A[ i + j*lda]; }  }
@@ -167,9 +162,6 @@ int main(int argc, char ** argv){
 //for(i = 0; i < n; i++){ printf(" %+5d ", S[i]); } printf("\n"); 
 //for(i = 0; i < n; i++){ printf(" %+5d ", SSS[i]); } printf("\n"); 
 //printf("\n");
-
-
-
 
 
 	gettimeofday(&tp, NULL);
@@ -263,16 +255,16 @@ int main(int argc, char ** argv){
 	free( HH );
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-	//printf("\n");
+	printf("\n");
 	printf("|time = %f   GFlop/sec = %f", elapsed_refL, perform_refL);
 
-	//printf("\n");
+	printf("\n");
 	printf("|res1   = %5.1e    orth1  = %5.1e ", norm_repres_1, norm_orth_1);
 
-	//printf("\n");
+	printf("\n");
 	printf("|res2-1 = %5.1e    res2-2 = %5.1e  orth2 = %5.1e  ", norm_repres_2_1, norm_repres_2_2, norm_orth_2);
 
-	//printf("\n");
+	printf("\n");
 	printf("|res3   = %5.1e    orth3  = %5.1e  diff3 = %5.1e", norm_repres_3, norm_orth_3, norm_diffQ_3 );
 
 	printf("\n\n");

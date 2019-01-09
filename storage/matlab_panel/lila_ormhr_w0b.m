@@ -10,8 +10,7 @@
       end
 %
       work(1:i-1,1:n)    = Q(1:i-1,j:j+n-1);
-      T(i:j-1,j:j+n-1)   = Q(i:j-1,j:j+n-1);
-      T(j:j+n-1,j:j+n-1) = Q(j:j+n-1,j:j+n-1);
+      T(i:j+n-1,j:j+n-1) = Q(i:j+n-1,j:j+n-1);
       A(j+n:m,j:j+n-1)   = Q(j+n:m,j:j+n-1); 
 %
       work(1:i-1,1:n)    = (tril(A(1:i-1,1:i-1),-1) + eye(i-1,i-1)) \ work(1:i-1,1:n);

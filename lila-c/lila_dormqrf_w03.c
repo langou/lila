@@ -1,9 +1,9 @@
 #include "lila.h"
 
-int lila_dormqrf_w03( int m, int n, int k, int i, int j, int mt, double *A, int lda, double *TTT, int llldddttt, double *work, int lwork ){
+int lila_dormqrf_w03( int m, int n, int k, int i, int j, int mt, double *A, int lda, double *T, int ldt, double *work, int lwork ){
 
 	double *Aii, *Aij;
-	double *TTTii;
+	double *Tii;
 
 	int ml, vb;
 	int ldwork;
@@ -19,7 +19,7 @@ int lila_dormqrf_w03( int m, int n, int k, int i, int j, int mt, double *A, int 
 	
 	Aii = A + i + i*lda;
 	Aij = A + i + j*lda;
-	TTTii = TTT + (i % mt) + i*llldddttt;
+	Tii = T + (i % mt) + i*ldt;
 
 	ldwork = mt;
 
@@ -39,7 +39,7 @@ int lila_dormqrf_w03( int m, int n, int k, int i, int j, int mt, double *A, int 
 
 		cblas_dtrmm( CblasColMajor, CblasLeft, CblasLower, CblasTrans, CblasUnit, vb, n, (1.0e+00), Aii, lda, work, ldwork );
 		cblas_dgemm( CblasColMajor, CblasTrans, CblasNoTrans, vb, n, ml-vb, (1.0e+00), Aii+vb, lda, Aij+vb, lda, (1.0e+00), work, ldwork );
-		cblas_dtrmm( CblasColMajor, CblasLeft, CblasUpper, CblasTrans, CblasNonUnit, vb, n, (1.0e+00), TTTii, llldddttt, work, ldwork );
+		cblas_dtrmm( CblasColMajor, CblasLeft, CblasUpper, CblasTrans, CblasNonUnit, vb, n, (1.0e+00), Tii, ldt, work, ldwork );
 		cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans, ml-vb, n, vb, (-1.0e+00), Aii+vb, lda, work, ldwork, (1.0e+00), Aij+vb, lda );
 		cblas_dtrmm( CblasColMajor, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, vb, n, (+1.0e+00), Aii, lda, work, ldwork );
 
@@ -60,7 +60,7 @@ int lila_dormqrf_w03( int m, int n, int k, int i, int j, int mt, double *A, int 
 
 		} else {
 
-			if(jj == 1) TTTii = TTTii - (i%mt) + vb * llldddttt;
+			if(jj == 1) Tii = Tii - (i%mt) + vb * ldt;
 
 			ml -= vb;
 
@@ -68,7 +68,7 @@ int lila_dormqrf_w03( int m, int n, int k, int i, int j, int mt, double *A, int 
 
 			Aii += vb * ( lda + 1 );
 			Aij += vb;
-			if(jj != 1+vb) TTTii = TTTii + vb * llldddttt;
+			if(jj != 1+vb) Tii = Tii + vb * ldt;
 
 			if ( ( jj + mt - 1 ) <= k ) vb = mt; else vb = k - jj + 1;
 

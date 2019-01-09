@@ -14,18 +14,13 @@ int lila_dorgh2_w03( int m, int n, int i, int j, int l, int mt, double *A, int l
 	Q0j = Q + j*ldq;
 	Sj = S + j;
 
-//	printf("(j%%mt) = %3d, mt = %3d, n = %3d,\n",j%mt,mt,n);
-
 	for( k = 0; k < n; k++ ){
 		Tkk = Tjj + k + k*ldt;
 
 		if ( fabs( 1.0e+00 - (*Tkk) ) < fabs( 1.0e+00 + (*Tkk) ) ){
 			for( i1 = 0; i1 < n; i1++) Tjj[ i1 + k*ldt ] = - Tjj[ i1 + k*ldt];
 	 		Sj[ k ] = - 1;		
-			//Sj[ k ] = 1;		
 		} else {
-			//for( i1 = 0; i1 < n; i1++) Tjj[ i1 + k*ldt ] = - Tjj[ i1 + k*ldt];
-	 		//Sj[ k ] = - 1;		
 			Sj[ k ] = 1;		
 		}
 			(*Tkk) = (*Tkk) - 1.0e+00;
@@ -44,8 +39,6 @@ int lila_dorgh2_w03( int m, int n, int i, int j, int l, int mt, double *A, int l
 
 	for( k = 0; k < n; k++ ){
 		if ( Sj[ k ] == -1 ){
-			//printf("\n\nHIIIIIII           -------------         YOUR IN THE LOOP \n\n");
-			//for( i1 = 0; i1 < j-1; i1++) T0j[ i1 + k*ldt ] = - T0j[ i1 + k*ldt ];
 		}
 	}
 	for( k = 0; k < n; k++ ){

@@ -22,7 +22,6 @@ int lila_dorgh2( int m, int n, int i, int j, int mt, double *A, int lda, double 
 		if ( fabs( 1.0e+00 - (*Tkk) ) < fabs( 1.0e+00 + (*Tkk) ) ){
 			for( i1 = 0; i1 < n; i1++) Tjj[ i1 + k*ldt ] = - Tjj[ i1 + k*ldt];
  	 		Sj[ k ] = - 1;
- 	 		//Sj[ k ] = 1;
 		} else {
 			Sj[ k ] = 1;		
 		}

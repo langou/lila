@@ -10,21 +10,9 @@ int lila_ormhr_w0b( int m, int n, int i, int j, double *A, int lda, double *T, i
 	l = 5;
 	if ( j > i + l  ) l = i + l; else l = i;
 
-	//l=i;
-
 	ldw = l-i;
 
-//  	work = (double *) malloc((i-1) * n * sizeof(double));
 	work = (double *) malloc(ldw * n * sizeof(double));
-//	work = (double *) malloc(m * n * sizeof(double));
-
-
-//	for( k = 0; k < (i-1) * n; k++){
-	
-//		work[k] = 0.0e+00;
-
-//	}
-
 
 	Q0j = Q + j*ldq;
 	Qij = Q + i + j*ldq;

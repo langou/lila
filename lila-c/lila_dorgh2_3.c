@@ -22,11 +22,11 @@ int lila_dorgh2_3( int m, int n, double *A, int lda, double *T, int ldt, double 
 
 	for( k = 0; k < n; k++ ){
 		if ( S[ k ] == -1 ){
-			for( i1 = n; i1 < m; i1++) A[ i1 + k*lda ] = - A[ i1 + k*lda ]; // this one was m-j
+			for( i1 = n; i1 < m; i1++) A[ i1 + k*lda ] = - A[ i1 + k*lda ]; 
 		}
 	}
 
-	cblas_dtrsm( CblasColMajor, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, m-n, n, 1.0e+00, T, ldt, A+n, lda ); // this one was m-j-n
+	cblas_dtrsm( CblasColMajor, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, m-n, n, 1.0e+00, T, ldt, A+n, lda ); 
 
 	for( k = 0; k < n; k++ ){
 		if ( S[ k ] == -1 ){
@@ -36,7 +36,7 @@ int lila_dorgh2_3( int m, int n, double *A, int lda, double *T, int ldt, double 
 
 	for( k = 0; k < n; k++ ){
 		if ( S[ k ] == -1 ){
-			for( i1 = 0; i1 < m; i1++) Q[ i1 + k*ldq ] = - Q[ i1 + k*ldq ]; // this one was m-i   but i was always zero...
+			for( i1 = 0; i1 < m; i1++) Q[ i1 + k*ldq ] = - Q[ i1 + k*ldq ]; 
 		}
 	}
 
