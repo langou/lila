@@ -19,7 +19,7 @@ int lila_dorghr_w03_mt( int m, int n, int i, int mt, double *A, int lda, double 
 
 
 	
-		if( jj != 1 ) info = lila_ormhr2_w03_hr ( m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+		//if( jj != 1 ) info = lila_ormhr2_w03_hr ( m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 		info = lila_dgeqr2_w03_hr               ( m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 		info = lila_dlarft_connect_w03          ( m, vb, j, i, mt, A, lda, T, ldt );
 
