@@ -37,7 +37,7 @@ int lila_dgeqrf_w03_mt_v02( int m, int n, int i, int mt, double *A, int lda, dou
 
 	while( vb != 0 ){
 
-		info = lila_ormhr2_w03_hr( ml, vb, i, j, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork, S );
+		info = lila_ormhr2_w03_hr( m, vb, i, j, 0, mt, A, lda, T, ldt, Q, ldq, work, lwork, S );
 		info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', ml-vb, vb, Qii+vb, ldq, Aii+vb, lda ); 
 		info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', vb, vb, Qii, ldq, Tki, ldt ); 
 		lila_dorgh2_3( ml, vb, Aii, lda, Tki, ldt, Qii, ldq, work, lwork, S );

@@ -2,11 +2,11 @@
    clear
    clear global
 %
-   m = 47;
-   i = 7;
-   n = 26;
+   m = 27;
+   i = 1;
+   n = 16;
    nb = 4;
-   mt = n+i-1;
+   mt = n;
    log10KA = 1;
 %
    if ( m < n ) fprintf('m < n\n'); return; end
@@ -18,37 +18,43 @@
    As = A;
 %
    T = zeros(n+i-1,n+i-1);
-   TT = zeros(mt,n+i-1);
 %
    Q(1:m,1:n+i-1) = A(1:m,1:n+i-1);
    D = -zeros(n+i-1,1);
    A = rand(m,n+i-1);
-   QQ = Q;
-
-   [ Q, R ] = Cholesky_qr( Q(i:m,i:n+i-1) );
-   for ii=i:n+i-1,
-      for jj=ii:n+i-1,
-         A(ii,jj) = R(ii-i+1,jj-i+1);
-      end
-   end
-
-   for ii = 1:i-1,
-      Q = [zeros(1,n+ii-1);Q];
-      Q = [zeros(m-i+1+ii,1),Q];
-   end
-   for ii = 1:i-1,
-      Q(ii,ii) = 1.0e+00;
-   end
 
    j = i;
    if( nb > n+i-1 ), vb = n+i-1; else vb = nb; end
+
+   QQ = Q;
+
+   [ Q(j:m,j:vb+j-1), R ] = Cholesky_qr( Q(j:m,j:vb+j-1) );
+   for ii=j:vb+j-1,
+      for jj=ii:vb+j-1,
+         A(ii,jj) = R(ii-j+1,jj-j+1);
+      end
+   end
+
+
    [ A, T, Q, D ] = lila_orghr_w0b_panel( m, vb, i, j, A, T, Q, D );
+
    j = j+vb;
    if( j+nb > n+i-1 ) vb = n+i-1-j; else vb = nb; end
+
    while( vb~= 0 )
+
+      [ Q(j:m,j:vb+j-1), R ] = Cholesky_qr( Q(j:m,j:vb+j-1) );
+      for ii=j:vb+j-1,
+         for jj=ii:vb+j-1,
+            A(ii,jj) = R(ii-j+1,jj-j+1);
+         end
+      end
+
       [ A, T, Q, D ] = lila_orghr_w0b_panel( m, vb, i, j, A, T, Q, D );
+
       j = j+vb;
       if( j+nb > n+i-1 ) vb = n+i-1-j; else vb = nb; end
+
    end
 
 %

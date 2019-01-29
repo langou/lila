@@ -1,14 +1,14 @@
 %
-   function [ A, T, Q, D ] = lila_orgh2_w0b_panel( m, n, j, A, T, Q, D )
+   function [ A, T, Q, D ] = lila_orgh2_w0b_panel( m, n, i, j, A, T, Q, D )
 %
       for k = 1:n,
 %
          if (abs(T(j+k-1,j+k-1) - 1) < abs( - T(j+k-1,j+k-1) - 1 ))
-           Q(1:m,j+k-1)         = - Q(1:m,j+k-1);
+           Q(i:m,j+k-1)         = - Q(i:m,j+k-1);
            A(j+k-1,j+k-1:j+n-1) = - A(j+k-1,j+k-1:j+n-1);
            A(j+n:m,j+k-1)       = - A(j+n:m,j+k-1);
            T(j:j+n-1,j+k-1)     = - T(j:j+n-1,j+k-1);
-           T(1:j-1,j+k-1)       = - T(1:j-1,j+k-1);
+           T(i:j-1,j+k-1)       = - T(i:j-1,j+k-1);
            D(j+k-1)             = -1;
          else
            D(j+k-1)             = 1;
