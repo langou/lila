@@ -87,10 +87,10 @@ int main(int argc, char ** argv){
 
 //	lila_dgeqrf_w03_level1( m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork, nb );
 
-	lila_dgeqrf_w03_mt    ( m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+//	lila_dgeqrf_w03_mt    ( m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 //	lila_dgeqrf_w03_l     ( m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 
-//	lila_dgeqrf_w03_mt_v02( m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+	lila_dgeqrf_w03_mt_v02( m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 
 	gettimeofday(&tp, NULL);
 	elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);

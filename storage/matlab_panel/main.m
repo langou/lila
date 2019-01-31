@@ -19,33 +19,25 @@
    Q = zeros(m,n);
    T = zeros(n,n);
 %
-%   [ A, T, Q ] = lila_geqr2_w0a( m, n, 1, A, T, Q );
-%
-%   [ A, T, Q ] = lila_geqr2_w0b( m, n, A, T, Q );  % This script only does a full block with LU 
-%
-%
-%
-      Q(1:m,1:n) = A(1:m,1:n);
-      D = -zeros(n,1);
-      A = rand(m,n);
+   Q(1:m,1:n) = A(1:m,1:n);
+   D = -zeros(n,1);
+   A = rand(m,n);
 
-      [ Q, R ] = Cholesky_qr( Q );
-      for ii=1:n,
-         for jj=ii:n,
-           A(ii,jj) = R(ii,jj);
-         end
+   [ Q, R ] = Cholesky_qr( Q );
+   for ii=1:n,
+      for jj=ii:n,
+        A(ii,jj) = R(ii,jj);
       end
+   end
 
-      AA = A; TT = T; QQ = Q;
-      [ AA, TT, QQ, DD ] = lila_geqr2_w0b_panel( m, n, 1, AA, TT, QQ, D );
-%      [ A, T, Q, D ] = lila_geqr2_w0b_panel( m, n, 1, A, T, Q, D );
+   AA = A; TT = T; QQ = Q;
+   [ AA, TT, QQ, DD ] = lila_geqr2_w0b_panel( m, n, 1, 1, AA, TT, QQ, D );
 %
-      n1 = ceil(n/2);
-      n2 = n - n1;
+   n1 = ceil(n/2);
+   n2 = n - n1;
 %
-      [ A, T, Q, D ] = lila_geqr2_w0b_panel( m, n1, 1, A, T, Q, D );
-      [ A, T, Q, D ] = lila_geqr2_w0b_panel( m, n2, n1+1, A, T, Q, D );
-%
+   [ A, T, Q, D ] = lila_geqr2_w0b_panel( m, n1, 1, 1, A, T, Q, D );
+   [ A, T, Q, D ] = lila_geqr2_w0b_panel( m, n2, 1, n1+1, A, T, Q, D );
 %
 %  Checks
 %

@@ -23,7 +23,6 @@
    Q(1:m,1:n+i-1) = A(1:m,1:n+i-1);
    D = -zeros(n+i-1,1);
    A = rand(m,n+i-1);
-   QQ = Q;
 
    [ Q, R ] = Cholesky_qr( Q(i:m,i:n+i-1) );
    for ii=i:n+i-1,
