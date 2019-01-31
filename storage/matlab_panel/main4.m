@@ -4,11 +4,11 @@
 %
    fprintf('\n');
 %
-   m = 17;
-   i = 2;
+   m = 57;
+   i = 7;
    j = i;
-   n = 12;
-   mt = n+i-1;
+   n = 37;
+   mt = 3;
    log10KA = 1;
 %
    if ( m < n ) fprintf('m < n\n'); return; end
@@ -21,6 +21,7 @@
 %
    TT = zeros(n+i-1,n+i-1);
    T = zeros(mt,n+i-1);
+   T = zeros(n+i-1,n+i-1);
 %
    Q(i:m,i:n+i-1) = A(i:m,i:n+i-1);
    D = -zeros(n+i-1,1);
@@ -33,14 +34,22 @@
       end
    end
 
-   AA = A; QQ = Q;
-   [ AA, TT, QQ, DD ] = lila_geqr2_w0b_panel( m, n, i, j, AA, TT, QQ, D );
+%   AA = A; QQ = Q;
+%   [ AA, TT, QQ, DD ] = lila_geqr2_w0b_panel( m, n, i, j, mt, AA, TT, QQ, D );
 %
-   n1 = ceil((n+i-1)/2);
-   n2 = n - n1;
+   vb = mt - mod(i-1,mt);
+   if (vb > n+i-1), vb = n+i-1; end
+   itlo = mod(i-1,mt)+1; if (itlo == 0), itlo = mt, end;
 %
-   [ A, T, Q, D ] = lila_geqr2_w0b_panel( m, n1, i, j, A, T, Q, D );
-   [ A, T, Q, D ] = lila_geqr2_w0b_panel( m, n2, i, n1+j, A, T, Q, D );
+   while( vb~=0 ),
+
+      [ A, T, Q, D ] = lila_geqr2_w0b_panel_mt( m, vb, i, j, mt, A, T, Q, D );
+
+      itlo = mod(itlo+vb-1,mt)+1; if (itlo == 0), itlo = mt, end;
+      j = j+vb;
+      if( j+mt-1 >= n+i-1) vb = n + i -1 + 1 - j; else, vb = mt; end
+
+   end
 %
 %  Checks
 %

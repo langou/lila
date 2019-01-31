@@ -1,5 +1,5 @@
 %
-   function [ A, T, Q, D ] = lila_geqr2_w0b_panel( m, n, i, j, mt, A, T, Q, D )
+   function [ A, T, Q, D ] = lila_geqr2_w0b_panel_mt( m, n, i, j, mt, A, T, Q, D )
 %
 %     lila_ormhr_w0b % ormqr
       work = zeros( i-1, n);
