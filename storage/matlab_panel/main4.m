@@ -21,7 +21,6 @@
 %
    TT = zeros(n+i-1,n+i-1);
    T = zeros(mt,n+i-1);
-   T = zeros(n+i-1,n+i-1);
 %
    Q(i:m,i:n+i-1) = A(i:m,i:n+i-1);
    D = -zeros(n+i-1,1);
@@ -34,8 +33,13 @@
       end
    end
 
-%   AA = A; QQ = Q;
-%   [ AA, TT, QQ, DD ] = lila_geqr2_w0b_panel( m, n, i, j, mt, AA, TT, QQ, D );
+%
+%  This is to check that we do all good operations on everything
+%  because the checks don't track mt and aren't good. Below
+%  I copy TT into T for the checks.
+%
+   AA = A; QQ = Q;
+   [ AA, TT, QQ, DD ] = lila_geqr2_w0b_panel( m, n, i, j, mt, AA, TT, QQ, D );
 %
    vb = mt - mod(i-1,mt);
    if (vb > n+i-1), vb = n+i-1; end
@@ -43,19 +47,25 @@
 %
    while( vb~=0 ),
 
-      [ A, T, Q, D ] = lila_geqr2_w0b_panel_mt( m, vb, i, j, mt, A, T, Q, D );
+      [ A, T, Q, D ]     = lila_geqr2_w0b_panel_mt( m, vb, i, j, mt, A, T, Q, D );
 
       itlo = mod(itlo+vb-1,mt)+1; if (itlo == 0), itlo = mt, end;
       j = j+vb;
       if( j+mt-1 >= n+i-1) vb = n + i -1 + 1 - j; else, vb = mt; end
 
    end
+T
 %
 %  Checks
 %
    RR = triu(qr(As(i:m,i:n+i-1),0));
    VV = tril(qr(As(i:m,i:n+i-1),0),-1) + eye(m-i+1,n);
    HH = ( eye(m-i+1) - VV * ( TT(i:n+i-1,i:n+i-1) * VV' ) );
+%
+%
+%%%% cheating
+   T = TT;
+%%%%
 %
    R = triu(A(i:n+i-1,i:n+i-1));
    V = tril(A(i:m,i:n+i-1),-1)+eye(m-i+1,n);
