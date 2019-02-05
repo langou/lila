@@ -10,10 +10,10 @@ int main(int argc, char ** argv){
 	srand(0);
 
     	m   = 41;
-    	n   = 27;
+    	n   = 20;
 	nb  =  2;
 	ii  =  1;
-	mt  =  7;
+	mt  =  5;
 	lda = -1;
 	ldq = -1;
 

@@ -4,11 +4,11 @@
 %
    fprintf('\n');
 %
-   m = 57;
-   i = 7;
+   m = 847;
+   i = 158;
    j = i;
-   n = 37;
-   mt = 3;
+   n = 473;
+   mt = 34;
    log10KA = 1;
 %
    if ( m < n ) fprintf('m < n\n'); return; end
@@ -19,7 +19,6 @@
    clear U S V
    As = A;
 %
-   TT = zeros(n+i-1,n+i-1);
    T = zeros(mt,n+i-1);
 %
    Q(i:m,i:n+i-1) = A(i:m,i:n+i-1);
@@ -32,45 +31,39 @@
          A(ii,jj) = R(ii-i+1,jj-i+1);
       end
    end
-
-%
-%  This is to check that we do all good operations on everything
-%  because the checks don't track mt and aren't good. Below
-%  I copy TT into T for the checks.
-%
-   AA = A; QQ = Q;
-   [ AA, TT, QQ, DD ] = lila_geqr2_w0b_panel( m, n, i, j, mt, AA, TT, QQ, D );
 %
    vb = mt - mod(i-1,mt);
    if (vb > n+i-1), vb = n+i-1; end
-   itlo = mod(i-1,mt)+1; if (itlo == 0), itlo = mt, end;
 %
    while( vb~=0 ),
 
       [ A, T, Q, D ]     = lila_geqr2_w0b_panel_mt( m, vb, i, j, mt, A, T, Q, D );
-
-      itlo = mod(itlo+vb-1,mt)+1; if (itlo == 0), itlo = mt, end;
       j = j+vb;
       if( j+mt-1 >= n+i-1) vb = n + i -1 + 1 - j; else, vb = mt; end
 
    end
-T
+
 %
 %  Checks
 %
-   RR = triu(qr(As(i:m,i:n+i-1),0));
-   VV = tril(qr(As(i:m,i:n+i-1),0),-1) + eye(m-i+1,n);
-   HH = ( eye(m-i+1) - VV * ( TT(i:n+i-1,i:n+i-1) * VV' ) );
-%
-%
-%%%% cheating
-   T = TT;
-%%%%
-%
    R = triu(A(i:n+i-1,i:n+i-1));
    V = tril(A(i:m,i:n+i-1),-1)+eye(m-i+1,n);
-   H = ( eye(m-i+1) - V * ( T(i:n+i-1,i:n+i-1) * V' ) );
+   H = eye(m-i+1);
 %
+   j = i;
+   k = 1;
+   vb = mt - mod(i-1,mt);
+   if (vb > n+i-1), vb = n+i-1; end
+   while( vb ~= 0 ),
+
+      it = mod(j-1,mt)+1;
+      H = H * ( eye(m-i+1) - V(1:m-i+1,k:k+vb-1) * ( T(it:it+vb-1,j:j+vb-1) * V(1:m-i+1,k:k+vb-1)' ) ) ;
+      j = j+vb;
+      k = k+vb;
+      if( j+mt-1 >= n+i-1) vb = n + i -1 + 1 - j; else, vb = mt; end
+
+   end
+
    fprintf('\n');
    fprintf('|| Q''*Q - I ||            = % 5.3e\n',norm(Q(i:m,i:n+i-1)'*Q(i:m,i:n+i-1)-eye(n),'fro'))
    fprintf('|| A - Q*R || / || A ||   = % 5.3e\n', norm(As(i:m,i:n+i-1) - Q(i:m,i:n+i-1)*R(1:n,1:n), 'fro') / norm(As(i:m,i:n+i-1), 'fro'));
