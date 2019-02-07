@@ -4,11 +4,11 @@
 %
    fprintf('\n');
 %
-   m = 847;
-   i = 158;
+   m = 32;
+   i = 4;
    j = i;
-   n = 473;
-   mt = 34;
+   n = 20;
+   mt = 2;
    log10KA = 1;
 %
    if ( m < n ) fprintf('m < n\n'); return; end
