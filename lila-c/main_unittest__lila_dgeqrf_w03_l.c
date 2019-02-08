@@ -95,6 +95,46 @@ int main(int argc, char ** argv){
 	gettimeofday(&tp, NULL);
 	elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
+//	double *RRR;
+//	double *RRRi0, *AAs_ii;
+//	RRR = (double *) malloc(m * (n+ii) * sizeof(double));
+//	RRRi0 = RRR+ii;
+//	AAs_ii = As+ii+ii*lda;
+
+//	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', ml, n, AAs_ii, lda, RRRi0, m );
+//	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', ml, n, AAs_ii, lda, RRRi0, m );
+//	lila_dormqrf_z03( m, n, n, ii, 0, mt, A, lda, T, ldt, RRR, m, work, lwork );
+//	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', n, n, RRRi0, lda, Aii, lda ); 
+
+//	int ik;
+//	int jk;
+//	printf("R=[\n");
+//	for( ik = ii; ik < n+ii; ik++ ){
+//		for( jk = ii; jk < ik; jk++ ){
+//			printf("        ");
+//		}
+//		for( jk = ik; jk < n+ii; jk++ ){
+//			printf(" %6.2f ", A[ ik + jk*lda]-RRRi0[ ik + jk*lda]);
+//		}
+//		printf("\n");
+//	}
+//	printf("];\n");
+//
+//	printf("R=[\n");
+//	for( ik = ii; ik < n+ii; ik++ ){
+//		for( jk = ii; jk < ik; jk++ ){
+//			printf("        ");
+//		}
+//		for( jk = ik; jk < n+ii; jk++ ){
+//			printf(" %6.2f ", RRRi0[ ik + jk*lda]);
+//		}
+//		printf("\n");
+//	}
+//	printf("];\n");
+
+
+//	free( RRR );
+
 	free( work );
 
 	perform_refL = ( 4.0e+00 * ((double) ml) * ((double) n) * ((double) n) - 4.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_refL / 1.0e+9 ;
@@ -103,7 +143,7 @@ int main(int argc, char ** argv){
 	double norm_orth_1, norm_repres_1;
 	double *QQ, *RR, *HH, norm_repres_2_1, norm_repres_2_2, norm_orth_2;
 	double norm_orth_3, norm_repres_3, norm_diffQ_3;
-	double *As_ii, *Qii, *Tii;
+	double *Qii, *Tii, *As_ii;
 
 	As_ii = As+ii+ii*lda;
 	Qii   =  Q+ii+ii*ldq;
@@ -115,7 +155,7 @@ int main(int argc, char ** argv){
 	cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, n, ml, 1.0e+00, Qii, ldq, -1.0e+00, work, n );
 	norm_orth_1 = LAPACKE_dlange_work( LAPACK_COL_MAJOR, 'F', n, n, work, n, NULL );
 	free( work );
-	printf("1 \n");
+//	printf("1 \n");
 
 	lwork = ml*n;
 	work  = (double *) malloc(ml * n * sizeof(double));
@@ -125,7 +165,7 @@ int main(int argc, char ** argv){
 	norm_repres_1 = LAPACKE_dlange_work( LAPACK_COL_MAJOR, 'F', ml, n, work, ml, NULL );
 	norm_repres_1 = norm_repres_1 / normA;
 	free( work );
-	printf("2 \n");
+//	printf("2 \n");
 
 //	RR = (double *) malloc(ml * n * sizeof(double));
 	RR = (double *) malloc(m * n * sizeof(double));
@@ -142,7 +182,7 @@ int main(int argc, char ** argv){
 //	if( ml > n )  lila_dormqrf_z03( ml, n, n,   0, 0, mt, A+ii*(1+lda), lda, T+ii*(1+ldt), ldt, RR, ml, work, lwork );
 //	if( ml == n ) lila_dormqrf_z03( ml, n, n-1, 0, 0, mt, A+ii*(1+lda), lda, T+ii*(1+ldt), ldt, RR, ml, work, lwork );
 	free( work );
-	printf("3 \n");
+//	printf("3 \n");
 
 //	if( ml > n )  norm_repres_2_1 = LAPACKE_dlantr_work(LAPACK_COL_MAJOR, 'F', 'L', 'N', ml-1, n,   RRi0+1, m, NULL );
 //	if( ml == n ) norm_repres_2_1 = LAPACKE_dlantr_work(LAPACK_COL_MAJOR, 'F', 'L', 'N', ml-1, n-1, RRi0+1, m, NULL );
@@ -156,7 +196,7 @@ int main(int argc, char ** argv){
 	free( work );
 
 	free( RR );
-	printf("4 \n");
+//	printf("4 \n");
 
 	HH = (double *) malloc(ml * ml * sizeof(double));
 	info  = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'A', ml, ml, (0e+00), (1e+00), HH, ml );
@@ -168,7 +208,7 @@ int main(int argc, char ** argv){
 	if( ml == n ) lila_dormqrf_z00( ml, ml, n-1, 0, 0, -1, Aii, lda, HH, ml, Tii, ldt, work, lwork );
 //	lila_dormqrf_z00( ml, ml, n, 0, 0, -1, Aii, lda, HH, ml, Tii, ldt, work, lwork );
 	free( work );
-	printf("5 \n");
+//	printf("5 \n");
 
 	lwork = ml*ml;
 	work  = (double *) malloc(ml * ml * sizeof(double));
@@ -176,7 +216,7 @@ int main(int argc, char ** argv){
 	cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, ml, ml, 1.0e+00, HH, ml, -1.0e+00, work, ml );
 	norm_orth_2 = LAPACKE_dlange_work( LAPACK_COL_MAJOR, 'F', ml, ml, work, ml, NULL );
 	free( work );
-	printf("6 \n");
+//	printf("6 \n");
 
 	QQ = (double *) malloc(ml * n * sizeof(double));
 
@@ -188,7 +228,7 @@ int main(int argc, char ** argv){
 	cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, n, ml, 1.0e+00, QQ, ml, -1.0e+00, work, n );
 	norm_orth_3 = LAPACKE_dlange_work( LAPACK_COL_MAJOR, 'F', n, n, work, n, NULL );
 	free( work );
-	printf("7 \n");
+//	printf("7 \n");
 
 	lwork = ml*n;
 	work  = (double *) malloc(ml * n * sizeof(double));
@@ -198,14 +238,14 @@ int main(int argc, char ** argv){
 	norm_repres_3 = LAPACKE_dlange_work( LAPACK_COL_MAJOR, 'F', ml, n, work, ml, NULL );
 	norm_repres_3 = norm_repres_3 / normA;
 	free( work );
-	printf("8 \n");
+//	printf("8 \n");
 
 	lwork = ml*n;
 	work  = (double *) malloc(ml * n * sizeof(double));
  	for(i = 0; i < ml; i++) for(j = 0; j < n; j++) work[ i+j*ml ] = Qii[ i+j*ldq] - QQ[ i+j*ml ];
 	norm_diffQ_3 = LAPACKE_dlantr_work(LAPACK_COL_MAJOR, 'F', 'U', 'N', ml, n, work, ml, NULL );
 	free( work );
-	printf("9 \n");
+//	printf("9 \n");
 
 	free( QQ );
 	free( HH );

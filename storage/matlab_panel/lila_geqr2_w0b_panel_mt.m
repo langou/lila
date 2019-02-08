@@ -26,7 +26,6 @@
 %      A(j+n:m,j:j+n-1)     = A(j+n:m,j:j+n-1) - A(j+n:m,1:i-1) * work(1:i-1,1:n);
       A(j+n:m,j:j+n-1)      = A(j+n:m,j:j+n-1) - A(j+n:m,i:j-1) * zork(1:j-i+1-1,1:n);
 %
-%
 %     lila_orgh2_w0b_panel
       for k = 1:n,
       if (abs(T(it+k-1,j+k-1) - 1) < abs( - T(it+k-1,j+k-1) - 1 ))
@@ -58,8 +57,6 @@
          end
       end
 %
-%     Putting back the lower triangle of V back into A
-%
       for ii=1:n,
          for jj=1:ii-1,
            A(j+ii-1,j+jj-1) = T(it+ii-1,j+jj-1);
@@ -67,7 +64,6 @@
       end
 
      A(j+n:m,j:j+n-1) = A(j+n:m,j:j+n-1) / triu( T(it:it+n-1,j:j+n-1) );
-
 %
       T(it:it+n-1,j:j+n-1) = - triu( T(it:it+n-1,j:j+n-1) ) / ( (eye(n,n) + tril(A(j:j+n-1,j:j+n-1),-1) )');
 %
