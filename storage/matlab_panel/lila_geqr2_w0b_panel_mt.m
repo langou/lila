@@ -30,9 +30,9 @@
       for k = 1:n,
       if (abs(T(it+k-1,j+k-1) - 1) < abs( - T(it+k-1,j+k-1) - 1 ))
          T(it:it+n-1,j+k-1)  = - T(it:it+n-1,j+k-1);
-         D(j+k-1)            = -1;
+         D(j+k-1)            = - 1;
       else
-         D(j+k-1)            =  1;
+         D(j+k-1)            =   1;
       end
          T(it+k-1,j+k-1)           = T(it+k-1,j+k-1) - 1;
          T(it+k:it+n-1,j+k-1)      = T(it+k:it+n-1,j+k-1) / T(it+k-1,j+k-1);

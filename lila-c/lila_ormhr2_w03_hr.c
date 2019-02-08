@@ -30,17 +30,8 @@ int lila_ormhr2_w03_hr( int m, int n, int i, int j, int l, int mt, double *A, in
 	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A',     n, n,   Qjj, ldq,   Tjj,    ldt ); 
 	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m-j-n, n, Qjj+n, ldq, Ajj+n,    lda ); 
 
-//	if( i != 0 ) cblas_dtrsm( CblasColMajor, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, i, n, 1.0e+00, A, lda, work2, lwork2 );
-//	if( i != 0 ) cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans, j, n, i, (-1.0e+00), Aii, lda, work2, lwork2, (+1.0e+00), Tij, ldt );
-
 	if( j-i != 0) cblas_dtrsm( CblasColMajor, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, j-i, n, (+1.0e+00), Aii, lda, work2, lwork2 );
-
-//	if( i != 0 ) cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans, n, n, i, (-1.0e+00), Aji, lda, work2, lwork2, (+1.0e+00), Tjj, ldt );
-
-	if( j-i != 0) cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans, n, n, j-i, (-1.0e+00), Aji, lda, work2, lwork2, (+1.0e+00), Tjj, ldt ); 
-
-//	if( i != 0 ) cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans, m-j-i-n, n, i, (-1.0e+00), Aji+n, lda, work2, lwork2, (+1.0e+00), Ajj+n, lda ); 
-
+	if( j-i != 0) cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans,     n, n, j-i, (-1.0e+00),   Aji, lda, work2, lwork2, (+1.0e+00),   Tjj, ldt ); 
 	if( j-i != 0) cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans, m-j-n, n, j-i, (-1.0e+00), Aji+n, lda, work2, lwork2, (+1.0e+00), Ajj+n, lda ); 
 
 	for( k = 0; k < n; k++ ){
