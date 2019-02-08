@@ -85,55 +85,66 @@ int main(int argc, char ** argv){
 	gettimeofday(&tp, NULL);
 	elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-//	lila_dgeqrf_w03_level1( m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork, nb );
+	lila_dgeqrf_w03_level1( m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork, nb );
 
 //	lila_dgeqrf_w03_mt    ( m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 //	lila_dgeqrf_w03_l     ( m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 
-	lila_dgeqrf_w03_mt_v02( m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+//	lila_dgeqrf_w03_mt_v02( m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 
 	gettimeofday(&tp, NULL);
 	elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-//	double *RRR;
-//	double *RRRi0, *AAs_ii;
-//	RRR = (double *) malloc(m * (n+ii) * sizeof(double));
-//	RRRi0 = RRR+ii;
-//	AAs_ii = As+ii+ii*lda;
+/*
+	double *RRR;
+	double *RRRi0, *AAs_ii;
+	RRR = (double *) malloc(m * (n+ii) * sizeof(double));
+	RRRi0 = RRR+ii;
+	AAs_ii = As+ii+ii*lda;
 
-//	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', ml, n, AAs_ii, lda, RRRi0, m );
-//	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', ml, n, AAs_ii, lda, RRRi0, m );
-//	lila_dormqrf_z03( m, n, n, ii, 0, mt, A, lda, T, ldt, RRR, m, work, lwork );
-//	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', n, n, RRRi0, lda, Aii, lda ); 
+	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', ml, n, AAs_ii, lda, RRRi0, m );
+	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', ml, n, AAs_ii, lda, RRRi0, m );
+	lila_dormqrf_z03( m, n, n, ii, 0, mt, A, lda, T, ldt, RRR, m, work, lwork );
+	//info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', n, n, RRRi0, lda, Aii, lda ); 
 
-//	int ik;
-//	int jk;
-//	printf("R=[\n");
-//	for( ik = ii; ik < n+ii; ik++ ){
-//		for( jk = ii; jk < ik; jk++ ){
-//			printf("        ");
-//		}
-//		for( jk = ik; jk < n+ii; jk++ ){
-//			printf(" %6.2f ", A[ ik + jk*lda]-RRRi0[ ik + jk*lda]);
-//		}
-//		printf("\n");
-//	}
-//	printf("];\n");
-//
-//	printf("R=[\n");
-//	for( ik = ii; ik < n+ii; ik++ ){
-//		for( jk = ii; jk < ik; jk++ ){
-//			printf("        ");
-//		}
-//		for( jk = ik; jk < n+ii; jk++ ){
-//			printf(" %6.2f ", RRRi0[ ik + jk*lda]);
-//		}
-//		printf("\n");
-//	}
-//	printf("];\n");
+	int ik;
+	int jk;
+	printf("R=[\n");
+	for( ik = ii; ik < n+ii; ik++ ){
+		for( jk = ii; jk < ik; jk++ ){
+			printf("          ");
+		}
+		for( jk = ik; jk < n+ii; jk++ ){
+			//printf(" %6.2f ", A[ ik + jk*lda]-RRR[ ik + (jk-ii)*lda]);
+			if (fabs(A[ ik + jk*lda]-RRR[ ik + (jk-ii)*lda])>0.00001){
+			printf(" *%6.2f* ", A[ ik + jk*lda]);
+			}else{
+			printf("  %6.2f  ", A[ ik + jk*lda]);
+			}
+		}
+		printf("\n");
+	}
+	printf("];\n");
+
+	printf("R=[\n");
+	for( ik = ii; ik < n+ii; ik++ ){
+		for( jk = 0; jk < ik-ii; jk++ ){
+			printf("          ");
+		}
+		for( jk = ik-ii; jk < n; jk++ ){
+			if (fabs(A[ ik + (jk+ii)*lda]-RRR[ ik + jk*lda])>0.00001){
+			printf(" *%6.2f* ", RRR[ ik + jk*lda]);
+			}else{
+			printf("  %6.2f  ", RRR[ ik + jk*lda]);
+			}
+		}
+		printf("\n");
+	}
+	printf("];\n");
 
 
-//	free( RRR );
+	free( RRR );
+*/
 
 	free( work );
 

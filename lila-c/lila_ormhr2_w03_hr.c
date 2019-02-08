@@ -20,7 +20,7 @@ int lila_ormhr2_w03_hr( int m, int n, int i, int j, int l, int mt, double *A, in
 	Aij = A + i  + j*lda;
 	Aji = A + j  + i*lda;
 
-	for( k = 0; k < j; k++){
+	for( k = i; k < j; k++){
 		if( S[ k ] == -1 ){
 			for( i1 = 0; i1 < n; i1++) A0j[ k + i1*lda ] = - A0j[ k + i1*lda ];
 		}
