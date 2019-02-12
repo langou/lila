@@ -13,8 +13,8 @@ int lila_dgeqrf_levelx_w02( int n_lvl, int i_lvl, int *nb_lvl, int m, int n, int
 	j = i;
 
 	if( i_lvl == n_lvl-1 ){
-//	info = lila_dgeqr2_w02a( m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );
-	info = lila_dgeqr2_w02b( m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+	info = lila_dgeqr2_w02a( m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+//	info = lila_dgeqr2_w02b( m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 	} else {
 	info = lila_dgeqrf_levelx_w02( n_lvl, i_lvl+1, nb_lvl, m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 	}
@@ -29,8 +29,8 @@ int lila_dgeqrf_levelx_w02( int n_lvl, int i_lvl, int *nb_lvl, int m, int n, int
 	info = lila_dormqrf_w02( m, vb, k, i, j, mt, A, lda, T, ldt, work, lwork );
 
 	if( i_lvl == n_lvl-1 ){
-//		info = lila_dgeqr2_w02a( m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );
-		info = lila_dgeqr2_w02b( m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+		info = lila_dgeqr2_w02a( m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+//		info = lila_dgeqr2_w02b( m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 	} else {
 		info = lila_dgeqrf_levelx_w02( n_lvl, i_lvl+1, nb_lvl, m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 	}

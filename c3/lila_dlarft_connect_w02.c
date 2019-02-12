@@ -22,8 +22,6 @@ int lila_dlarft_connect_w02( int m, int n, int i, int j, int mt, double *A, int 
 	cblas_dtrmm ( CblasColMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, i-j, n, (-1.0e+00), Tjj, ldt, Tji, ldt );
 	cblas_dtrmm ( CblasColMajor, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, i-j, n, (+1.0e+00), Tii, ldt, Tji, ldt );
 
-//	printf("\n                                      >> j = %2d,   i-j = nb1 = %2d, nb2 = %2d,  m = %2d,  m-n-i = %2d\n",j, i-j,n,m,m-n-i);
-
 	return 0;
 
 }

@@ -16,7 +16,7 @@ int lila_dgeqr2_w03_3( int m, int n, int i, int mt, double *A, int lda, double *
 
 	Aii = A + i*lda + i;
 	Qii = Q + i*ldq + i;
-	Tki = T + k + i*ldt;
+	Tki = T + i*ldt + k;
 
   	info = dgeqr3( ml, n, Aii, lda, Tki, ldt );
 
