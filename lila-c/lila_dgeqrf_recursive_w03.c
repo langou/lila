@@ -6,11 +6,9 @@ int lila_dgeqrf_recursive_w03( int m, int n, int i, int mt, double *A, int lda, 
 
 	if ( n < 2 ) {
 
-//		info = lila_dgeqr1_w03a( m, n, i, mt, A, lda, T, ldt, Q, ldq, work, lwork );
-//		info = lila_dgeqr1_w03b( m, n, i, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+//		info = lila_dgeqr2_w03a( m, n, i, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+		info = lila_dgeqrf_w03_mt_v02( m, n, i, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 
-		info = lila_dgeqr2_w03a( m, n, i, mt, A, lda, T, ldt, Q, ldq, work, lwork );
-//		info = lila_dgeqr2_w03b( m, n, i, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 
 	} else {
 

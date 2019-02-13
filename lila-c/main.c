@@ -4,22 +4,21 @@ int main(int argc, char ** argv) {
 
 	int i, j, info, lda, ldq, ldt, m, n, mt, w, ii, lwork, ml;
 	double *A, *Q, *As, *T, *work=NULL;
-	double normA, normR;
+	double normA;
 	double elapsed_refL, perform_refL;
 	struct timeval tp;
 	int n_lvl;
 	int *nb_lvl;
 	char mode;
-	double norm_orth;
 
 	srand(0);
 
     	m = 31;
     	n = 15;
-	ii = 0;
+	ii = 3;
 	lda = -1;
 	ldq = -1;
-	mt = 1;
+	mt = 2;
 	n_lvl = 1;
 	nb_lvl = (int *) malloc(n_lvl * sizeof(int));
 	nb_lvl[0] = 10;
