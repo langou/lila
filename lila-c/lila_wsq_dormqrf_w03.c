@@ -1,6 +1,6 @@
 #include "lila.h"
 
-int lila_dormqrf_w03( int m, int n, int k, int i, int j, int mt, double *A, int lda, double *T, int ldt, double *work, int lwork ){
+int lila_wsq_dormqrf_w03( int m, int n, int k, int i, int j, int mt, double *A, int lda, double *T, int ldt, double *work, int lwork ){
 
 	double *Aii, *Aij, *Tii;
 	int ml, vb, ldwork, iii, jjj, not_done, jj;
@@ -8,10 +8,6 @@ int lila_dormqrf_w03( int m, int n, int k, int i, int j, int mt, double *A, int 
 	vb = mt - (i % mt );
 	if ( vb > k ) vb = k;
 	
-	Aii = A + i        + i*lda;
-	Aij = A + i        + j*lda;
-	Tii = T + (i % mt) + i*ldt;
-
 	ldwork   = mt; // We can change to lwork = mt, but does that change lwork throughout.
 	ml       = m - i;
 	not_done = 1;

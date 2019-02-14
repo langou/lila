@@ -1,6 +1,6 @@
 #include "lila.h"
 
-int lila_ormhr2_w03_hr( int m, int n, int i, int j, int l, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork, double *S ){
+int lila_wsq_ormhr2_w03_hr( int m, int n, int i, int j, int l, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork, double *S ){
 
 	double *Qij, *Qjj, *Tjj, *Tkk, *Ajj, *Aii, *Aij, *Aji, *A0j, *work2;
 	int k, info, i1, it, lwork2;

@@ -1,20 +1,20 @@
 #include "lila.h"
 
-int lila_dgeqrf_w03_mt_v02( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork ){
+int lila_wsq_dgeqrf_w03_mt_hr( int panel, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork ){
 
-	double *Tki, *Aii, *Qii;
+	double *Tki, *Aii, *Qii, *S;
 	int ml, vb, j, info;
-	int *S;
 	
-	S  = (int *) malloc((n+i) * sizeof(int));
-	
+//	S  = (int *) malloc((n+i) * sizeof(int));
+	S = work;	
+
 	j  = i;
 	ml = m - i;
-	vb = mt - ( i % mt); if ( vb > n ) vb = n;
+	vb = mt - ( i%mt ); if ( vb > n ) vb = n;
 
 	Aii = A + i        + i*lda;
 	Qii = Q + i        + i*ldq;
-	Tki = T + (i % mt) + i*ldt;
+	Tki = T + ( i%mt ) + i*ldt;
 
 	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', ml, n, Aii, lda, Qii, ldq ); 
 	cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, n, ml, (+1.0e+00), Qii, ldq, (+0e+00), Aii, lda );
@@ -23,13 +23,13 @@ int lila_dgeqrf_w03_mt_v02( int m, int n, int i, int mt, double *A, int lda, dou
 
 	while( vb != 0 ){
 
-		info = lila_ormhr2_w03_hr( m, vb, i, j, -1, mt, A, lda, T, ldt, Q, ldq, work, lwork, S );
+		info = lila_wsq_ormhr2_w03_hr( m, vb, i, j, -1, mt, A, lda, T, ldt, Q, ldq, work, lwork, S );
 		j += vb;
 		if( j + mt >= i + n ) vb = n - ( j - i ); else vb = mt;
 
 	}
 
-	free(S);
+//	free(S);
 
 	return 0;
 

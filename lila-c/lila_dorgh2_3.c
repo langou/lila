@@ -1,6 +1,6 @@
 #include "lila.h"
 
-int lila_dorgh2_3( int m, int n, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork, int* S ){
+int lila_dorgh2_3( int m, int n, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork, double *S ){
 
 	double *Tkk;
 	int k, i1;
