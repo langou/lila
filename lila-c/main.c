@@ -128,8 +128,13 @@ int main(int argc, char ** argv) {
 		T = (double *) malloc(ldt * (n+ii) * sizeof(double));
 
 		int lwork;
-		lwork = 1920000;
+		lwork = 0;
 		work = (double *) malloc( 1920000 * sizeof(double));
+
+		lwork = lila_wsq_dgeqrf_levelx_w03( panel, leaf, n_lvl, 0, nb_lvl, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+		printf(" 0 |  lwork  = %3d,\n",lwork);
+		free( work );
+		work = (double *) malloc( lwork * sizeof(double));
 
 		gettimeofday(&tp, NULL);
 		elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -148,8 +153,13 @@ int main(int argc, char ** argv) {
 		T = (double *) malloc(ldt * (n+ii) * sizeof(double));
 
 		int lwork;
-		lwork = 1920000;
+		lwork = 1;
 		work = (double *) malloc( 1920000 * sizeof(double));
+
+		lwork = lila_wsq_dgeqrf_recursive_w03( panel, leaf, nx, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+		printf(" 0 |  lwork  = %3d,\n",lwork);
+		free( work );
+		work = (double *) malloc( lwork * sizeof(double));
 
 		gettimeofday(&tp, NULL);
 		elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
