@@ -16,7 +16,8 @@ int lila_wsq_dormqrf_w03( int m, int n, int k, int i, int j, int mt, double *A, 
 	while( not_done == 1 ){
 
 
-		if ( lwork1 < n*vb ) lwork1 = n*vb; // nxvb ? or just n
+		if ( lwork1 < n*ldwork ) lwork1 = n*ldwork; // nxvb ? or just n
+		//if ( lwork1 < n*vb ) lwork1 = n*vb; // nxvb ? or just n
 
 //		for( jjj = 0; jjj < n; jjj++ ){
 //			for( iii = 0; iii < vb; iii++ ){

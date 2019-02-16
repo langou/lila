@@ -8,7 +8,8 @@ int lila_wsq_dormqrbz_w03( int m, int n, int k, int i, int j, int mt, double *A,
 	lwork1 = 0;
 //	ldwork = k;
 	
-	if( lwork1 < k ) lwork1 = k;
+	if( lwork1 < n*ldwork ) lwork1 = n*ldwork;
+//	if( lwork1 < k ) lwork1 = k;
 
 	ml = m - (i+k-vb);
 	not_done = 1;

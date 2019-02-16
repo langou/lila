@@ -66,9 +66,6 @@ lila_ormhr2_w03_hr.o: lila_ormhr2_w03_hr.c
 lila_dgeqr2_w03_3.o: lila_dgeqr2_w03_3.c
 	$(CC) -c $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) lila_dgeqr2_w03_3.c
 
-lila_dgeqrf_w03_mt_l.o: lila_dgeqrf_w03_mt_l.c
-	$(CC) -c $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) lila_dgeqrf_w03_mt_l.c
-
 lila_dormqrbz_w03.o: lila_dormqrbz_w03.c
 	$(CC) -c $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) lila_dormqrbz_w03.c
 

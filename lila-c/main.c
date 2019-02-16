@@ -135,6 +135,7 @@ int main(int argc, char ** argv) {
 		printf(" 0 |  lwork  = %3d,\n",lwork);
 		free( work );
 		work = (double *) malloc( lwork * sizeof(double));
+		//work = (double *) malloc( 1920000 * sizeof(double));
 
 		gettimeofday(&tp, NULL);
 		elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -160,6 +161,7 @@ int main(int argc, char ** argv) {
 		printf(" 0 |  lwork  = %3d,\n",lwork);
 		free( work );
 		work = (double *) malloc( lwork * sizeof(double));
+		//work = (double *) malloc( 1920000 * sizeof(double));
 
 		gettimeofday(&tp, NULL);
 		elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -224,7 +226,9 @@ int main(int argc, char ** argv) {
 	info  = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'A', ml, ml, (0e+00), (1e+00), HH, ml );
 	lwork = ml*ml;
 	work  = (double *) malloc(ml * ml * sizeof(double));
-	lila_dormqrf_z00( ml, ml, n,   0, 0, -1, Aii, lda, HH, ml, Tii, ldt, work, lwork );
+	if( m==n ) lila_dormqrf_z00( ml, ml, n,  0, 0, -1, Aii, lda, HH, ml, Tii, ldt, work, lwork );
+	if( m > n ) lila_dormqrf_z00( ml, ml, n,  0, 0, -1, Aii, lda, HH, ml, Tii, ldt, work, lwork );
+	//lila_dormqrf_z03( ml, ml, n, 0, 0, mt, Aii, lda, HH, ml, Tii, ldt, work, lwork );
 	free( work );
 //	printf("5 \n");
 
