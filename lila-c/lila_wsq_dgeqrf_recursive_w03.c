@@ -16,7 +16,7 @@ int lila_wsq_dgeqrf_recursive_w03( int panel, int leaf, int nx, int m, int n, in
 		if ( leaf == 2 ){
 			lwork1 = lila_wsq_dgeqrf_w03_mt_hr( panel, m, n, i, mt, A, lda, T, ldt, Q, ldq, work, lwork ); if( lwork < lwork1 ) lwork = lwork1;
 		}
-		printf(" 1 |  lwork  = %3d,\n",lwork);
+		//printf(" 1 |  lwork  = %3d,\n",lwork);
 		
 	} else {
 
@@ -29,7 +29,7 @@ int lila_wsq_dgeqrf_recursive_w03( int panel, int leaf, int nx, int m, int n, in
 		lwork1 = lila_wsq_dormqrbz_w03( m, nb2, nb1, i, i+nb1, mt, A, lda, Q, ldq, T, ldt, work, lwork );                  if( lwork < lwork1 ) lwork = lwork1;
 
 	}
-	printf(" 1 |  lwork  = %3d,\n",lwork);
+	//printf(" 1 |  lwork  = %3d,\n",lwork);
 	return (lwork);
 
 }

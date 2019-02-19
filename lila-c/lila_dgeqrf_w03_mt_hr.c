@@ -6,7 +6,7 @@ int lila_dgeqrf_w03_mt_hr( int panel, int m, int n, int i, int mt, double *A, in
 	int ml, vb, j, info;
 	
 //	S  = (int *) malloc((n+i) * sizeof(int));
-	S = work;	
+	S = work + n+i;	
 
 	j  = i;
 	ml = m - i;

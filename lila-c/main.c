@@ -17,7 +17,7 @@ int main(int argc, char ** argv) {
 	lda       = -1;
 	ldq       = -1;
 	mt        = 4;
-	nx        = 5;
+	nx        = 7;
 	leaf      = 1;
 	panel     = 1;
 	n_lvl     = 1;
@@ -132,7 +132,7 @@ int main(int argc, char ** argv) {
 		work = (double *) malloc( 1920000 * sizeof(double));
 
 		lwork = lila_wsq_dgeqrf_levelx_w03( panel, leaf, n_lvl, 0, nb_lvl, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
-		printf(" 0 |  lwork  = %3d,\n",lwork);
+		//printf(" 0 |  lwork  = %3d,\n",lwork);
 		free( work );
 		work = (double *) malloc( lwork * sizeof(double));
 		//work = (double *) malloc( 1920000 * sizeof(double));
@@ -154,11 +154,11 @@ int main(int argc, char ** argv) {
 		T = (double *) malloc(ldt * (n+ii) * sizeof(double));
 
 		int lwork;
-		lwork = 1;
+		lwork = 0;
 		work = (double *) malloc( 1920000 * sizeof(double));
 
 		lwork = lila_wsq_dgeqrf_recursive_w03( panel, leaf, nx, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
-		printf(" 0 |  lwork  = %3d,\n",lwork);
+		//printf(" 0 |  lwork  = %3d,\n",lwork);
 		free( work );
 		work = (double *) malloc( lwork * sizeof(double));
 		//work = (double *) malloc( 1920000 * sizeof(double));

@@ -18,7 +18,7 @@ int lila_dgeqrf_levelx_w03( int panel, int leaf, int n_lvl, int i_lvl, int *nb_l
 		else if ( leaf == 1 ){
 			info = lila_dgeqrf_w03_mt   ( panel, m, vb, i, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 		} 
-		else{
+		else if ( leaf == 2 ){
 			info = lila_dgeqrf_w03_mt_hr( panel, m, vb, i, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 		}
 
@@ -43,7 +43,7 @@ int lila_dgeqrf_levelx_w03( int panel, int leaf, int n_lvl, int i_lvl, int *nb_l
 		else if ( leaf == 1 ){
 			info = lila_dgeqrf_w03_mt   ( panel, m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 		} 
-		else{
+		else if ( leaf == 2 ){
 			info = lila_dgeqrf_w03_mt_hr( panel, m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 		}
 

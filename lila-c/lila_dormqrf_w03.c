@@ -2,20 +2,32 @@
 
 int lila_dormqrf_w03( int m, int n, int k, int i, int j, int mt, double *A, int lda, double *T, int ldt, double *work, int lwork ){
 
-	double *Aii, *Aij, *Tii;
-	int ml, vb, ldwork, iii, jjj, not_done, jj;
+	double *Aii, *Aij;
+	double *Tii;
+
+	int ml, vb;
+	int ldwork;
+	int iii, jjj; 
+
+	int jalo;
+	int not_done, jj;
 
 	vb = mt - (i % mt );
 	if ( vb > k ) vb = k;
+
+	jalo = i;
 	
-	Aii = A + i        + i*lda;
-	Aij = A + i        + j*lda;
+	Aii = A + i + i*lda;
+	Aij = A + i + j*lda;
 	Tii = T + (i % mt) + i*ldt;
 
-	ldwork   = mt; // We can change to lwork = mt, but does that change lwork throughout.
-	ml       = m - i;
+	ldwork = mt;
+
+	ml = m - i;
+
 	not_done = 1;
-	jj       = 1;
+
+	jj = 1;
 
 	while( not_done == 1 ){
 
@@ -48,12 +60,16 @@ int lila_dormqrf_w03( int m, int n, int k, int i, int j, int mt, double *A, int 
 
 		} else {
 
-			if( jj == 1 ) Tii = Tii - ( i%mt ) + vb * ldt;
-			ml  -= vb;
-			jj  += vb;
+			if(jj == 1) Tii = Tii - (i%mt) + vb * ldt;
+
+			ml -= vb;
+
+			jj += vb;
+
 			Aii += vb * ( lda + 1 );
 			Aij += vb;
 			if(jj != 1+vb) Tii = Tii + vb * ldt;
+
 			if ( ( jj + mt - 1 ) <= k ) vb = mt; else vb = k - jj + 1;
 
 		}

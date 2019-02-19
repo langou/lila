@@ -19,7 +19,7 @@ int lila_wsq_dgeqrf_w03_mt( int panel, int m, int n, int i, int mt, double *A, i
 		lwork1 = lila_wsq_dgeqr2_w03_hr( m, vb, i, mt, A, lda, T, ldt, Q, ldq, work, lwork ); if ( lwork < lwork1 ) lwork = lwork1;
 	}
 
-	printf(" 2 |  lwork  = %3d,\n",lwork);
+	//printf(" 2 |  lwork  = %3d,\n",lwork);
 
 	j   = i + vb;
 	l   = vb;
@@ -49,7 +49,7 @@ int lila_wsq_dgeqrf_w03_mt( int panel, int m, int n, int i, int mt, double *A, i
 		if( j + mt >= i + n ) vb = n - ( j - i ); else vb = mt;
 
 	}
-	printf(" 2-|  lwork  = %3d,\n",lwork);
+	//printf(" 2-|  lwork  = %3d,\n",lwork);
 
 	return lwork;
 }

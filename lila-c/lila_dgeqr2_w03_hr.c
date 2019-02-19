@@ -11,7 +11,7 @@ int lila_dgeqr2_w03_hr( int m, int n, int i, int mt, double *A, int lda, double 
 	S = work;
 
 	ml = m - i;
-	k  =  i%mt;
+	k  = i % mt;
 
 	Aii = A + i + i*lda;
 	Qii = Q + i + i*ldq;
