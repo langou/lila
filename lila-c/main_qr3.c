@@ -2,8 +2,8 @@
 
 int main(int argc, char ** argv) {
 
-	int i, j, info, lda, ldq, m, n, ii, lwork, ml;
-	double *A, *Q, *As, *work=NULL, *Aii, *Qii, *tau=NULL;
+	int i, j, info, lda, ldq, ldt, m, n, ii, lwork, ml;
+	double *A, *Q, *T, *As, *work=NULL, *Aii, *Qii, *Tii, *tau=NULL;
 	double normA, elapsed_refL, perform_refL;
 	struct timeval tp;
 
@@ -40,6 +40,7 @@ int main(int argc, char ** argv) {
 
 	if( lda < 0 ) lda = m;
 	if( ldq < 0 ) ldq = m;
+	ldt       = n+ii;
 
 	printf("m = %4d, ",         m);
 	printf("ii = %4d, ",       ii);
@@ -50,6 +51,7 @@ int main(int argc, char ** argv) {
 	A  = (double *) malloc(lda * (n+ii) * sizeof(double));
 	As = (double *) malloc(lda * (n+ii) * sizeof(double));
 	Q  = (double *) malloc(ldq * (n+ii) * sizeof(double));
+	T  = (double *) malloc(ldt * (n+ii) * sizeof(double));
 
  	for(i = 0; i < lda * (n+ii); i++)
 		*(A + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
@@ -57,6 +59,7 @@ int main(int argc, char ** argv) {
  	for(i = 0; i < ldq * (n+ii); i++)
 		*(Q + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
 
+	Tii   = T + ii + ii*ldt;
 	Aii   = A + ii + ii*lda;
 	Qii   = Q + ii + ii*ldq;
 	ml    = m - ii;
@@ -65,48 +68,59 @@ int main(int argc, char ** argv) {
 
 	if( m < n+ii ){ printf("\n\n YOUR CHOICE OF n AND ii HAVE MADE YOU LARGER THAN m, PLEASE RECONSIDER \n\n"); return 0; }
 
-	work = (double *) malloc( 1 * sizeof(double));
-	lwork = -1;
-  	info = LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, ml, n, Aii, lda, tau, work, lwork ); 
-	i = (int) work[0]; 
-	info = LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, ml, n, n, Qii, ldq, tau, work, lwork );
-	j = (int) work[0]; 
-	if ( i > j ) lwork = i; else lwork = j;
-	free( work );
+//	1
+//	work = (double *) malloc( 1 * sizeof(double));
+//	lwork = -1;
+//	info = LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, ml, n, n, Qii, ldq, tau, work, lwork );
+//	lwork = (int) work[0]; 
+//	free( work );
+//	
+//	tau = (double *) malloc( (n+ii) * sizeof(double));
+//	work = (double *) malloc( lwork * sizeof(double));
+//	
+//	gettimeofday(&tp, NULL);
+//	elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+//	
+//	info = dgeqr3( ml, n, Aii, lda, Tii, ldt );
+//	for (i=0;i<n;i++) tau[i]=Tii[i+i*ldt];
+//	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', ml, n, Aii, lda, Qii, ldq ); 
+//	info = LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, ml, n, n, Qii, ldq, tau, work, lwork );
+//	
+//	gettimeofday(&tp, NULL);
+//	elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+//	
+//	free( tau  );
+//	free( work );
 
-	tau = (double *) malloc( (n+ii) * sizeof(double));
+//	2
+	lwork = n * n;
 	work = (double *) malloc( lwork * sizeof(double));
 
 	gettimeofday(&tp, NULL);
 	elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-  	info = LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, ml, n, Aii, lda, tau, work, lwork ); 
-	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', ml, n, Aii, lda, Qii, ldq ); 
-	info = LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, ml, n, n, Qii, ldq, tau, work, lwork );
+	info = dgeqr3( ml, n, Aii, lda, Tii, ldt );
+	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', ml, n, Aii, lda, Qii, ldq );
+	info = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'U', n, n, (0.0e+00), (1.0e+00), Qii, ldq);
+	info = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'A', n, n, (0.0e+00), (0.0e+00), work, n);
+	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', n, n, Tii, ldt, work, n );
+	cblas_dtrmm( CblasColMajor, CblasRight, CblasLower, CblasTrans, CblasUnit, n, n, (+1.0e+00), Aii, lda, work, n );
+	cblas_dtrmm( CblasColMajor, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, ml, n, (-1.0e+00), work, n, Qii, ldq );
+ 	for(j = 0; j < n; j++) Qii[ j + ldq * j ] = 1.00e+00 + Qii[ j + ldq * j ];
 
 	gettimeofday(&tp, NULL);
 	elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-//	free( tau  );
-	free( work );
-
 	perform_refL = ( 4.0e+00 * ((double) m) * ((double) n) * ((double) n) - 4.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_refL / 1.0e+9 ;
+	free( work );
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	double *T, *QQ, *RR, *HH, norm_repres_1, norm_orth_1, *As_ii, *Tii;
+	double *QQ, *RR, *HH, norm_repres_1, norm_orth_1, *As_ii;
 	double norm_orth_3, norm_repres_3, norm_diffQ_3, norm_repres_2_2, norm_orth_2, norm_repres_2_1;
-	int ldt;
 
-	ldt = n+ii;
-	T  = (double *) malloc(ldt * (n+ii) * sizeof(double));
-//	tau = (double *) malloc( (n+ii) * sizeof(double));
-
-	Tii   = T+ii+ii*ldt;
 	As_ii = As+ii+ii*lda;
 	Qii   =  Q+ii+ii*ldq;
-
-	info = LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', ml, n, Aii, lda, tau, Tii, ldt);
 
 	lwork = n*n;
 	work  = (double *) malloc(n * n * sizeof(double));
@@ -212,7 +226,6 @@ int main(int argc, char ** argv) {
 	free( A );
 	free( As );
 	free( T );
-	free( tau );
 
 
 	return 0;
