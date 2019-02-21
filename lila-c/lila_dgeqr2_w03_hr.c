@@ -6,9 +6,7 @@ int lila_dgeqr2_w03_hr( int m, int n, int i, int mt, double *A, int lda, double 
 	double *S;
 	int info, k, ml;
 
-//	int *S;
-//	S = (int *) malloc(n * sizeof(int));
-	S = work;
+	S = work+n;
 
 	ml = m - i;
 	k  = i % mt;
@@ -25,8 +23,6 @@ int lila_dgeqr2_w03_hr( int m, int n, int i, int mt, double *A, int lda, double 
 	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', ml-n, n, Qii+n, ldq, Aii+n, lda ); 
 	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', n, n, Qii, ldq, Tki, ldt ); 
 	lila_dorgh2_3( ml, n, Aii, lda, Tki, ldt, Qii, ldq, work, lwork, S );
-
-//	free(S);
 
 	return 0;
 

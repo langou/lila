@@ -32,7 +32,7 @@ int lila_wsq_dgeqrf_levelx_w03( int panel, int leaf, int n_lvl, int i_lvl, int *
 		lwork1 = lila_wsq_dgeqrf_levelx_w03( panel, leaf, n_lvl, i_lvl+1, nb_lvl, m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork ); if ( lwork1 > lwork ) lwork = lwork1;
 	}
 
-		printf(" 1 |  lwork  = %3d,\n",lwork);
+		//printf(" 1 |  lwork  = %3d,\n",lwork);
 
 		k += vb;
 		j += vb;

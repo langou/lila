@@ -13,7 +13,7 @@ int lila_dgeqrf_w03_mt( int panel, int m, int n, int i, int mt, double *A, int l
 	else if( panel == 1 ){
 		info = lila_dgeqr2_w03_3 ( m, vb, i, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 	}
-	else{
+	else if( panel == 2){
 		info = lila_dgeqr2_w03_hr( m, vb, i, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 	}
 
@@ -33,7 +33,7 @@ int lila_dgeqrf_w03_mt( int panel, int m, int n, int i, int mt, double *A, int l
 		else if( panel == 1 ){
 			info = lila_dgeqr2_w03_3 ( m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 		}
-		else{
+		else if( panel == 2){
 			info = lila_dgeqr2_w03_hr( m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 		}
 
