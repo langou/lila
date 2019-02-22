@@ -4,7 +4,7 @@ int main(int argc, char ** argv) {
 
 	int i, j, info, lda, ldq, ldt, m, n, mt, ii, lwork, ml, nx;
 	int n_lvl, *nb_lvl, panel, leaf;
-	double *A, *As, *T, *work=NULL, *Aii;
+	double *A, *Q, *As, *T, *work=NULL, *Aii;
 	double normA, elapsed_refL, perform_refL;
 	struct timeval tp;
 	char mode;
@@ -32,6 +32,10 @@ int main(int argc, char ** argv) {
 		}
 		if( strcmp( *(argv + i), "-lda") == 0) {
 			lda  = atoi( *(argv + i + 1) );
+			i++;
+		}
+		if( strcmp( *(argv + i), "-ldq") == 0) {
+			ldq  = atoi( *(argv + i + 1) );
 			i++;
 		}
 		if( strcmp( *(argv + i), "-m") == 0) {
@@ -108,9 +112,13 @@ int main(int argc, char ** argv) {
 
 	A  = (double *) malloc(lda * (n+ii) * sizeof(double));
 	As = (double *) malloc(lda * (n+ii) * sizeof(double));
+	Q  = (double *) malloc(ldq * (n+ii) * sizeof(double));
 
  	for(i = 0; i < lda * (n+ii); i++)
 		*(A + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
+
+ 	for(i = 0; i < lda * (n+ii); i++)
+		*(Q + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
 
 	Aii   = A + ii + ii*lda;
 	ml    = m - ii;
@@ -127,15 +135,14 @@ int main(int argc, char ** argv) {
 		int lwork;
 		lwork = 0;
 		work = (double *) malloc( 1920000 * sizeof(double));
-		lwork = lila_wsq_dgeqrf_levelx_w03( panel, leaf, n_lvl, 0, nb_lvl, m, n, ii, mt, A, lda, T, ldt, NULL, -1, work, lwork );
-		//printf(" 0 |  lwork  = %3d,\n",lwork);
+		lwork = lila_wsq_dgeqrf_levelx_w03( panel, leaf, n_lvl, 0, nb_lvl, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 		free( work );
 		work = (double *) malloc( lwork * sizeof(double));
 
 		gettimeofday(&tp, NULL);
 		elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-		lila_dgeqrf_levelx_v03( panel, leaf, n_lvl, 0, nb_lvl, m, n, ii, mt, A, lda, T, ldt, work, lwork );
+		//lila_dgeqrf_levelx_v03( panel, leaf, n_lvl, 0, nb_lvl, m, n, ii, mt, A, lda, T, ldt, work, lwork );
 
 		gettimeofday(&tp, NULL);
 		elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -151,15 +158,14 @@ int main(int argc, char ** argv) {
 		int lwork;
 		lwork = 0;
 		work = (double *) malloc( 1920000 * sizeof(double));
-		lwork = lila_wsq_dgeqrf_recursive_w03( panel, leaf, nx, m, n, ii, mt, A, lda, T, ldt, NULL, -1, work, lwork );
-		//printf(" 0 |  lwork  = %3d,\n",lwork);
+		lwork = lila_wsq_dgeqrf_recursive_w03( panel, leaf, nx, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 		free( work );
 		work = (double *) malloc( lwork * sizeof(double));
-		
+
 		gettimeofday(&tp, NULL);
 		elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-		lila_dgeqrf_recursive_v03( panel, leaf, nx, m, n, ii, mt, A, lda, T, ldt, work, lwork );
+		//lila_dgeqrf_recursive_v03( panel, leaf, nx, m, n, ii, mt, A, lda, T, ldt, work, lwork );
 
 		gettimeofday(&tp, NULL);
 		elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -169,13 +175,18 @@ int main(int argc, char ** argv) {
 
 	perform_refL = ( 4.0e+00 * ((double) m) * ((double) n) * ((double) n) - 4.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_refL / 1.0e+9 ;
 	
-	double *QQ, *RR, *HH, norm_repres_2_1, norm_repres_2_2, norm_orth_2, *Tii, *As_ii;
+
+//	info = lila_dgeqrf_q03_3( panel, leaf, n_lvl, i_lvl+1, nb_lvl, m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+
+
+
+	double *QQ, *RR, *HH, norm_repres_2_1, norm_repres_2_2, norm_orth_2, *Qii, *Tii, *As_ii;
 	double norm_orth_3, norm_repres_3, norm_diffQ_3, norm_orth_1, norm_repres_1;
 
 	As_ii = As+ii+ii*lda;
+	Qii   =  Q+ii+ii*ldq;
 	Tii   =  T+ii+ii*ldt;
 
-/*
 	lwork = n*n;
 	work  = (double *) malloc(n * n * sizeof(double));
 	info  = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'A', n, n, (0e+00), (1e+00), work, n );
@@ -193,7 +204,9 @@ int main(int argc, char ** argv) {
 	norm_repres_1 = norm_repres_1 / normA;
 	free( work );
 //	printf("2 \n");
-*/
+
+
+
 
 	RR = (double *) malloc(m * n * sizeof(double));
 	double *RRi0;
@@ -246,6 +259,8 @@ int main(int argc, char ** argv) {
 	free( work );
 //	printf("6 \n");
 
+
+
 	QQ = (double *) malloc(ml * n * sizeof(double));
 
 	for( i = 0; i < ml; i++){ for( j = 0; j < n; j++){ QQ[i+j*ml] = HH[j+i*ml]; } } 
@@ -258,6 +273,7 @@ int main(int argc, char ** argv) {
 	free( work );
 //	printf("7 \n");
 
+
 	lwork = ml*n;
 	work  = (double *) malloc(ml * n * sizeof(double));
 	info  = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', ml, n, QQ, ml, work, ml );
@@ -268,30 +284,29 @@ int main(int argc, char ** argv) {
 	free( work );
 //	printf("8 \n");
 
-/*
 	lwork = ml*n;
 	work  = (double *) malloc(ml * n * sizeof(double));
  	for(i = 0; i < ml; i++) for(j = 0; j < n; j++) work[ i+j*ml ] = Qii[ i+j*ldq] - QQ[ i+j*ml ];
 	norm_diffQ_3 = LAPACKE_dlantr_work(LAPACK_COL_MAJOR, 'F', 'U', 'N', ml, n, work, ml, NULL );
 	free( work );
 //	printf("9 \n");
-*/
 
 	free( QQ );
 	free( HH );
 
 	printf("\n");
 	printf("| time = %f   GFlop/sec = %f", elapsed_refL, perform_refL);
-//	printf("\n");
-//	printf("| res1  = %5.1e    orth1 = %5.1e  diff3 = %5.1e  ", norm_repres_1, norm_orth_1, norm_diffQ_3);
+	printf("\n");
+	printf("| res1  = %5.1e    orth1 = %5.1e ", norm_repres_1, norm_orth_1);
 	printf("\n");
 	printf("| res2  = %5.1e    res2  = %5.1e  orth2 = %5.1e  ", norm_repres_2_1, norm_repres_2_2, norm_orth_2);
 	printf("\n");
-	printf("| res3  = %5.1e    orth3 = %5.1e  ", norm_repres_3, norm_orth_3 );
+	printf("| res3  = %5.1e    orth3 = %5.1e  diff3 = %5.1e", norm_repres_3, norm_orth_3, norm_diffQ_3 );
 	printf("\n");
 
 
 	free( A );
+	free( Q );
 	free( As );
 	free( T );
 

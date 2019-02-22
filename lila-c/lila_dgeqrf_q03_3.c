@@ -1,91 +1,63 @@
 #include "lila.h"
 
-int lila_dgeqrf_q03_3( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork ){
+int lila_dgeqrf_q03_3( int panel, int leaf, int n_lvl, int i_lvl, int *nb_lvl, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork ){
+	
+	int vb, info, j, k, nb;
 
-	double *Ajj, *Qjj, *Tkj, *tau;
-	int vb, info, j, l, ml, k, lwork1;
-//
-//	This code block is working from the bottom right of the updated matrix and working by mt - or trying
-//
+	nb = nb_lvl[ i_lvl ];
+	if ( nb > n ) vb = n; else vb = nb; 
 
-	tau  = work;
-	work = work + n;
-	lwork1 = lwork - n;
+	k = 0;
+	j = i;
+
+	if( i_lvl == n_lvl-1 ){
+
+		if ( leaf == 0 ){
+//			info = lila_dgeqrf_q03_mt_l ( panel, m, vb, i, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+		} 
+		else if ( leaf == 1 ){
+//			info = lila_dgeqrf_q03_mt   ( panel, m, vb, i, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+		} 
+		else if ( leaf == 2 ){
+//			info = lila_dgeqrf_w03_mt_hr( panel, m, vb, i, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+		}
+
+	} else {
+		info = lila_dgeqrf_q03_3( panel, leaf, n_lvl, i_lvl+1, nb_lvl, m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+	}
+
+		k += vb;
+		j += vb;
+	
+	while ( j < i+n ) {
+
+		if ( j+nb > i+n ) vb = i+n-j; else vb = nb; 
+
+	if( i_lvl == n_lvl-1 ){
+
+		if ( leaf == 0 ){
+//			info = lila_dgeqrf_q03_mt_l ( panel, m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+		} 
+		else if ( leaf == 1 ){
+//			info = lila_dgeqrf_q03_mt   ( panel, m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+		} 
+		else if ( leaf == 2 ){
+//			info = lila_dgeqrf_w03_mt_hr( panel, m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+		}
+
+	} else {
+		info = lila_dgeqrf_q03_3( panel, leaf, n_lvl, i_lvl+1, nb_lvl, m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+	}
+
+		info = lila_dormqrbz_w03( m, vb, k, i, j, mt, A, lda, Q, ldq, T, ldt, work, lwork );
+
  
-	vb = mt - ( (n+i)%mt ); if ( vb > n ) vb = n;
-	j  = n + i;
-	ml = m - n - i;
-	k  = n;	
-
-	Ajj = A + j      + j*lda;
-	Qjj = Q + j      + j*ldq;
-	Tkj = T + (j%mt) + j*ldt;
-
-	for (i=0;i<vb;i++) tau[i]=Tkj[(i%mt)+i*ldt];
-	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', ml, vb, Ajj, lda, Qjj, ldq ); 
-	info = LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, ml, vb, vb, Qjj, ldq, tau, work, lwork1 );
-	info = lila_dormqrbz_w03( m, vb, k, i, j, mt, A, lda, Q, ldq, T, ldt, work, lwork1 );	
-
-	while( vb != i ){
-
-
-		if( j - mt <= i ) vb = i; else vb = mt;
-		k  -= vb;
-		j  -= vb;
-		ml += vb;
-
-		Ajj = A + j      + j*lda;
-		Qjj = Q + j      + j*ldq;
-		Tkj = T + (j%mt) + j*ldt;
-
-		for (i=0;i<vb;i++) tau[i]=Tkj[(i%mt)+i*ldt];
-		info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', ml, vb, Ajj, lda, Qjj, ldq ); 
-		info = LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, ml, vb, vb, Qjj, ldq, tau, work, lwork1 );
-		info = lila_dormqrbz_w03( m, vb, k, i, j, mt, A, lda, Q, ldq, T, ldt, work, lwork1 );	
-
+		k += vb;
+		j += vb;
 
 	}
 
-/*
-	ml = m  - i;
-	vb = mt - ( i%mt ); if ( vb > n ) vb = n;
-	k  = 0;
-
-	for (i=0;i<vb;i++) tau[i]=Tki[(i%mt)+i*ldt];
-	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', ml, n, Aii, lda, Qii, ldq ); 
-	info = LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, ml, n, n, Qii, ldq, tau, work, lwork1 );
-
-//	info = lila_dormqrbz_w03( m, vb, k, i, i, mt, A, lda, Q, ldq, T, ldt, work, lwork1 );	
-
-	k   += vb;
-	j   = i + vb;
-	l   = vb;
-	ml -= vb;
-
-	if( j + mt >= i + n ) vb = n - ( j - i ); else vb = mt;
-
-	while( vb != 0 ){
-
-
-		Aii = A + j      + j*lda;
-		Qii = Q + j      + j*ldq;
-		Tki = T + (j%mt) + j*ldt;
-
-//		for (i=0;i<vb;i++) tau[i]=Tki[(i%mt)+i*ldt];
-//		info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', ml, vb, Aii, lda, Qii, ldq ); 
-//		info = LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, ml, vb, vb, Qii, ldq, tau, work, lwork1 );
-
-//		info = lila_dormqrbz_w03 ( ml, vb, k, i, j, mt, A, lda, Q, ldq, T, ldt, work, lwork1 );	
-
-		k  += vb;
-		j  += vb;
-		l  += vb;
-		ml -= vb;
-
-		if( j + mt >= i + n ) vb = n - ( j - i ); else vb = mt;
-
-	}
-*/
 	return 0;
+
 }
 
