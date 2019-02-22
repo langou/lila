@@ -261,7 +261,7 @@ int main(int argc, char ** argv) {
 //	printf("6 \n");
 
 
-/*
+
 	QQ = (double *) malloc(ml * n * sizeof(double));
 
 	for( i = 0; i < ml; i++){ for( j = 0; j < n; j++){ QQ[i+j*ml] = HH[j+i*ml]; } } 
@@ -274,6 +274,7 @@ int main(int argc, char ** argv) {
 	free( work );
 //	printf("7 \n");
 
+
 	lwork = ml*n;
 	work  = (double *) malloc(ml * n * sizeof(double));
 	info  = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', ml, n, QQ, ml, work, ml );
@@ -283,6 +284,8 @@ int main(int argc, char ** argv) {
 	norm_repres_3 = norm_repres_3 / normA;
 	free( work );
 //	printf("8 \n");
+
+/*
 
 	lwork = ml*n;
 	work  = (double *) malloc(ml * n * sizeof(double));
