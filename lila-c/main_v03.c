@@ -158,13 +158,14 @@ int main(int argc, char ** argv) {
 		//printf(" 0 |  lwork  = %3d,\n",lwork);
 		//free( work );
 		//work = (double *) malloc( lwork * sizeof(double));
-
+		
+		lwork = 1920000;
 		work = (double *) malloc( 1920000 * sizeof(double));
 
 		gettimeofday(&tp, NULL);
 		elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-		//lila_dgeqrf_recursive_w03( panel, leaf, nx, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+		lila_dgeqrf_recursive_v03( panel, leaf, nx, m, n, ii, mt, A, lda, T, ldt, work, lwork );
 
 		gettimeofday(&tp, NULL);
 		elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -179,7 +180,18 @@ int main(int argc, char ** argv) {
 
 //   	This is where I will generate Q
 
+	ldq = m;
+	Q = (double *) malloc(ldq * (n+ii) * sizeof(double));
 
+	for(i = 0; i < ldq * (n+ii); i++)
+		*(Q + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
+
+	lwork = 1920000;
+	work = (double *) malloc( 1920000 * sizeof(double));
+
+	info = lila_dgeqrf_q03_3( ml, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+
+	free( work );
 
 	double *QQ, *RR, *HH, norm_repres_2_1, norm_repres_2_2, norm_orth_2, *Qii, *Tii, *As_ii;
 	double norm_orth_3, norm_repres_3, norm_diffQ_3, norm_orth_1, norm_repres_1;
@@ -187,7 +199,7 @@ int main(int argc, char ** argv) {
 	As_ii = As+ii+ii*lda;
 	Qii   =  Q+ii+ii*ldq;
 	Tii   =  T+ii+ii*ldt;
-/*
+
 	lwork = n*n;
 	work  = (double *) malloc(n * n * sizeof(double));
 	info  = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'A', n, n, (0e+00), (1e+00), work, n );
@@ -206,7 +218,7 @@ int main(int argc, char ** argv) {
 	free( work );
 //	printf("2 \n");
 
-*/
+
 
 
 	RR = (double *) malloc(m * n * sizeof(double));
@@ -285,8 +297,6 @@ int main(int argc, char ** argv) {
 	free( work );
 //	printf("8 \n");
 
-/*
-
 	lwork = ml*n;
 	work  = (double *) malloc(ml * n * sizeof(double));
  	for(i = 0; i < ml; i++) for(j = 0; j < n; j++) work[ i+j*ml ] = Qii[ i+j*ldq] - QQ[ i+j*ml ];
@@ -296,7 +306,7 @@ int main(int argc, char ** argv) {
 
 	free( QQ );
 	free( HH );
-*/
+
 	printf("\n");
 	printf("| time = %f   GFlop/sec = %f", elapsed_refL, perform_refL);
 	printf("\n");
@@ -309,6 +319,7 @@ int main(int argc, char ** argv) {
 
 
 	free( A );
+	free( Q );
 	free( As );
 	free( T );
 

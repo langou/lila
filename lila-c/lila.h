@@ -74,7 +74,9 @@ extern int lila_dgeqrf_v03_mt_l( int panel, int m, int n, int i, int mt, double 
 extern int lila_dgeqrf_v03_mt( int panel, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *work, int lwork );
 extern int lila_dgeqr2_v03_l( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *work, int lwork );
 extern int lila_dgeqr2_v03_3( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *work, int lwork );
+extern int lila_dgeqrf_recursive_v03( int panel, int leaf, int nx, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *work, int lwork );
 
+extern int lila_dgeqrf_q03_3( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
 
 
 
