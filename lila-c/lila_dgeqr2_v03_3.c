@@ -3,7 +3,7 @@
 int lila_dgeqr2_v03_3( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *work, int lwork ){
 
 	double *work1, *Aii, *Tki;
-	int j, k, ml, info; 
+	int k, ml, info; 
 
 //	work1 = (double *) malloc( n * n * sizeof(double));
 	work1 = work;	

@@ -3,7 +3,7 @@
 int main(int argc, char ** argv) {
 
 	int i, j, info, lda, ldq, ldt, m, n, ii, lwork, ml;
-	double *A, *Q, *T, *As, *work=NULL, *Aii, *Qii, *Tii, *tau=NULL;
+	double *A, *Q, *T, *As, *work=NULL, *Aii, *Qii, *Tii;
 	double normA, elapsed_refL, perform_refL;
 	struct timeval tp;
 
