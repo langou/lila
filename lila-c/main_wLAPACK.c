@@ -2,7 +2,7 @@
 
 int main(int argc, char ** argv) {
 
-	int i, j, info, lda, ldq, m, n, ii, lwork, ml;
+	int i, j, info, lda, ldq, m, n, ii, lwork, ml, verbose;
 	double *A, *Q, *As, *work=NULL, *Aii, *Qii, *tau=NULL;
 	double normA, elapsed_refL, perform_refL;
 	struct timeval tp;
@@ -38,14 +38,16 @@ int main(int argc, char ** argv) {
 		}
 	}
 
+	verbose = 0;
+
 	if( lda < 0 ) lda = m;
 	if( ldq < 0 ) ldq = m;
 
-	printf("m = %4d, ",         m);
-	printf("ii = %4d, ",       ii);
-	printf("n = %4d, ",         n);
-	printf("lda = %4d, ",     lda);
-	printf("ldq = %4d, ",     ldq);
+	if (verbose) printf("m = %4d, ",         m);
+	if (verbose) printf("ii = %4d, ",       ii);
+	if (verbose) printf("n = %4d, ",         n);
+	if (verbose) printf("lda = %4d, ",     lda);
+	if (verbose) printf("ldq = %4d, ",     ldq);
 
 	A  = (double *) malloc(lda * (n+ii) * sizeof(double));
 	As = (double *) malloc(lda * (n+ii) * sizeof(double));
@@ -91,6 +93,10 @@ int main(int argc, char ** argv) {
 	free( work );
 
 	perform_refL = ( 4.0e+00 * ((double) m) * ((double) n) * ((double) n) - 4.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_refL / 1.0e+9 ;
+
+	printf("%6d %6d %s %16.8f %10.3f\n", m, n, getenv("OPENBLAS_NUM_THREADS"), elapsed_refL, perform_refL);
+
+	return 0;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
