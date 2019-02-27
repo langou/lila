@@ -11,13 +11,13 @@
    perf = Z(:,5);
 
    ax = axes;
-   loglog( [1 2 4 ], [ X(13,5) Y(13,5) Z(13,5) ], 'r', 'LineWidth', 2); hold on;
-   loglog( [1 2 4 ], [ X(13,5) 2*X(13,5) 4*X(13,5) ], 'r--', 'LineWidth', 2); hold on;
+   loglog( [1 2 4 ], [ X(13,4) Y(13,4) Z(13,4) ], 'r', 'LineWidth', 2); hold on;
+   loglog( [1 2 4 ], [ X(13,4) X(13,4)/2 X(13,4)/4 ], 'r--', 'LineWidth', 2); hold on;
    grid on
    set( ax, 'XTick',[ 1 2 3 4]);
-   axis([1 4 0 40])
+   axis([1 4 9 40])
 
    title('scalability experiment, m=n=5000, VRQT')
    xlabel('number of processors')
-   ylabel('performance')
+   ylabel('time in seconds')
 
