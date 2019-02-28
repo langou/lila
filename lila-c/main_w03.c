@@ -2,7 +2,7 @@
 
 int main(int argc, char ** argv) {
 
-	int i, j, info, lda, ldq, ldt, m, n, mt, ii, lwork, ml, nx;
+	int i, j, info, lda, ldq, ldt, m, n, mt, ii, lwork, ml, nx, verbose;
 	int n_lvl, *nb_lvl, panel, leaf;
 	double *A, *Q, *As, *T, *work=NULL, *Aii;
 	double normA, elapsed_refL, perform_refL;
@@ -24,6 +24,7 @@ int main(int argc, char ** argv) {
 	nb_lvl    = (int *) malloc(n_lvl * sizeof(int));
 	nb_lvl[0] = 10;
 	mode      = 'r';
+	verbose   = 0;
 
 	for(i = 1; i < argc; i++){
 		if( strcmp( *(argv + i), "-ldq") == 0) {
@@ -32,6 +33,10 @@ int main(int argc, char ** argv) {
 		}
 		if( strcmp( *(argv + i), "-lda") == 0) {
 			lda  = atoi( *(argv + i + 1) );
+			i++;
+		}
+		if( strcmp( *(argv + i), "-verbose") == 0) {
+			verbose  = atoi( *(argv + i + 1) );
 			i++;
 		}
 		if( strcmp( *(argv + i), "-m") == 0) {
@@ -79,33 +84,33 @@ int main(int argc, char ** argv) {
 	if( lda < 0 ) lda = m;
 	if( ldq < 0 ) ldq = m;
 
-	if ( mode == 'l' ) printf("dgeqrf_levelx_w03    | ");
-	if ( mode == 'r' ) printf("dgeqrf_recursive_w03 | ");
+	if ( (mode == 'l') && (verbose != 0) ) printf("dgeqrf_levelx_w03    | ");
+	if ( (mode == 'r') && (verbose != 0) ) printf("dgeqrf_recursive_w03 | ");
 
-	printf("m = %4d, ",         m);
-	printf("ii = %4d, ",       ii);
-	printf("n = %4d, ",         n);
-	printf("lda = %4d, ",     lda);
-	printf("ldq = %4d, ",     ldq);
-	printf("mt = %4d, ",       mt); 
-	printf("panel = %4d, ", panel); 
-	printf("leaf = %4d, ",   leaf); 
+	if (verbose != 0) printf("m = %4d, ",         m);
+	if (verbose != 0) printf("ii = %4d, ",       ii);
+	if (verbose != 0) printf("n = %4d, ",         n);
+	if (verbose != 0) printf("lda = %4d, ",     lda);
+	if (verbose != 0) printf("ldq = %4d, ",     ldq);
+	if (verbose != 0) printf("mt = %4d, ",       mt); 
+	if (verbose != 0) printf("panel = %4d, ", panel); 
+	if (verbose != 0) printf("leaf = %4d, ",   leaf); 
 	if ( mode == 'l' ) {
-	printf("n_lvl = %4d ( ",n_lvl);
- 	for(j = 0; j < n_lvl; j++) printf(" %4d ",nb_lvl[j]);
-	printf(")");
+	if (verbose != 0) printf("n_lvl = %4d ( ",n_lvl);
+ 	if (verbose != 0) for(j = 0; j < n_lvl; j++) printf(" %4d ",nb_lvl[j]);
+	if (verbose != 0) printf(")");
 	if ( n_lvl == 1 ) {
-	printf("   ");
+	if (verbose != 0) printf("   ");
 	}
 	if ( n_lvl == 2 ) {
-	printf("      ");
+	if (verbose != 0) printf("      ");
 	}
 	}
 	if ( mode == 'r' ) {
-	printf("nx = %4d, ",       nx); 
-	printf("                        ");
+	if (verbose != 0) printf("nx = %4d, ",       nx); 
+	if (verbose != 0) printf("                        ");
 	}
-	printf("  ");
+	if (verbose != 0) printf("  ");
 
 	A  = (double *) malloc(lda * (n+ii) * sizeof(double));
 	As = (double *) malloc(lda * (n+ii) * sizeof(double));
@@ -131,13 +136,9 @@ int main(int argc, char ** argv) {
 
 		int lwork;
 		lwork = 0;
-		work = (double *) malloc( 1920000 * sizeof(double));
-
-		lwork = lila_wsq_dgeqrf_levelx_w03( panel, leaf, n_lvl, 0, nb_lvl, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
-		//printf(" 0 |  lwork  = %3d,\n",lwork);
+		lwork = lila_wsq_dgeqrf_levelx_w03( panel, leaf, n_lvl, 0, nb_lvl, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work=NULL, lwork );
 		free( work );
 		work = (double *) malloc( lwork * sizeof(double));
-		//work = (double *) malloc( 1920000 * sizeof(double));
 
 		gettimeofday(&tp, NULL);
 		elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -157,13 +158,9 @@ int main(int argc, char ** argv) {
 
 		int lwork;
 		lwork = 0;
-		work = (double *) malloc( 1920000 * sizeof(double));
-
-		lwork = lila_wsq_dgeqrf_recursive_w03( panel, leaf, nx, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
-		//printf(" 0 |  lwork  = %3d,\n",lwork);
+		lwork = lila_wsq_dgeqrf_recursive_w03( panel, leaf, nx, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work=NULL, lwork );
 		free( work );
 		work = (double *) malloc( lwork * sizeof(double));
-		//work = (double *) malloc( 1920000 * sizeof(double));
 
 		gettimeofday(&tp, NULL);
 		elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -178,6 +175,13 @@ int main(int argc, char ** argv) {
 
 	perform_refL = ( 4.0e+00 * ((double) m) * ((double) n) * ((double) n) - 4.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_refL / 1.0e+9 ;
 	
+	if (verbose == 0){ 
+		if ( mode == 'r' ){
+			printf("%6d %6d %6d %6d %s %16.8f %10.3f %6d %6d\n", m, n, mt, nx, getenv("OPENBLAS_NUM_THREADS"), elapsed_refL, perform_refL, leaf, panel);
+		} else {
+			printf("%6d %6d %6d %s %16.8f %10.3f %6d %6d\n", m, n, mt, getenv("OPENBLAS_NUM_THREADS"), elapsed_refL, perform_refL, leaf, panel);
+	} } else {
+
 	double *QQ, *RR, *HH, norm_repres_2_1, norm_repres_2_2, norm_orth_2, *Qii, *Tii, *As_ii;
 	double norm_orth_3, norm_repres_3, norm_diffQ_3, norm_orth_1, norm_repres_1;
 
@@ -295,7 +299,7 @@ int main(int argc, char ** argv) {
 	printf("\n");
 	printf("| res3  = %5.1e    orth3 = %5.1e  diff3 = %5.1e", norm_repres_3, norm_orth_3, norm_diffQ_3 );
 	printf("\n");
-
+	}
 
 	free( Q );
 	free( A );

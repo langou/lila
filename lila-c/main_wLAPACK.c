@@ -14,6 +14,7 @@ int main(int argc, char ** argv) {
 	ii        = 6;
 	lda       = -1;
 	ldq       = -1;
+	verbose   = 0;
 
 	for(i = 1; i < argc; i++){
 		if( strcmp( *(argv + i), "-ldq") == 0) {
@@ -36,9 +37,11 @@ int main(int argc, char ** argv) {
 			ii  = atoi( *(argv + i + 1) );
 			i++;
 		}
+		if( strcmp( *(argv + i), "-verbose") == 0) {
+			verbose  = atoi( *(argv + i + 1) );
+			i++;
+		}
 	}
-
-	verbose = 0;
 
 	if( lda < 0 ) lda = m;
 	if( ldq < 0 ) ldq = m;
@@ -89,16 +92,13 @@ int main(int argc, char ** argv) {
 	gettimeofday(&tp, NULL);
 	elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-//	free( tau  );
 	free( work );
 
 	perform_refL = ( 4.0e+00 * ((double) m) * ((double) n) * ((double) n) - 4.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_refL / 1.0e+9 ;
 
+	if (verbose == 0){ 
 	printf("%6d %6d %s %16.8f %10.3f\n", m, n, getenv("OPENBLAS_NUM_THREADS"), elapsed_refL, perform_refL);
-
-	return 0;
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	} else {
 
 	double *T, *QQ, *RR, *HH, norm_repres_1, norm_orth_1, *As_ii, *Tii;
 	double norm_orth_3, norm_repres_3, norm_diffQ_3, norm_repres_2_2, norm_orth_2, norm_repres_2_1;
@@ -213,11 +213,13 @@ int main(int argc, char ** argv) {
 	printf("\n");
 	printf("| res3  = %5.1e    orth3 = %5.1e  diff3 = %5.1e", norm_repres_3, norm_orth_3, norm_diffQ_3 );
 	printf("\n");
+	free( T );
+
+	}
 
 	free( Q );
 	free( A );
 	free( As );
-	free( T );
 	free( tau );
 
 
