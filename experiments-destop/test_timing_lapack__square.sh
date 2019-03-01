@@ -4,7 +4,7 @@ rm -f test_timing_lapack__square__1thread.dat
 rm -f test_timing_lapack__square__2threads.dat
 rm -f test_timing_lapack__square__3threads.dat
 rm -f test_timing_lapack__square__4threads.dat
-for ((i=100; i<1000 ; i+=100));
+for ((i=100; i<1100 ; i+=100));
 do
 ../lila-c/xmain_wLAPACK.exe -m $i -n $i -ii 0 >> test_timing_lapack__square__1thread.dat
 done

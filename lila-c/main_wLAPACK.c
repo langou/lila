@@ -97,7 +97,8 @@ int main(int argc, char ** argv) {
 	perform_refL = ( 4.0e+00 * ((double) m) * ((double) n) * ((double) n) - 4.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_refL / 1.0e+9 ;
 
 	if (verbose == 0){ 
-	printf("%6d %6d %s %16.8f %10.3f\n", m, n, getenv("OPENBLAS_NUM_THREADS"), elapsed_refL, perform_refL);
+	printf("%6d %6d %16.8f %10.3f\n", m, n, elapsed_refL, perform_refL);
+	//printf("%6d %6d %s %16.8f %10.3f\n", m, n, getenv("OPENBLAS_NUM_THREADS"), elapsed_refL, perform_refL);
 	} else {
 
 	double *T, *QQ, *RR, *HH, norm_repres_1, norm_orth_1, *As_ii, *Tii;

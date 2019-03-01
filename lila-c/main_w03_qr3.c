@@ -2,7 +2,7 @@
 
 int main(int argc, char ** argv) {
 
-	int i, j, info, lda, ldq, ldt, m, n, ii, lwork, ml;
+	int i, j, info, lda, ldq, ldt, m, n, ii, lwork, ml, verbose;
 	double *A, *Q, *T, *As, *work=NULL, *Aii, *Qii, *Tii;
 	double normA, elapsed_refL, perform_refL;
 	struct timeval tp;
@@ -14,6 +14,7 @@ int main(int argc, char ** argv) {
 	ii        = 6;
 	lda       = -1;
 	ldq       = -1;
+	verbose   = 0;
 
 	for(i = 1; i < argc; i++){
 		if( strcmp( *(argv + i), "-ldq") == 0) {
@@ -36,17 +37,21 @@ int main(int argc, char ** argv) {
 			ii  = atoi( *(argv + i + 1) );
 			i++;
 		}
+	if( strcmp( *(argv + i), "-verbose") == 0) {
+			verbose  = atoi( *(argv + i + 1) );
+			i++;
+		}
 	}
 
 	if( lda < 0 ) lda = m;
 	if( ldq < 0 ) ldq = m;
 	ldt       = n+ii;
 
-	printf("m = %4d, ",         m);
-	printf("ii = %4d, ",       ii);
-	printf("n = %4d, ",         n);
-	printf("lda = %4d, ",     lda);
-	printf("ldq = %4d, ",     ldq);
+	if (verbose != 0) printf("m = %4d, ",         m);
+	if (verbose != 0) printf("ii = %4d, ",       ii);
+	if (verbose != 0) printf("n = %4d, ",         n);
+	if (verbose != 0) printf("lda = %4d, ",     lda);
+	if (verbose != 0) printf("ldq = %4d, ",     ldq);
 
 	A  = (double *) malloc(lda * (n+ii) * sizeof(double));
 	As = (double *) malloc(lda * (n+ii) * sizeof(double));
@@ -114,7 +119,11 @@ int main(int argc, char ** argv) {
 	perform_refL = ( 4.0e+00 * ((double) m) * ((double) n) * ((double) n) - 4.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_refL / 1.0e+9 ;
 	free( work );
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	if ( verbose == 0 ){
+		printf("%6d %6d %16.8f %10.3f\n", m, n, elapsed_refL, perform_refL);
+		//printf("%6d %6d %s %16.8f %10.3f\n", m, n, getenv("OPENBLAS_NUM_THREADS"), elapsed_refL, perform_refL);
+
+	} else {
 
 	double *QQ, *RR, *HH, norm_repres_1, norm_orth_1, *As_ii;
 	double norm_orth_3, norm_repres_3, norm_diffQ_3, norm_repres_2_2, norm_orth_2, norm_repres_2_1;
@@ -221,6 +230,7 @@ int main(int argc, char ** argv) {
 	printf("\n");
 	printf("| res3  = %5.1e    orth3 = %5.1e  diff3 = %5.1e", norm_repres_3, norm_orth_3, norm_diffQ_3 );
 	printf("\n");
+	}
 
 	free( Q );
 	free( A );

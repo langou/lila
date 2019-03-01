@@ -177,9 +177,11 @@ int main(int argc, char ** argv) {
 	
 	if (verbose == 0){ 
 		if ( mode == 'r' ){
-			printf("%6d %6d %6d %6d %s %16.8f %10.3f %6d %6d\n", m, n, mt, nx, getenv("OPENBLAS_NUM_THREADS"), elapsed_refL, perform_refL, leaf, panel);
+			printf("%6d %6d %6d %6d %16.8f %10.3f %6d %6d\n", m, n, mt, nx, elapsed_refL, perform_refL, leaf, panel);
+			//printf("%6d %6d %6d %6d %s %16.8f %10.3f %6d %6d\n", m, n, mt, nx, getenv("OPENBLAS_NUM_THREADS"), elapsed_refL, perform_refL, leaf, panel);
 		} else {
-			printf("%6d %6d %6d %s %16.8f %10.3f %6d %6d\n", m, n, mt, getenv("OPENBLAS_NUM_THREADS"), elapsed_refL, perform_refL, leaf, panel);
+			printf("%6d %6d %6d %16.8f %10.3f %6d %6d\n", m, n, mt, elapsed_refL, perform_refL, leaf, panel);
+			//printf("%6d %6d %6d %s %16.8f %10.3f %6d %6d\n", m, n, mt, getenv("OPENBLAS_NUM_THREADS"), elapsed_refL, perform_refL, leaf, panel);
 	} } else {
 
 	double *QQ, *RR, *HH, norm_repres_2_1, norm_repres_2_2, norm_orth_2, *Qii, *Tii, *As_ii;
