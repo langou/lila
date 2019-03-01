@@ -28,7 +28,7 @@
 
    legend
    legend('mt = 5000','mt = 3000','mt = 1000','mt = 500','mt = 200')
-   title('scalability experiment, m=n=5000, VRQT, mt')
+   title('scalability experiment, m=n=5000, VRQT, mt, l1p2')
    xlabel('number of processors')
    ylabel('time in seconds')
 
@@ -49,7 +49,7 @@
 
    legend
    legend('mt = 5000','mt = 3000','mt = 1000','mt = 500','mt = 200')
-   title('scalability experiment, m=n=5000, VRQT, mt')
+   title('scalability experiment, m=n=5000, VRQT, mt, l1p2')
    xlabel('number of processors')
    ylabel('GFlop/second')
 
