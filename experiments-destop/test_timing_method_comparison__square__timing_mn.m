@@ -12,7 +12,7 @@
 
    legend
    legend('w03 l1p1','LAPACK','qr3')
-   title('scalability experiment, VRQT, method comparison')
+   title('VRQT, method comparison, m=n')
    xlabel('dimension size')
    ylabel('time in seconds')
 
@@ -26,7 +26,7 @@
 
    legend
    legend('w03 l1p1','LAPACK','qr3')   
-   title('scalability experiment, VRQT, method comparison')
+   title('VRQT, method comparison, m=n')
    xlabel('dimension size')
    ylabel('GFlop/second')
 
