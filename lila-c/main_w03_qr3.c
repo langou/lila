@@ -43,6 +43,8 @@ int main(int argc, char ** argv) {
 		}
 	}
 
+	if( m < n+ii ){ printf("\n\n YOUR CHOICE OF n AND ii HAVE MADE YOU LARGER THAN m, PLEASE RECONSIDER \n\n"); return 0; }
+
 	if( lda < 0 ) lda = m;
 	if( ldq < 0 ) ldq = m;
 	ldt       = n+ii;
@@ -70,8 +72,6 @@ int main(int argc, char ** argv) {
 	ml    = m - ii;
 	info  = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n+ii, A, lda, As, lda );
 	normA = LAPACKE_dlange_work   ( LAPACK_COL_MAJOR, 'F', ml, n, Aii, lda, work );
-
-	if( m < n+ii ){ printf("\n\n YOUR CHOICE OF n AND ii HAVE MADE YOU LARGER THAN m, PLEASE RECONSIDER \n\n"); return 0; }
 
 //	1
 //	work = (double *) malloc( 1 * sizeof(double));

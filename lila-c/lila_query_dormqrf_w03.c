@@ -1,6 +1,6 @@
 #include "lila.h"
 
-int lila_wsq_dormqrf_w03( int m, int n, int k, int i, int j, int mt, double *A, int lda, double *T, int ldt, double *work, int lwork ){
+int lila_query_dormqrf_w03( int m, int n, int k, int i, int j, int mt, double *A, int lda, double *T, int ldt, double *work, int lwork ){
 
 	int ml, vb, lwork1, not_done, jj;
 
@@ -17,7 +17,6 @@ int lila_wsq_dormqrf_w03( int m, int n, int k, int i, int j, int mt, double *A, 
 	while( not_done == 1 ){
 
 	if ( lwork1 < (ml-vb)*n ) lwork1 = (ml-vb)*n;
-//	if ( lwork1 < ml-vb ) lwork1 = ml-vb;
 
 	if ( jj + vb - 1 == k ) {
 			not_done = 0; 

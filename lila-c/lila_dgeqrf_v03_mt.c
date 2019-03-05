@@ -1,48 +1,17 @@
 #include "lila.h"
 
-int lila_dgeqrf_v03_mt( int panel, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *work, int lwork ){
+int lila_dgeqrf_v03_mt( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *work, int lwork ){
 
 	int vb, info, j, l, ml;
 
-	ml = m - i;
-	vb = mt - ( i%mt ); if ( vb > n ) vb = n;
-
-	if( panel == 0 ){	
-		info = lila_dgeqr2_v03_l ( m, vb, i, mt, A, lda, T, ldt, work, lwork );
-	}
-	else if( panel == 1 ){
-		info = lila_dgeqr2_v03_3 ( m, vb, i, mt, A, lda, T, ldt, work, lwork );
-	}
-	else if( panel == 2){
-		//info = lila_dgeqr2_w03_hr( m, vb, i, mt, A, lda, T, ldt, Q, ldq, work, lwork );
-	}
-
-	j   = i + vb;
-	l   = vb;
-	ml -= vb;
-
-	if( j + mt >= i + n ) vb = n - ( j - i ); else vb = mt;
-
-	while( vb != 0 ){
-
-		info = lila_dormqrf_w03  ( m, vb, l, i, j, mt, A, lda, T, ldt, work, lwork );
-
-		if( panel == 0 ){	
-			info = lila_dgeqr2_v03_l ( m, vb, j, mt, A, lda, T, ldt, work, lwork );
-		}
-		else if( panel == 1 ){
-			info = lila_dgeqr2_v03_3 ( m, vb, j, mt, A, lda, T, ldt, work, lwork );
-		}
-		else if( panel == 2){
-			//info = lila_dgeqr2_w03_hr( m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );
-		}
-
-		j  += vb;
-		l  += vb;
-		ml -= vb;
-
-		if( j + mt >= i + n ) vb = n - ( j - i ); else vb = mt;
-
+	if ( lila_param[1] == 0 ){
+		info = lila_dgeqrf_v03_mt_l ( m, n, i, mt, A, lda, T, ldt, work, lwork );
+	} 
+	if ( lila_param[1] == 1 ){
+		info = lila_dgeqrf_v03_mt_hh( lila_param, m, n, i, mt, A, lda, T, ldt, work, lwork );
+	} 
+	if ( lila_param[1] == 2 ){
+		//info = lila_dgeqrf_w03_mt_hr( panel, m, n, i, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 	}
 
 	return 0;
