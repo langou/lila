@@ -92,7 +92,7 @@ int main(int argc, char ** argv) {
 	if (verbose != 0) printf("n = %4d, ",         n);
 	if (verbose != 0) printf("lda = %4d, ",     lda);
 	if (verbose != 0) printf("ldq = %4d, ",     ldq);
-	if (verbose != 0) printf("mt = %4d, ",       mt); 
+	if (verbose != 0) printf("mt = %4d, ",       mt); comparison_time_test_mn_square
 	if (verbose != 0) printf("panel = %4d, ", panel); 
 	if (verbose != 0) printf("leaf = %4d, ",   leaf); 
 	if ( mode == 'l' ) {
