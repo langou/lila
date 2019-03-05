@@ -1,0 +1,32 @@
+
+TITLE: A new interface for the Householder QR factorization (GEQRF)
+
+
+ABSTRACT: (first contribution) We present a new interface for performing the
+Householder QR factorization (GEQRF) of matrices. The main advantage of our new
+interface is that it disconnects the algorithm block size (nb) with the compact
+WY block size (mt). Thanks to this new interface we can, for example, perform a
+fully column-recursive QR factorization algorithm with a controlled number of
+operations. We can also achieve many levels of column-blocking with an independently
+chosen compact WY block size. There are two main differences between the newly
+proposed interface and the existing interfaces. Firstly, we include the T
+matrix from the compact WY representation in the interface (in addition to the
+matrices V and R). Secondly, we work with "global" index position. (So as to
+position ourselves correctly in the T matrix.) This interface enables us to
+construct the T matrix "as we go" and reuse it independently of where we are in
+the factorization. A needed subroutine is the "connect" T matrices from two
+different WY representations. (second contribution) In addition, we propose a
+second interface that includes the Q matrix. So that the QR factorization
+interface now returns V, R, T and Q. We demonstrate the usefulness of the new
+interface. For example, this enables to easily code a Block Arnoldi method
+which performs Cholesky QR on the panel, and then the outer blocking scheme is
+performed using Householder reflectors. Most block orthogononalization schemes
+use a block Gram-Schmidt outer scheme, and are pretty flexible on the inner
+scheme (panel). LAPACK GEQRF uses Householder reflectors in the inner and outer
+scheme. Our new scheme is the first to use Householder reflectors on the outer
+scheme and a flexible inner scheme (Gram-Schmidt, Cholesky QR, TSQR, etc.).
+(third contribution) While Ballard et al. (JPDC, 2015) show that, given Q, we
+can quickly construct V and T. We show that, given V and T, we can quickly (and
+stably) construct Q. In other words, the cost of constructing T and Q is about
+the cost of constructing T xor Q. In other words, constructing T is about
+"free" if one needs Q.
