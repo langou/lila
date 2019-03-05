@@ -81,6 +81,8 @@ int main(int argc, char ** argv) {
 		}
 	}
 
+	if( m < n+ii ){ printf("\n\n YOUR CHOICE OF n AND ii HAVE MADE YOU LARGER THAN m, PLEASE RECONSIDER \n\n"); return 0; }
+
 	if( lda < 0 ) lda = m;
 	if( ldq < 0 ) ldq = m;
 
@@ -127,9 +129,17 @@ int main(int argc, char ** argv) {
 	info  = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n+ii, A, lda, As, lda );
 	normA = LAPACKE_dlange_work   ( LAPACK_COL_MAJOR, 'F', ml, n, Aii, lda, work );
 
-	if( m < n+ii ){ printf("\n\n YOUR CHOICE OF n AND ii HAVE MADE YOU LARGER THAN m, PLEASE RECONSIDER \n\n"); return 0; }
-
 	if ( mode == 'l' ){
+
+		int *lila_param, k;
+		k = 4;
+		if( n_lvl > 1 ) k += n_lvl;
+		lila_param = (int *) malloc(k * sizeof(int));
+		lila_param[ 0 ] = 0;
+		lila_param[ 1 ] = leaf;
+		lila_param[ 2 ] = panel;
+		lila_param[ 3 ] = n_lvl;
+		if( n_lvl > 1 ) for(j = 0; j < n_lvl; j++) lila_param[ k+j ] = nb_lvl[j];
 
 		ldt = mt;
 		T = (double *) malloc(ldt * (n+ii) * sizeof(double));
@@ -143,17 +153,24 @@ int main(int argc, char ** argv) {
 		gettimeofday(&tp, NULL);
 		elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-		lila_dgeqrf_levelx_w03( panel, leaf, n_lvl, 0, nb_lvl, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+		lila_dgeqrf_levelx_w03( lila_param, n_lvl, 0, nb_lvl, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 
 		gettimeofday(&tp, NULL);
 		elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
 		free( work );
+		free( lila_param );
+
 	}
 
 	if ( mode == 'r' ){
 
 		int *lila_param;
+		lila_param = (int *) malloc(4 * sizeof(int));
+		lila_param[ 0 ] = 0;
+		lila_param[ 1 ] = leaf;
+		lila_param[ 2 ] = panel;
+		lila_param[ 3 ] = nx;
 
 		ldt = mt;
 		T = (double *) malloc(ldt * (n+ii) * sizeof(double));
@@ -167,12 +184,13 @@ int main(int argc, char ** argv) {
 		gettimeofday(&tp, NULL);
 		elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-		lila_dgeqrf_recursive_w03( lila_param, panel, leaf, nx, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+		lila_dgeqrf_recursive_w03( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 
 		gettimeofday(&tp, NULL);
 		elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
 		free( work );
+		free( lila_param );
 	}
 
 	perform_refL = ( 4.0e+00 * ((double) m) * ((double) n) * ((double) n) - 4.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_refL / 1.0e+9 ;

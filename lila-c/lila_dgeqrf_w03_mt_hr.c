@@ -1,11 +1,10 @@
 #include "lila.h"
 
-int lila_dgeqrf_w03_mt_hr( int panel, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork ){
+int lila_dgeqrf_w03_mt_hr( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork ){
 
 	double *Tki, *Aii, *Qii, *S;
 	int ml, vb, j, info;
 	
-//	S  = (int *) malloc((n+i) * sizeof(int));
 	S = work + n+i;	
 
 	j  = i;
@@ -28,8 +27,6 @@ int lila_dgeqrf_w03_mt_hr( int panel, int m, int n, int i, int mt, double *A, in
 		if( j + mt >= i + n ) vb = n - ( j - i ); else vb = mt;
 
 	}
-
-//	free(S);
 
 	return 0;
 
