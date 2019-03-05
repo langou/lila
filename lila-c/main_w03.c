@@ -92,7 +92,7 @@ int main(int argc, char ** argv) {
 	if (verbose != 0) printf("n = %4d, ",         n);
 	if (verbose != 0) printf("lda = %4d, ",     lda);
 	if (verbose != 0) printf("ldq = %4d, ",     ldq);
-	if (verbose != 0) printf("mt = %4d, ",       mt); 
+	if (verbose != 0) printf("mt = %4d, ",       mt);
 	if (verbose != 0) printf("panel = %4d, ", panel); 
 	if (verbose != 0) printf("leaf = %4d, ",   leaf); 
 	if ( mode == 'l' ) {
@@ -153,6 +153,8 @@ int main(int argc, char ** argv) {
 
 	if ( mode == 'r' ){
 
+		int *lila_param;
+
 		ldt = mt;
 		T = (double *) malloc(ldt * (n+ii) * sizeof(double));
 
@@ -165,7 +167,7 @@ int main(int argc, char ** argv) {
 		gettimeofday(&tp, NULL);
 		elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-		lila_dgeqrf_recursive_w03( panel, leaf, nx, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+		lila_dgeqrf_recursive_w03( lila_param, panel, leaf, nx, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 
 		gettimeofday(&tp, NULL);
 		elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
