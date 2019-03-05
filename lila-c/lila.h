@@ -51,7 +51,7 @@ extern int lila_dgeqr2_w03_hr( int m, int n, int i, int mt, double *A, int lda, 
 extern int lila_ormhr2_w03_hr( int m, int n, int i, int j, int l, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork, double *S );
 
 extern int lila_dgeqrf_levelx_w03( int panel, int leaf, int n_lvl, int i_lvl, int *nb_lvl, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
-extern int lila_dgeqrf_recursive_w03( int panel, int leaf, int nx, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
+extern int lila_dgeqrf_recursive_w03( int *lila_param, int panel, int leaf, int nx, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
 
 extern int lila_wsq_dgeqrf_levelx_w03   ( int panel, int leaf, int n_lvl, int i_lvl, int *nb_lvl, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
 extern int lila_wsq_dgeqrf_recursive_w03( int panel, int leaf, int nx, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
