@@ -1,6 +1,6 @@
 
 (*) we need to do a study for 
-(*) lila_query could be used to do pictures
+(*) lila_query could be used to do pictures, or mayb we do the pictures in matlab? or maybe we do both
 (*) lila_param can be used for profiling
 (*) do a study for the computation of Q
 (*) maybe do a study for the computation of T
@@ -8,6 +8,8 @@
 (*) explain that the next step is the blocking in the m dimension, right now focusing on iterative methods, so column mind set
 (*) how do we go about breaking the space in t em dimension? Do we reconstruct? Do we have layers of small T? Or do we go for a big T? How can we keep being elegenat?
 (*) explain that teh next step is MGS
+
+(*) explain the overall design of the software
 
 (*) next step is n=1 and full T and lag
 
