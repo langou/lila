@@ -5,29 +5,20 @@ int lila_dormqrf_z03( int m, int n, int k, int i, int j, int mt, double *A, int 
 	double *Aii, *Bij;
 	double *Tii;
 
-	int ml, vb;
-	int ldwork;
+	int not_done, jj, ml, vb, ldwork;
 	int iii, jjj; 
-
-	int jalo;
-	int not_done, jj;
 
 	vb = mt - (i % mt );
 	if ( vb > k ) vb = k;
 
-	jalo = i;
-	
-	Aii = A + i + i*lda;
-	Bij = B + i + j*ldb;
+	Aii = A + i        + i*lda;
+	Bij = B + i        + j*ldb;
 	Tii = T + (i % mt) + i*ldt;
 
-	ldwork = mt;
-
-	ml = m - i;
-
+	ldwork   = mt;
 	not_done = 1;
-
-	jj = 1;
+	ml       = m - i;
+	jj       = 1;
 
 	while( not_done == 1 ){
 

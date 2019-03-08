@@ -2,7 +2,7 @@
 
 int main(int argc, char ** argv) {
 
-	int i, j, info, lda, ldq, ldt, m, n, mt, ii, lwork, ml, nx;
+	int i, j, info, lda, ldq, ldt, m, n, mt, ii, ml, nx, verbose, testing;
 	int n_lvl, *nb_lvl, panel, leaf;
 	int *lila_param;
 	double *A, *As, *T, *work=NULL, *Aii;
@@ -25,6 +25,8 @@ int main(int argc, char ** argv) {
 	nb_lvl    = (int *) malloc(n_lvl * sizeof(int));
 	nb_lvl[0] = 10;
 	mode      = 'r';
+	verbose   = 0;
+	testing   = 1;
 
 	for(i = 1; i < argc; i++){
 		if( strcmp( *(argv + i), "-ldq") == 0) {
@@ -45,6 +47,14 @@ int main(int argc, char ** argv) {
 		}
 		if( strcmp( *(argv + i), "-mt") == 0) {
 			mt  = atoi( *(argv + i + 1) );
+			i++;
+		}
+		if( strcmp( *(argv + i), "-verbose") == 0) {
+			verbose  = atoi( *(argv + i + 1) );
+			i++;
+		}
+		if( strcmp( *(argv + i), "-testing") == 0) {
+			testing  = atoi( *(argv + i + 1) );
 			i++;
 		}
 		if( strcmp( *(argv + i), "-ii") == 0) {
@@ -82,32 +92,35 @@ int main(int argc, char ** argv) {
 	if( lda < 0 ) lda = m;
 	if( ldq < 0 ) ldq = m;
 
-	if ( mode == 'l' ) printf("dgeqrf_levelx_w03    | ");
-	if ( mode == 'r' ) printf("dgeqrf_recursive_w03 | ");
+	if ( verbose == 1 ){
 
-	printf("m = %4d, ",         m);
-	printf("ii = %4d, ",       ii);
-	printf("n = %4d, ",         n);
-	printf("lda = %4d, ",     lda);
-	printf("mt = %4d, ",       mt); 
-	printf("panel = %4d, ", panel); 
-	printf("leaf = %4d, ",   leaf); 
-	if ( mode == 'l' ) {
-	printf("n_lvl = %4d ( ",n_lvl);
- 	for(j = 0; j < n_lvl; j++) printf(" %4d ",nb_lvl[j]);
-	printf(")");
-	if ( n_lvl == 1 ) {
-	printf("   ");
+		if ( mode == 'l' ) printf("dgeqrf_levelx_w03    | ");
+		if ( mode == 'r' ) printf("dgeqrf_recursive_w03 | ");
+
+		printf("m = %4d, ",         m);
+		printf("ii = %4d, ",       ii);
+		printf("n = %4d, ",         n);
+		printf("lda = %4d, ",     lda);
+		printf("mt = %4d, ",       mt); 
+		printf("panel = %4d, ", panel); 
+		printf("leaf = %4d, ",   leaf); 
+		if ( mode == 'l' ) {
+		printf("n_lvl = %4d ( ",n_lvl);
+ 		for(j = 0; j < n_lvl; j++) printf(" %4d ",nb_lvl[j]);
+		printf(")");
+		if ( n_lvl == 1 ) {
+		printf("   ");
+		}
+		if ( n_lvl == 2 ) {
+		printf("      ");
+		}
+		}
+		if ( mode == 'r' ) {
+		printf("nx = %4d, ",       nx); 
+		printf("                        ");
+		}
+		printf("  \n");
 	}
-	if ( n_lvl == 2 ) {
-	printf("      ");
-	}
-	}
-	if ( mode == 'r' ) {
-	printf("nx = %4d, ",       nx); 
-	printf("                        ");
-	}
-	printf("  \n");
 
 	A  = (double *) malloc(lda * (n+ii) * sizeof(double));
 	As = (double *) malloc(lda * (n+ii) * sizeof(double));
@@ -138,7 +151,7 @@ int main(int argc, char ** argv) {
 		T = (double *) malloc(ldt * (n+ii) * sizeof(double));
 
 		int lwork;
-		lwork = lila_query_dgeqrf_w03_levelx( lila_param, n_lvl, 0, nb_lvl, m, n, ii, mt, A, lda, T, ldt, NULL, -1, work=NULL, lwork );
+		lwork = lila_query_dgeqrf_w03_levelx( lila_param, n_lvl, 0, nb_lvl, m, n, ii, mt, A, lda, T, ldt, NULL, -1, work=NULL, -1 );
 		work = (double *) malloc( lwork * sizeof(double));
 
 		gettimeofday(&tp, NULL);
@@ -167,7 +180,7 @@ int main(int argc, char ** argv) {
 		T = (double *) malloc(ldt * (n+ii) * sizeof(double));
 
 		int lwork;
-		lwork = lila_query_dgeqrf_w03_recursive( lila_param, m, n, ii, mt, A, lda, T, ldt, NULL, -1, work=NULL, lwork );
+		lwork = lila_query_dgeqrf_w03_recursive( lila_param, m, n, ii, mt, A, lda, T, ldt, NULL, -1, work=NULL, -1 );
 		work = (double *) malloc( lwork * sizeof(double));
 
 		gettimeofday(&tp, NULL);
@@ -183,7 +196,19 @@ int main(int argc, char ** argv) {
 
 	perform_refL = ( 4.0e+00 * ((double) m) * ((double) n) * ((double) n) - 4.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_refL / 1.0e+9 ;
 	
-	info = lila_main_test( lila_param, m, n, ii, mt, A, lda, T, ldt, NULL, -1, As, normA, elapsed_refL, perform_refL );
+	if ( verbose == 0 ){ 
+		if ( mode == 'r' ){
+			printf("%6d %6d %6d %6d %16.8f %10.3f %6d %6d\n", m, n, mt, nx, elapsed_refL, perform_refL, leaf, panel);
+			//printf("%6d %6d %6d %6d %s %16.8f %10.3f %6d %6d\n", m, n, mt, nx, getenv("OPENBLAS_NUM_THREADS"), elapsed_refL, perform_refL, leaf, panel);
+		} else { // levelx
+			printf("%6d %6d %6d %16.8f %10.3f %6d %6d\n", m, n, mt, elapsed_refL, perform_refL, leaf, panel);
+			//printf("%6d %6d %6d %s %16.8f %10.3f %6d %6d\n", m, n, mt, getenv("OPENBLAS_NUM_THREADS"), elapsed_refL, perform_refL, leaf, panel);
+		} 
+	} 
+
+	if ( testing == 0 ){
+		info = lila_main_test( lila_param, m, n, ii, mt, A, lda, T, ldt, NULL, -1, As, normA, elapsed_refL, perform_refL );
+	}
 
 	free( A );
 	free( As );

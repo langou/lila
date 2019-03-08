@@ -16,8 +16,7 @@ int main(int argc, char ** argv) {
 	ii        = 6;
 	lda       = -1;
 	ldq       = -1;
-	mt        = 4;
-	nx        = 7;
+	nx        = n;
 	leaf      = 1;
 	panel     = 1;
 	n_lvl     = 1;
@@ -90,7 +89,7 @@ int main(int argc, char ** argv) {
 
 	if( lda < 0 ) lda = m;
 	if( ldq < 0 ) ldq = m;
-
+	mt 		  = n;
 
 
 
@@ -164,7 +163,7 @@ int main(int argc, char ** argv) {
 		gettimeofday(&tp, NULL);
 		elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-		lila_dgeqrf_w03_levelx( lila_param, n_lvl, 0, nb_lvl, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+	//	lila_dgeqrf_w03_levelx( lila_param, n_lvl, 0, nb_lvl, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 
 		gettimeofday(&tp, NULL);
 		elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -192,7 +191,7 @@ int main(int argc, char ** argv) {
 		gettimeofday(&tp, NULL);
 		elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-		lila_dgeqrf_w03_recursive( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+		lila_dgeqrf_ker_recursive( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 
 		gettimeofday(&tp, NULL);
 		elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -214,7 +213,15 @@ int main(int argc, char ** argv) {
 	} 
 
 	if ( testing == 0 ){
+		
+		double *tau, *Tii;
+		tau = (double *) malloc( n * sizeof(double));		
+		Tii = T + ii + ii*ldt;
+		info = lila_dlarft_w03( m, n, ii, mt, Aii, lda, Tii, ldt, tau);		
+
 		info = lila_main_test( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, As, normA, elapsed_refL, perform_refL );
+
+		free( tau );
 	}
 
 	free( Q );

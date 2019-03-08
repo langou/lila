@@ -2,7 +2,7 @@
 
 int main(int argc, char ** argv) {
 
-	int i, j, info, lda, ldq, ldt, m, n, mt, ii, ml, nx, verbose, testing;
+	int i, j, info, lda, ldq, ldt, m, n, mt, ii, ml, nx, verbose, testing, method;
 	int n_lvl, *nb_lvl, panel, leaf, *lila_param;
 	double *A, *Q, *As, *T, *work=NULL, *Aii;
 	double normA, elapsed_refL, perform_refL;
@@ -16,8 +16,7 @@ int main(int argc, char ** argv) {
 	ii        = 6;
 	lda       = -1;
 	ldq       = -1;
-	mt        = 4;
-	nx        = 7;
+	nx        = n;
 	leaf      = 1;
 	panel     = 1;
 	n_lvl     = 1;
@@ -26,6 +25,7 @@ int main(int argc, char ** argv) {
 	mode      = 'r';
 	verbose   = 0;
 	testing   = 1;
+	method    = 0;
 
 	for(i = 1; i < argc; i++){
 		if( strcmp( *(argv + i), "-ldq") == 0) {
@@ -42,6 +42,10 @@ int main(int argc, char ** argv) {
 		}
 		if( strcmp( *(argv + i), "-testing") == 0) {
 			testing  = atoi( *(argv + i + 1) );
+			i++;
+		}
+		if( strcmp( *(argv + i), "-method") == 0) {
+			method  = atoi( *(argv + i + 1) );
 			i++;
 		}
 		if( strcmp( *(argv + i), "-m") == 0) {
@@ -90,9 +94,7 @@ int main(int argc, char ** argv) {
 
 	if( lda < 0 ) lda = m;
 	if( ldq < 0 ) ldq = m;
-
-
-
+	mt                = n+ii;
 
 	if ( verbose == 1 ){
 
@@ -164,7 +166,7 @@ int main(int argc, char ** argv) {
 		gettimeofday(&tp, NULL);
 		elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-		lila_dgeqrf_w03_levelx( lila_param, n_lvl, 0, nb_lvl, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+	//	lila_dgeqrf_w03_levelx( lila_param, n_lvl, 0, nb_lvl, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 
 		gettimeofday(&tp, NULL);
 		elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -175,11 +177,12 @@ int main(int argc, char ** argv) {
 
 	if ( mode == 'r' ){
 
-		lila_param = (int *) malloc(4 * sizeof(int));
+		lila_param = (int *) malloc(5 * sizeof(int));
 		lila_param[ 0 ] = 0;
 		lila_param[ 1 ] = leaf;
 		lila_param[ 2 ] = panel;
 		lila_param[ 3 ] = nx;
+		lila_param[ 4 ] = method;
 
 		ldt = mt;
 		T = (double *) malloc(ldt * (n+ii) * sizeof(double));
@@ -189,10 +192,22 @@ int main(int argc, char ** argv) {
 		free( work );
 		work = (double *) malloc( lwork * sizeof(double));
 
+	
 		gettimeofday(&tp, NULL);
 		elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-		lila_dgeqrf_w03_recursive( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+		if( method == 2 ){ 
+
+			lila_param[4] = 1; 
+			lila_dgeqrf_qr2_recursive( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+			lila_param[4] = 2; 
+			lila_dgeqrf_qr2_recursive( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+
+		} else {
+
+			lila_dgeqrf_qr2_recursive( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+
+		}
 
 		gettimeofday(&tp, NULL);
 		elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -214,7 +229,11 @@ int main(int argc, char ** argv) {
 	} 
 
 	if ( testing == 0 ){
-		info = lila_main_test( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, As, normA, elapsed_refL, perform_refL );
+		if( method == 1 ){
+			info = lila_main_test( lila_param, m, n, ii, mt, A, lda, T, ldt, NULL, -1, As, normA, elapsed_refL, perform_refL );
+		} else {
+			info = lila_main_test( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, As, normA, elapsed_refL, perform_refL );
+		}
 	}
 
 	free( Q );

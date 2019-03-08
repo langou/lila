@@ -2,7 +2,7 @@
 
 int main(int argc, char ** argv) {
 
-	int i, j, info, lda, ldq, ldt, m, n, ii, lwork, ml, verbose;
+	int i, j, info, lda, ldq, ldt, m, n, ii, lwork, ml, verbose, testing;
 	double *A, *Q, *T, *As, *work=NULL, *Aii, *Qii, *Tii;
 	double normA, elapsed_refL, perform_refL;
 	struct timeval tp;
@@ -15,6 +15,7 @@ int main(int argc, char ** argv) {
 	lda       = -1;
 	ldq       = -1;
 	verbose   = 0;
+	testing   = 1;
 
 	for(i = 1; i < argc; i++){
 		if( strcmp( *(argv + i), "-ldq") == 0) {
@@ -37,8 +38,12 @@ int main(int argc, char ** argv) {
 			ii  = atoi( *(argv + i + 1) );
 			i++;
 		}
-	if( strcmp( *(argv + i), "-verbose") == 0) {
+		if( strcmp( *(argv + i), "-verbose") == 0) {
 			verbose  = atoi( *(argv + i + 1) );
+			i++;
+		}
+		if( strcmp( *(argv + i), "-testing") == 0) {
+			testing  = atoi( *(argv + i + 1) );
 			i++;
 		}
 	}
@@ -47,13 +52,16 @@ int main(int argc, char ** argv) {
 
 	if( lda < 0 ) lda = m;
 	if( ldq < 0 ) ldq = m;
-	ldt       = n+ii;
+	ldt            = n+ii;
 
-	if (verbose != 0) printf("m = %4d, ",         m);
-	if (verbose != 0) printf("ii = %4d, ",       ii);
-	if (verbose != 0) printf("n = %4d, ",         n);
-	if (verbose != 0) printf("lda = %4d, ",     lda);
-	if (verbose != 0) printf("ldq = %4d, ",     ldq);
+	if( verbose == 1 ){
+
+		printf("m = %4d, ",         m);
+		printf("ii = %4d, ",       ii);
+		printf("n = %4d, ",         n);
+		printf("lda = %4d, ",     lda);
+		printf("ldq = %4d, ",     ldq);
+	}
 
 	A  = (double *) malloc(lda * (n+ii) * sizeof(double));
 	As = (double *) malloc(lda * (n+ii) * sizeof(double));
@@ -120,10 +128,12 @@ int main(int argc, char ** argv) {
 	free( work );
 
 	if ( verbose == 0 ){
+
 		printf("%6d %6d %16.8f %10.3f\n", m, n, elapsed_refL, perform_refL);
 		//printf("%6d %6d %s %16.8f %10.3f\n", m, n, getenv("OPENBLAS_NUM_THREADS"), elapsed_refL, perform_refL);
 
-	} else {
+	}
+	if( testing == 0 ){
 
 	double *QQ, *RR, *HH, norm_repres_1, norm_orth_1, *As_ii;
 	double norm_orth_3, norm_repres_3, norm_diffQ_3, norm_repres_2_2, norm_orth_2, norm_repres_2_1;

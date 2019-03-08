@@ -2,7 +2,7 @@
 
 int main(int argc, char ** argv) {
 
-	int i, j, info, lda, ldq, m, n, ii, lwork, ml, verbose;
+	int i, j, info, lda, ldq, m, n, ii, lwork, ml, verbose, testing;
 	double *A, *Q, *As, *work=NULL, *Aii, *Qii, *tau=NULL;
 	double normA, elapsed_refL, perform_refL;
 	struct timeval tp;
@@ -15,6 +15,7 @@ int main(int argc, char ** argv) {
 	lda       = -1;
 	ldq       = -1;
 	verbose   = 0;
+	testing   = 1;
 
 	for(i = 1; i < argc; i++){
 		if( strcmp( *(argv + i), "-ldq") == 0) {
@@ -41,6 +42,10 @@ int main(int argc, char ** argv) {
 			verbose  = atoi( *(argv + i + 1) );
 			i++;
 		}
+		if( strcmp( *(argv + i), "-testing") == 0) {
+			testing  = atoi( *(argv + i + 1) );
+			i++;
+		}
 	}
 
 	if( m < n+ii ){ printf("\n\n YOUR CHOICE OF n AND ii HAVE MADE YOU LARGER THAN m, PLEASE RECONSIDER \n\n"); return 0; }
@@ -48,11 +53,15 @@ int main(int argc, char ** argv) {
 	if( lda < 0 ) lda = m;
 	if( ldq < 0 ) ldq = m;
 
-	if (verbose) printf("m = %4d, ",         m);
-	if (verbose) printf("ii = %4d, ",       ii);
-	if (verbose) printf("n = %4d, ",         n);
-	if (verbose) printf("lda = %4d, ",     lda);
-	if (verbose) printf("ldq = %4d, ",     ldq);
+	if( verbose == 1 ){
+
+		printf("m = %4d, ",         m);
+		printf("ii = %4d, ",       ii);
+		printf("n = %4d, ",         n);
+		printf("lda = %4d, ",     lda);
+		printf("ldq = %4d, ",     ldq);
+
+	}
 
 	A  = (double *) malloc(lda * (n+ii) * sizeof(double));
 	As = (double *) malloc(lda * (n+ii) * sizeof(double));
@@ -79,7 +88,7 @@ int main(int argc, char ** argv) {
 	if ( i > j ) lwork = i; else lwork = j;
 	free( work );
 
-	tau = (double *) malloc( (n+ii) * sizeof(double));
+	tau  = (double *) malloc( (n+ii) * sizeof(double));
 	work = (double *) malloc( lwork * sizeof(double));
 
 	gettimeofday(&tp, NULL);
@@ -97,9 +106,10 @@ int main(int argc, char ** argv) {
 	perform_refL = ( 4.0e+00 * ((double) m) * ((double) n) * ((double) n) - 4.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_refL / 1.0e+9 ;
 
 	if (verbose == 0){ 
-	printf("%6d %6d %16.8f %10.3f\n", m, n, elapsed_refL, perform_refL);
-	//printf("%6d %6d %s %16.8f %10.3f\n", m, n, getenv("OPENBLAS_NUM_THREADS"), elapsed_refL, perform_refL);
-	} else {
+		printf("%6d %6d %16.8f %10.3f\n", m, n, elapsed_refL, perform_refL);
+		//printf("%6d %6d %s %16.8f %10.3f\n", m, n, getenv("OPENBLAS_NUM_THREADS"), elapsed_refL, perform_refL);
+	} 
+	if( testing == 0 ){
 
 	double *T, *QQ, *RR, *HH, norm_repres_1, norm_orth_1, *As_ii, *Tii;
 	double norm_orth_3, norm_repres_3, norm_diffQ_3, norm_repres_2_2, norm_orth_2, norm_repres_2_1;
