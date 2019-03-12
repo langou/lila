@@ -5,7 +5,6 @@ int lila_dgeqr2_w03_l( int m, int n, int i, int mt, double *A, int lda, double *
 	double *tau=NULL, *Aii, *Qii, *Tki;
 	int k, ml, info, lwork1; 
 
-//	tau = (double *) malloc( n * sizeof(double));
 	tau = work;
 	work = work + n;
 	lwork1 = lwork-n;
@@ -21,8 +20,6 @@ int lila_dgeqr2_w03_l( int m, int n, int i, int mt, double *A, int lda, double *
 	info = LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', ml, n, Aii, lda, tau, Tki, ldt);
 	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', ml, n, Aii, lda, Qii, ldq ); 
 	info = LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, ml, n, n, Qii, ldq, tau, work, lwork1 );
-
-//	free( tau );
 
 	return 0;
 

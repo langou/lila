@@ -5,7 +5,6 @@ int lila_dgeqr2_w03_3( int m, int n, int i, int mt, double *A, int lda, double *
 	double *work1, *Aii, *Qii, *Tki;
 	int j, k, ml, info; 
 
-//	work1 = (double *) malloc( n * n * sizeof(double));
 	work1 = work;	
 
 	ml = m - i;
@@ -29,8 +28,6 @@ int lila_dgeqr2_w03_3( int m, int n, int i, int mt, double *A, int lda, double *
 	cblas_dtrmm( CblasColMajor, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, ml, n, (-1.0e+00), work1, n, Qii, ldq );
 
  	for(j = 0; j < n; j++) Qii[ j + ldq * j ] = 1.00e+00 + Qii[ j + ldq * j ];
-
-//	free( work1 );
 
 	return 0;
 

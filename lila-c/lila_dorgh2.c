@@ -7,12 +7,6 @@ int lila_dorgh2( int m, int n, double *A, int lda, double *T, int ldt, double *Q
 	int *Sj;
 	int k, i1;
 
-	//Tjj = T + j + j*ldt;
-	//Ajj = A + j + j*lda;
-	//Q0j = Q + j*ldq;
-	//Sj = S + j;
-
-
 	for( k = 0; k < n; k++ ){
 		Tkk = Tjj + k + k*ldt;
 

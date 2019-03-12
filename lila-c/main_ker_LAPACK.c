@@ -13,12 +13,13 @@ int main(int argc, char ** argv) {
 
     	m         = 87;
     	n         = 53;
-	ii        = 6;
+	ii        = 0;
 	lda       = -1;
 	ldq       = -1;
-	nx        = n;
+	nx        = n+ii;
+	mt        = 1;
 	leaf      = 1;
-	panel     = 1;
+	panel     = 0;
 	n_lvl     = 1;
 	nb_lvl    = (int *) malloc(n_lvl * sizeof(int));
 	nb_lvl[0] = 10;
@@ -87,11 +88,8 @@ int main(int argc, char ** argv) {
 
 	if( m < n+ii ){ printf("\n\n YOUR CHOICE OF n AND ii HAVE MADE YOU LARGER THAN m, PLEASE RECONSIDER \n\n"); return 0; }
 
-	if( lda < 0 ) lda = m;
-	if( ldq < 0 ) ldq = m;
-	mt 		  = n;
-
-
+	if( lda < 0 ) lda =    m;
+	if( ldq < 0 ) ldq =    m;
 
 	if ( verbose == 1 ){
 
@@ -156,7 +154,7 @@ int main(int argc, char ** argv) {
 		T = (double *) malloc(ldt * (n+ii) * sizeof(double));
 
 		int lwork;
-		lwork = lila_query_dgeqrf_w03_levelx( lila_param, n_lvl, 0, nb_lvl, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work=NULL, -1 );
+	//	lwork = lila_query_dgeqrf_w03_levelx( lila_param, n_lvl, 0, nb_lvl, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work=NULL, -1 );
 		free( work );
 		work = (double *) malloc( lwork * sizeof(double));
 
@@ -181,10 +179,10 @@ int main(int argc, char ** argv) {
 		lila_param[ 3 ] = nx;
 
 		ldt = mt;
-		T = (double *) malloc(ldt * (n+ii) * sizeof(double));
+		T = (double *) malloc(1 * (n+ii) * sizeof(double));
 
 		int lwork;
-		lwork = lila_query_dgeqrf_w03_recursive( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work=NULL, -1 );
+		lwork = lila_query_dgeqrf_ker_recursive( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work=NULL, -1 );
 		free( work );
 		work = (double *) malloc( lwork * sizeof(double));
 
@@ -214,11 +212,11 @@ int main(int argc, char ** argv) {
 
 	if ( testing == 0 ){
 		
-		double *tau, *Tii;
+		double *tau;
 		tau = (double *) malloc( n * sizeof(double));		
-		Tii = T + ii + ii*ldt;
-		info = lila_dlarft_w03( m, n, ii, mt, Aii, lda, Tii, ldt, tau);		
 
+		//info = lila_dV2tau_w03( m, n, ii, n, A, lda, tau );
+		//info = lila_dlarft_w03( m, n, ii, mt, A, lda, T, ldt, tau);		
 		info = lila_main_test( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, As, normA, elapsed_refL, perform_refL );
 
 		free( tau );

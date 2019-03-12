@@ -7,7 +7,6 @@ int lila_ormhr2_w03_hr( int m, int n, int i, int j, int l, int mt, double *A, in
 
 	it     = (j % mt); 
 	lwork2 = j-i;
-//	work2  = (double *) malloc(lwork2 * n * sizeof(double));
 	work2 = work + n+i;
 
 	Qij = Q + i  + j*ldq;
@@ -79,8 +78,6 @@ int lila_ormhr2_w03_hr( int m, int n, int i, int j, int l, int mt, double *A, in
 
 	cblas_dtrsm( CblasColMajor, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, m-j-n, n, (+1.0e+00), Tjj, ldt, Ajj+n, lda ); 
 	cblas_dtrsm( CblasColMajor, CblasRight, CblasLower,   CblasTrans,    CblasUnit,     n, n, (-1.0e+00), Ajj, lda,   Tjj, ldt );
-
-//	free( work2 );
 
 	return 0;
 

@@ -5,7 +5,6 @@ int lila_dgeqr2_v03_3( int m, int n, int i, int mt, double *A, int lda, double *
 	double *work1, *Aii, *Tki;
 	int k, ml, info; 
 
-//	work1 = (double *) malloc( n * n * sizeof(double));
 	work1 = work;	
 
 	ml = m - i;
@@ -16,8 +15,7 @@ int lila_dgeqr2_v03_3( int m, int n, int i, int mt, double *A, int lda, double *
 
   	info = dgeqr3( ml, n, Aii, lda, Tki, ldt );
 
-// not sure if below is needed
-
+// 	not sure if below is needed
 	info = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'A', n, n, (0.0e+00), (0.0e+00), work1, n);
 	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', n, n, Tki, ldt, work1, n );
 
