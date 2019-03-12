@@ -239,7 +239,6 @@ lila_main_test.o: lila_main_test.c
 
 main_qr2.o: main_qr2.c
 	$(CC) -c $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) main_qr2.c
-		T = (double *) malloc(ldt * (n+ii) * sizeof(double));
 
 main_w03.o: main_w03.c
 	$(CC) -c $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) main_w03.c
