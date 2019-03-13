@@ -48,12 +48,13 @@ int main(int argc, char ** argv) {
 	if (ldb < k) ldb=k;
 	if (ldc < m) ldc=m;
 
-	printf("m = %4d; ",m);
-	printf("n = %4d; ",n);
-	printf("k = %4d; ",n);
-	printf("lda = %4d; ",lda);
-	printf("ldb = %4d; ",ldb);
-	printf("ldc = %4d; ",ldc);
+//	printf("m = %4d; ",m);
+//	printf("n = %4d; ",n);
+//	printf("k = %4d; ",k);
+//	printf("lda = %4d; ",lda);
+//	printf("ldb = %4d; ",ldb);
+//	printf("ldc = %4d; ",ldc);
+	printf("%5d %5d %5d", m, n ,k);
 
 	B  = (double *) malloc(ldb * n * sizeof(double));
 	C = (double *) malloc(ldc * n * sizeof(double));
@@ -77,8 +78,10 @@ int main(int argc, char ** argv) {
 		m, n, k, 1.0e+00, A, lda, B, ldb, 1.0e+00, C, ldc);
 	gettimeofday(&tp, NULL);
 	elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
-	printf("time = %f;", elapsed_refL );
-	printf("perf = %f; \n", 2.0e+00*((double) m)*((double) n)*((double) k)/elapsed_refL*1e-9 );
+//	printf("time = %f;", elapsed_refL );
+//	printf("perf = %f; \n", 2.0e+00*((double) m)*((double) n)*((double) k)/elapsed_refL*1e-9 );
+	printf(" %f", elapsed_refL );
+	printf(" %f\n", 2.0e+00*((double) m)*((double) n)*((double) k)/elapsed_refL*1e-9 );
 
 	free(A);
 	free(C);
