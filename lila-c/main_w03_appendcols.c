@@ -43,6 +43,10 @@ int main(int argc, char ** argv) {
 			m  = atoi( *(argv + i + 1) );
 			i++;
 		}
+		if( strcmp( *(argv + i), "-nb") == 0) {
+			nb  = atoi( *(argv + i + 1) );
+			i++;
+		}
 		if( strcmp( *(argv + i), "-n") == 0) {
 			n  = atoi( *(argv + i + 1) );
 			i++;
@@ -82,6 +86,7 @@ int main(int argc, char ** argv) {
 		printf("dgeqrf_w03_recursive | ");
 		printf("m = %4d, ",         m);
 		printf("n = %4d, ",         n);
+		printf("nb = %4d, ",       nb);
 		printf("lda = %4d, ",     lda);
 		printf("ldq = %4d, ",     ldq);
 		printf("mt = %4d, ",       mt);
@@ -128,7 +133,7 @@ int main(int argc, char ** argv) {
 	perform_refL = ( 4.0e+00 * ((double) m) * ((double) n) * ((double) n) - 4.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_refL / 1.0e+9 ;
 	
 	if ( verbose == 0 ){ 
-		printf("%6d %6d %6d %6d %16.8f %10.3f %6d %6d\n", m, n, mt, nx, elapsed_refL, perform_refL, leaf, panel);
+		printf("%6d %6d %6d %6d %6d %16.8f %10.3f %6d %6d\n", m, n, nb, mt, nx, elapsed_refL, perform_refL, leaf, panel);
 		//printf("%6d %6d %6d %6d %s %16.8f %10.3f %6d %6d\n", m, n, mt, nx, getenv("OPENBLAS_NUM_THREADS"), elapsed_refL, perform_refL, leaf, panel);
 	} 
 

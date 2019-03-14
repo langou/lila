@@ -43,6 +43,10 @@ int main(int argc, char ** argv) {
 			n  = atoi( *(argv + i + 1) );
 			i++;
 		}
+		if( strcmp( *(argv + i), "-nb") == 0) {
+			nb = atoi( *(argv + i + 1) );
+			i++;
+		}
 	}
 
 	if( m < n ){ printf("\n\n YOUR CHOICE OF n HAS MADE YOU LARGER THAN m, PLEASE RECONSIDER \n\n"); return 0; }
@@ -56,6 +60,7 @@ int main(int argc, char ** argv) {
 		printf("dgeqrf_w03_recursive | ");
 		printf("m = %4d, ",         m);
 		printf("n = %4d, ",         n);
+		printf("nb = %4d, ",       nb);
 		printf("lda = %4d, ",     lda);
 		printf("ldq = %4d, ",     ldq);
 		printf("mt = %4d, ",       mt);
@@ -109,7 +114,7 @@ int main(int argc, char ** argv) {
 	perform_refL = ( 4.0e+00 * ((double) m) * ((double) n) * ((double) n) - 4.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_refL / 1.0e+9 ;
 	
 	if ( verbose == 0 ){ 
-		printf("%6d %6d %6d  %16.8f %10.3f \n", m, n, mt, elapsed_refL, perform_refL);
+		printf("%6d %6d %6d %6d  %16.8f %10.3f \n", m, n, nb, mt, elapsed_refL, perform_refL);
 		//printf("%6d %6d %6d  %s %16.8f %10.3f \n", m, n, mt, getenv("OPENBLAS_NUM_THREADS"), elapsed_refL, perform_refL);
 	} 
 
