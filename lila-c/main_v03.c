@@ -194,7 +194,7 @@ int main(int argc, char ** argv) {
 		free( work );
 	}
 
-	perform_refL = ( 4.0e+00 * ((double) m) * ((double) n) * ((double) n) - 4.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_refL / 1.0e+9 ;
+	perform_refL = ( 2.0e+00 * ((double) m) * ((double) n) * ((double) n) - 2.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_refL / 1.0e+9 ;
 	
 	if ( verbose == 0 ){ 
 		if ( mode == 'r' ){
