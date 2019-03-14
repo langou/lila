@@ -103,6 +103,7 @@ extern int lila_dgeqrf_LAPACK_appendcols( int m, int k, int n, int mt, double *A
 
 
 extern int lila_main_test( int *lila_param, int m, int n, int ii, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *As, double normA, double elapsed_refL, double perform_refL );
+extern int lila_qr_test( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *As, double normA );
 
 
 
