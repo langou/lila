@@ -2,7 +2,7 @@
 
 int lila_dgeqrf_v03_mt( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *work, int lwork ){
 
-	int vb, info, j, l, ml, leaf;
+	int info, leaf;
 	leaf = lila_param[1];
 
 	if ( leaf == 0 ){

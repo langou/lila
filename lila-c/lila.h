@@ -69,6 +69,7 @@ extern int lila_query_dgeqr2_w03_l        ( int m, int n, int i, int mt, double 
 extern int lila_query_ormhr2_w03_hr       ( int m, int n, int i, int j, int l, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork, double *S );
 extern int lila_query_dorgh2_3            ( int m, int n, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork, double *S );
 extern int lila_query_dormqrf_w03         ( int m, int n, int k, int i, int j, int mt, double *A, int lda, double *T, int ldt, double *work, int lwork );
+extern int lila_query_dgeqrf_LAPACK_appendcols( int m, int k, int n, int mt, double *A, int lda, double *Q, int ldq, double *T, int ldt, double *work, int lwork );
 
 extern int lila_dgeqrf_v03_levelx   ( int *lila_param, int n_lvl, int i_lvl, int *nb_lvl, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *work, int lwork );
 extern int lila_dgeqrf_v03_recursive( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *work, int lwork );
@@ -96,6 +97,10 @@ extern int lila_dgeqrf_ker_recursive( int *lila_param, int m, int n, int i, int 
 extern int lila_dgeqrf_qr2_recursive2( int *lila_param, int m, int n, int i, int mt, int nb1, int nb2, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
 extern int lila_dgeqrf_qr2_recursive ( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
 extern int lila_dgeqrf_qr2           ( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
+
+extern int lila_dgeqrf_w03_appendcols   ( int *lila_param, int m, int k, int n, int mt, double *A, int lda, double *Q, int ldq, double *T, int ldt, double *work, int lwork );
+extern int lila_dgeqrf_LAPACK_appendcols( int m, int k, int n, int mt, double *A, int lda, double *Q, int ldq, double *T, int ldt, double *work, int lwork );
+
 
 extern int lila_main_test( int *lila_param, int m, int n, int ii, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *As, double normA, double elapsed_refL, double perform_refL );
 

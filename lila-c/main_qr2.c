@@ -24,7 +24,7 @@ int main(int argc, char ** argv) {
 	nb_lvl[0] = 10;
 	mode      = 'r';
 	verbose   = 0;
-	testing   = 1;
+	testing   = 0;
 	method    = 0;
 
 	for(i = 1; i < argc; i++){
@@ -228,7 +228,7 @@ int main(int argc, char ** argv) {
 		} 
 	} 
 
-	if ( testing == 0 ){
+	if ( testing == 1 ){
 		if( method == 1 ){
 			info = lila_main_test( lila_param, m, n, ii, mt, A, lda, T, ldt, NULL, -1, As, normA, elapsed_refL, perform_refL );
 		} else {

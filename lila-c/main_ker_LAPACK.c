@@ -25,7 +25,7 @@ int main(int argc, char ** argv) {
 	nb_lvl[0] = 10;
 	mode      = 'r';
 	verbose   = 0;
-	testing   = 1;
+	testing   = 0;
 
 	for(i = 1; i < argc; i++){
 		if( strcmp( *(argv + i), "-ldq") == 0) {
@@ -153,10 +153,9 @@ int main(int argc, char ** argv) {
 		ldt = mt;
 		T = (double *) malloc(ldt * (n+ii) * sizeof(double));
 
-		int lwork;
+	//	int lwork;
 	//	lwork = lila_query_dgeqrf_w03_levelx( lila_param, n_lvl, 0, nb_lvl, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work=NULL, -1 );
-		free( work );
-		work = (double *) malloc( lwork * sizeof(double));
+	//	work = (double *) malloc( lwork * sizeof(double));
 
 		gettimeofday(&tp, NULL);
 		elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -166,7 +165,7 @@ int main(int argc, char ** argv) {
 		gettimeofday(&tp, NULL);
 		elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-		free( work );
+	//	free( work );
 
 	}
 
@@ -183,7 +182,6 @@ int main(int argc, char ** argv) {
 
 		int lwork;
 		lwork = lila_query_dgeqrf_ker_recursive( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work=NULL, -1 );
-		free( work );
 		work = (double *) malloc( lwork * sizeof(double));
 
 		gettimeofday(&tp, NULL);
@@ -210,7 +208,7 @@ int main(int argc, char ** argv) {
 		} 
 	} 
 
-	if ( testing == 0 ){
+	if ( testing == 1 ){
 		
 		double *tau;
 		tau = (double *) malloc( n * sizeof(double));		

@@ -5,8 +5,6 @@ int lila_dV2tau_w03( int m, int n, int i, int mt, double *A, int lda, double *ta
 	double *Akk, *Ajj, normv2; 
 	int ml, vb, k, j;
 
-	// This script works if mt == n. I have not tested it on another mt
-
 	ml = m-i;
 	vb  = mt - (i%mt); if ( vb > n ) vb = n;
 	Akk = A + i + i*lda;

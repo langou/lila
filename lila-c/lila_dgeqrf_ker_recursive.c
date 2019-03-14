@@ -2,8 +2,8 @@
 
 int lila_dgeqrf_ker_recursive( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork ){
 
-	int info, nb1, nb2, ml, vl, j, nx; 
-	double *tau=NULL, *Aii, *Qii, *V, normV_square;
+	int info, nb1, nb2, ml, nx; 
+	double *tau=NULL, *Aii, *Qii;
 
 	nx = lila_param[ 3 ];
 	tau = T+i;
@@ -25,7 +25,7 @@ int lila_dgeqrf_ker_recursive( int *lila_param, int m, int n, int i, int mt, dou
 		nb2 = n - nb1;
 
 		info = lila_dgeqrf_ker_recursive( lila_param, m, nb1, i, mt, A, lda, T, ldt, Q, ldq, work, lwork );
-		info = LAPACKE_dormqr_work( LAPACK_COL_MAJOR, 'L', 'T', ml, nb2, nb1, Aii, lda, tau, Aii+nb1*ldq, ldq, work, lwork );
+		info = LAPACKE_dormqr_work( LAPACK_COL_MAJOR, 'L', 'T', ml, nb2, nb1, Aii, lda, tau, Aii+nb1*lda, ldq, work, lwork );
 		info = lila_dgeqrf_ker_recursive( lila_param, m, nb2, i+nb1, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 		
 		info = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'A', nb1, nb2, (0e+00), (0e+00), Qii+nb1*ldq, ldq );

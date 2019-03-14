@@ -26,7 +26,7 @@ int main(int argc, char ** argv) {
 	nb_lvl[0] = 10;
 	mode      = 'r';
 	verbose   = 0;
-	testing   = 1;
+	testing   = 0;
 
 	for(i = 1; i < argc; i++){
 		if( strcmp( *(argv + i), "-ldq") == 0) {
@@ -160,7 +160,7 @@ int main(int argc, char ** argv) {
 		T = (double *) malloc(ldt * (n+ii) * sizeof(double));
 
 		int lwork;
-		lwork = lila_query_dgeqrf_w03_levelx( lila_param, n_lvl, 0, nb_lvl, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work=NULL, lwork );
+		lwork = lila_query_dgeqrf_w03_levelx( lila_param, n_lvl, 0, nb_lvl, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work=NULL, -1 );
 		work = (double *) malloc( lwork * sizeof(double));
 
 		gettimeofday(&tp, NULL);
@@ -190,7 +190,7 @@ int main(int argc, char ** argv) {
 		T = (double *) malloc(ldt * (n+ii) * sizeof(double));
 
 		int lwork;
-		lwork = lila_query_dgeqrf_w03_recursive( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work=NULL, lwork );
+		lwork = lila_query_dgeqrf_w03_recursive( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work=NULL, -1 );
 		work = (double *) malloc( lwork * sizeof(double));
 
 		gettimeofday(&tp, NULL);
@@ -217,7 +217,7 @@ int main(int argc, char ** argv) {
 		} 
 	} 
 
-	if ( testing == 0 ){
+	if ( testing == 1 ){
 		info = lila_main_test( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, As, normA, elapsed_refL, perform_refL );
 	}
 

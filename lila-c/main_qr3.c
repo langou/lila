@@ -15,7 +15,7 @@ int main(int argc, char ** argv) {
 	lda       = -1;
 	ldq       = -1;
 	verbose   = 0;
-	testing   = 1;
+	testing   = 0;
 
 	for(i = 1; i < argc; i++){
 		if( strcmp( *(argv + i), "-ldq") == 0) {
@@ -133,7 +133,7 @@ int main(int argc, char ** argv) {
 		//printf("%6d %6d %s %16.8f %10.3f\n", m, n, getenv("OPENBLAS_NUM_THREADS"), elapsed_refL, perform_refL);
 
 	}
-	if( testing == 0 ){
+	if( testing == 1 ){
 
 	double *QQ, *RR, *HH, norm_repres_1, norm_orth_1, *As_ii;
 	double norm_orth_3, norm_repres_3, norm_diffQ_3, norm_repres_2_2, norm_orth_2, norm_repres_2_1;

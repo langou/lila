@@ -14,3 +14,7 @@
 (*) next step is n=1 and full T and lag
 
 (*) send an email to Almadena for funding of all this great ideas
+
+
+
+(*) Do a flop query as well
