@@ -7,7 +7,7 @@
 (*) explain that LAPACK recomputes, try to write the __ same recursive code with LAPACK kernels __
 (*) explain that the next step is the blocking in the m dimension, right now focusing on iterative methods, so column mind set
 (*) how do we go about breaking the space in t em dimension? Do we reconstruct? Do we have layers of small T? Or do we go for a big T? How can we keep being elegenat?
-(*) explain that teh next step is MGS
+(*) explain that the next step is MGS
 
 (*) explain the overall design of the software
 
@@ -18,3 +18,5 @@
 
 
 (*) Do a flop query as well
+(*) Create all separate routines for each test function
+(*) 
