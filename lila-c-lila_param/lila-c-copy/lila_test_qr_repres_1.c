@@ -1,16 +1,18 @@
 #include "lila.h"
 
-int lila_test_qr_repres_1( int m, int n, int i, double *A, int lda, double *Q, int ldq, double *R, int ldr, double norm ){
+int lila_test_qr_repres_1( int m, int n, int i, double *A, int lda, double *Q, int ldq, double *R, int ldr ){
 
 	double *Qii, *Aii, *Rii;
-	double norm_repres, *work;
+	double norm, norm_repres, *work;
 	int ml, info, lwork, jj, ii;
 
-	ml = m-i;
+	ml = m - i;
 
 	Rii = R+i+i*ldr;
 	Aii = A+i+i*lda;
 	Qii = Q+i+i*ldq;
+
+	norm = LAPACKE_dlange_work( LAPACK_COL_MAJOR, 'F', ml, n, Aii, lda, work );
 
 	lwork = ml*n;
 	work  = (double *) malloc(ml * n * sizeof(double));

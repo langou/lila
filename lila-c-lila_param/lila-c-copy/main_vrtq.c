@@ -3,8 +3,8 @@
 int main(int argc, char ** argv) {
 
 	int i, j, info, lda, ldq, ldt, m, n, mt, ii, ml, nx, verbose, testing;
-	int lwork, n_lvl, *nb_lvl, panel, leaf, vrtq, *lila_param;
-	double *A, *Q, *As, *T, *work=NULL, *Aii;
+	int lwork, n_lvl, *nb_lvl, panel, leaf, vrtq, t03, *lila_param;
+	double *A, *Q, *As, *T, *Ts, *work=NULL, *Aii;
 	double normA, elapsed_refL, perform_refL;
 	struct timeval tp;
 	char mode;
@@ -27,6 +27,7 @@ int main(int argc, char ** argv) {
 	verbose   = 0;
 	testing   = 0;
 	vrtq      = 0;
+	t03	  = 1;
 
 
 	for(i = 1; i < argc; i++){
@@ -60,6 +61,10 @@ int main(int argc, char ** argv) {
 		}
 		if( strcmp( *(argv + i), "-vrtq") == 0) {
 			vrtq  = atoi( *(argv + i + 1) );
+			i++;
+		}
+		if( strcmp( *(argv + i), "-t03") == 0) {
+			t03  = atoi( *(argv + i + 1) );
 			i++;
 		}
 		if( strcmp( *(argv + i), "-ii") == 0) {
@@ -105,6 +110,7 @@ int main(int argc, char ** argv) {
 		if ( vrtq == 0 ) printf(" w03 | ");
 		if ( vrtq == 1 ) printf(" v03 | ");
 		if ( vrtq == 2 ) printf(" v03 & q03 | ");
+		if ( vrtq == 3 ) printf(" t03 | ");
 		printf("m = %4d, ",         m);
 		printf("ii = %4d, ",       ii);
 		printf("n = %4d, ",         n);
@@ -132,12 +138,22 @@ int main(int argc, char ** argv) {
 	}
 
 	if ( mode == 'r' ){
-		lila_param = (int *) malloc(5 * sizeof(int));
-		lila_param[ 0 ] = mode;
-		lila_param[ 1 ] = leaf;
-		lila_param[ 2 ] = panel;
-		lila_param[ 3 ] = nx;
-		lila_param[ 4 ] = vrtq;
+		if ( vrtq == 3 ){
+			lila_param = (int *) malloc(6 * sizeof(int));
+			lila_param[ 0 ] = mode;
+			lila_param[ 1 ] = leaf;
+			lila_param[ 2 ] = panel;
+			lila_param[ 3 ] = nx;
+			lila_param[ 4 ] = vrtq;
+			lila_param[ 5 ] = t03;
+		} else {
+			lila_param = (int *) malloc(5 * sizeof(int));
+			lila_param[ 0 ] = mode;
+			lila_param[ 1 ] = leaf;
+			lila_param[ 2 ] = panel;
+			lila_param[ 3 ] = nx;
+			lila_param[ 4 ] = vrtq;
+		}
 	} else {
 		int k;
 		k = 5;
@@ -157,6 +173,7 @@ int main(int argc, char ** argv) {
 	                 As = (double *) malloc(lda * (n+ii) * sizeof(double));
 	if ( vrtq != 1 ) Q  = (double *) malloc(ldq * (n+ii) * sizeof(double)); else Q = A;// if statement for wanting v03 don't allocate space for Q
    	                 T  = (double *) malloc(ldt * (n+ii) * sizeof(double));
+	if ( vrtq == 3 ) Ts = (double *) malloc( n  *  n     * sizeof(double));
 
  	for(i = 0; i < lda * (n+ii); i++)
 		*(A + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
@@ -164,6 +181,7 @@ int main(int argc, char ** argv) {
  	for(i = 0; i < ldq * (n+ii); i++)
 		*(Q + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
 
+	ml   = m - ii;
 	Aii  = A + ii + ii*lda;
 	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n+ii, A, lda, As, lda );
 
@@ -173,10 +191,26 @@ int main(int argc, char ** argv) {
 	gettimeofday(&tp, NULL);
 	elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
+	////
 	lila_dgeqrf( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+	////
 
 	gettimeofday(&tp, NULL);
 	elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+
+	// This if statement constructs Ts as nxn to compare.
+	if ( vrtq == 3 ){
+
+		double *tau, *Akk, normv2;
+		int k; 
+		tau = work;
+		Akk=Aii;
+		info = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'A', n, n, (0e+00), (0e+00), Ts, n );
+		for( k = 0; k < n; k++){ normv2=1+cblas_ddot(ml-k-1,Akk+1,1,Akk+1,1); tau[k] = 2.0e+00 / normv2; Akk=Akk+1+lda; }
+		info = LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', ml, n, Aii, lda, tau, Ts, n);
+
+		//for( k = 0; k < n; k++ ) printf("T = %2.3e, Ts = %2.3e \n", T[(k%mt)+k*ldt], Ts[k+k*n]);	
+	}
 
 	free( work );
 
@@ -194,18 +228,47 @@ int main(int argc, char ** argv) {
 	} 
 
 	if ( testing == 1 ){
-		ml    = m - ii;
 		normA = LAPACKE_dlange_work( LAPACK_COL_MAJOR, 'F', ml, n, As+ii*(1+lda), lda, work );
-		if ( vrtq == 1 ){
+		if (( vrtq == 1 ) || ( vrtq == 3 )){
 			info = lila_main_test( lila_param, m, n, ii, mt, A, lda, T, ldt, NULL, -1, As, normA, elapsed_refL, perform_refL );
 		} else {
 			info = lila_main_test( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, As, normA, elapsed_refL, perform_refL );
+		}
+		
+		// This if statement compares the T constructed using our dlarft_w03, LAPACKE_dlarft_work (with the mt-structure), with the nxn Ts  
+		if ( vrtq == 3 ){
+
+			double norm_diff_T, *Tjj;
+			int vb, jj;
+
+			jj = ii;
+			Tjj = T+jj+jj*ldt;
+			vb = mt - ( ii%mt ); if ( vb > n ) vb = n;
+
+	 		for(i = 0; i < vb; i++) for(j = 0; j < vb; j++) Tjj[ i+j*ldt ] -= Ts[ i+j*n ];			
+
+			jj += vb;
+			Tjj = T+jj+jj*ldt;
+			if( jj + mt >= ii + n ) vb = n - ( jj - ii ); else vb = mt;
+
+			while( vb != 0 ){
+
+		 		for(i = 0; i < vb; i++) for(j = jj; j < jj+vb; j++) Tjj[ i+j*ldt ] -= Ts[ (i+jj)+j*n ];
+
+				jj += vb;
+				Tjj = T+jj+jj*ldt;
+				if( jj + mt >= ii + n ) vb = n - ( jj - ii ); else vb = mt;
+
+			}
+			norm_diff_T = LAPACKE_dlange_work( LAPACK_COL_MAJOR, 'F', mt, n, T, ldt, NULL );
+			printf("  diff_t = %2.1e \n", norm_diff_T );
 		}
 	}
 
 	if ( vrtq != 1 ) free( Q );
 	free( A );
 	free( As );
+	if ( vrtq == 3 ) free( Ts );
 	free( T );
 	free( lila_param );
 
