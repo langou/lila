@@ -1,6 +1,6 @@
 #include "lila.h"
 
-int lila_test_qr_repres_1( int m, int n, int i, double *A, int lda, double *Q, int ldq, double *R, int ldr ){
+double lila_test_qr_repres_1( int m, int n, int i, double *A, int lda, double *Q, int ldq, double *R, int ldr ){
 
 	double *Qii, *Aii, *Rii;
 	double norm, norm_repres, *work;
@@ -12,10 +12,9 @@ int lila_test_qr_repres_1( int m, int n, int i, double *A, int lda, double *Q, i
 	Aii = A+i+i*lda;
 	Qii = Q+i+i*ldq;
 
-	norm = LAPACKE_dlange_work( LAPACK_COL_MAJOR, 'F', ml, n, Aii, lda, work );
-
 	lwork = ml*n;
 	work  = (double *) malloc(ml * n * sizeof(double));
+	norm = LAPACKE_dlange_work( LAPACK_COL_MAJOR, 'F', ml, n, Aii, lda, work );
 	info  = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', ml, n, Qii, ldq, work, ml );
 	cblas_dtrmm( CblasColMajor, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, ml, n, (1.0e+00), Rii, lda, work, ml );
  	for(ii = 0; ii < ml; ii++) for(jj = 0; jj < n; jj++) work[ ii+jj*ml ] -= Aii[ ii+jj*lda ];

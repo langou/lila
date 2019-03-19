@@ -1,6 +1,6 @@
 #include "lila.h"
 
-int lila_dormqrbz_w03( int *lila_param, int m, int n, int k, int i, int j, int mt, double *A, int lda, double *Q, int ldq, double *T, int ldt, double *work, int lwork ){
+int lila_dormqrbz( int *lila_param, int m, int n, int k, int i, int j, int mt, double *A, int lda, double *Q, int ldq, double *T, int ldt, double *work, int lwork ){
 
 	int vrtq;
 	vrtq = lila_param[4];

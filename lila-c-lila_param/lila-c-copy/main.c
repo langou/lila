@@ -3,9 +3,9 @@
 int main(int argc, char ** argv) {
 
 	int i, j, info, lda, ldq, ldt, m, n, mt, ii, ml, nx, verbose, testing;
-	int lwork, n_lvl, *nb_lvl, panel, leaf, vrtq, t03, *lila_param;
+	int lwork, n_lvl, *nb_lvl, panel, leaf, vrtq, *lila_param;
 	double *A, *Q, *As, *T, *Ts, *work=NULL, *Aii;
-	double normA, elapsed_refL, perform_refL;
+	double normA, elapsed_ref1, perform_ref1, elapsed_ref2, perform_ref2;
 	struct timeval tp;
 	char mode;
 
@@ -27,7 +27,6 @@ int main(int argc, char ** argv) {
 	verbose   = 0;
 	testing   = 0;
 	vrtq      = 0;
-	t03	  = 1;
 
 
 	for(i = 1; i < argc; i++){
@@ -61,10 +60,6 @@ int main(int argc, char ** argv) {
 		}
 		if( strcmp( *(argv + i), "-vrtq") == 0) {
 			vrtq  = atoi( *(argv + i + 1) );
-			i++;
-		}
-		if( strcmp( *(argv + i), "-t03") == 0) {
-			t03  = atoi( *(argv + i + 1) );
 			i++;
 		}
 		if( strcmp( *(argv + i), "-ii") == 0) {
@@ -138,22 +133,14 @@ int main(int argc, char ** argv) {
 	}
 
 	if ( mode == 'r' ){
-		if ( vrtq == 3 ){
-			lila_param = (int *) malloc(6 * sizeof(int));
-			lila_param[ 0 ] = mode;
-			lila_param[ 1 ] = leaf;
-			lila_param[ 2 ] = panel;
-			lila_param[ 3 ] = nx;
-			lila_param[ 4 ] = vrtq;
-			lila_param[ 5 ] = t03;
-		} else {
-			lila_param = (int *) malloc(5 * sizeof(int));
-			lila_param[ 0 ] = mode;
-			lila_param[ 1 ] = leaf;
-			lila_param[ 2 ] = panel;
-			lila_param[ 3 ] = nx;
-			lila_param[ 4 ] = vrtq;
-		}
+
+		lila_param = (int *) malloc(6 * sizeof(int));
+		lila_param[ 0 ] = mode;
+		lila_param[ 1 ] = leaf;
+		lila_param[ 2 ] = panel;
+		lila_param[ 3 ] = nx;
+		lila_param[ 4 ] = vrtq;
+
 	} else {
 		int k;
 		k = 5;
@@ -173,7 +160,7 @@ int main(int argc, char ** argv) {
 	                 As = (double *) malloc(lda * (n+ii) * sizeof(double));
 	if ( vrtq != 1 ) Q  = (double *) malloc(ldq * (n+ii) * sizeof(double)); else Q = A;// if statement for wanting v03 don't allocate space for Q
    	                 T  = (double *) malloc(ldt * (n+ii) * sizeof(double));
-	if ( vrtq == 3 ) Ts = (double *) malloc( n  *  n     * sizeof(double));
+//	if ( vrtq == 3 ) Ts = (double *) malloc( n  *  n     * sizeof(double));
 
  	for(i = 0; i < lda * (n+ii); i++)
 		*(A + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
@@ -188,27 +175,92 @@ int main(int argc, char ** argv) {
 	lwork = lila_query_dgeqrf_w03_recursive( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work=NULL, -1 );
 	work  = (double *) malloc( lwork * sizeof(double));
 
-	gettimeofday(&tp, NULL);
-	elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+	// We need VRT in order to construct Q
+	if( vrtq == 2 ){ 
+
+		gettimeofday(&tp, NULL);
+		elapsed_ref1=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+
+		lila_param[4] = 1; 
+		lila_dgeqrf( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork ); 
+
+		gettimeofday(&tp, NULL);
+		elapsed_ref1+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+
+		perform_ref1 = ( 2.0e+00 * ((double) m) * ((double) n) * ((double) n) - 2.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_ref1 / 1.0e+9 ;
+
+		gettimeofday(&tp, NULL);
+		elapsed_ref2=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+
+		lila_param[4] = 2;
+		lila_dgeqrf( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+
+		gettimeofday(&tp, NULL);
+		elapsed_ref2+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+
+		perform_ref2 = ( 2.0e+00 * ((double) m) * ((double) n) * ((double) n) - 2.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_ref2 / 1.0e+9 ;
+
+	}
+	// We need to get V in order to construct T
+	if( vrtq == 3 ){ 
+
+		gettimeofday(&tp, NULL);
+		elapsed_ref1=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+
+		lila_param[4] = 1; 
+		lila_dgeqrf( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork ); 
+
+		gettimeofday(&tp, NULL);
+		elapsed_ref1+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+
+		perform_ref1 = ( 2.0e+00 * ((double) m) * ((double) n) * ((double) n) - 2.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_ref1 / 1.0e+9 ;
+
+		info = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'A', mt, n+ii, (0e+00), (0e+00), T, ldt );
+
+		gettimeofday(&tp, NULL);
+		elapsed_ref2=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+
+		lila_param[4] = 3;
+		lila_dgeqrf( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+
+		gettimeofday(&tp, NULL);
+		elapsed_ref2+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+
+		perform_ref2 = ( 0.0e+00 * ((double) m) * ((double) n) * ((double) n) - 0.0e+00 / 0.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_ref2 / 1.0e+9 ;
+
+	}
+	else{
+		gettimeofday(&tp, NULL);
+		elapsed_ref1=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+
+		lila_dgeqrf( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+
+		gettimeofday(&tp, NULL);
+		elapsed_ref1+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+		perform_ref1 = ( 4.0e+00 * ((double) m) * ((double) n) * ((double) n) - 4.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_ref1 / 1.0e+9 ;
+	}
+
 
 	////
-	if( vrtq == 2 ){ lila_param[4] = 1; lila_dgeqrf( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork ); lila_param[4] = vrtq;}
-	lila_dgeqrf( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
-	////
 
-	gettimeofday(&tp, NULL);
-	elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
 	free( work );
 
-	perform_refL = ( 4.0e+00 * ((double) m) * ((double) n) * ((double) n) - 4.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_refL / 1.0e+9 ;
+
+
 	
 	if ( verbose == 0 ){ 
 		if ( mode == 'r' ){
-			printf("%6d %6d %6d %6d %16.8f %10.3f %6d %6d\n", m, n, mt, nx, elapsed_refL, perform_refL, leaf, panel);
+
+			printf("%6d %6d %6d %6d %6d %6d %16.8f %10.3f", m, n, mt, nx, leaf, panel, elapsed_ref1, perform_ref1);
+			if(( vrtq == 2 )||( vrtq == 3 )){ 
+				printf("%16.8f %10.3f\n", elapsed_ref2, perform_ref2);
+			} else { 
+				printf("\n");
+			}
 			//printf("%6d %6d %6d %6d %s %16.8f %10.3f %6d %6d\n", m, n, mt, nx, getenv("OPENBLAS_NUM_THREADS"), elapsed_refL, perform_refL, leaf, panel);
 		} else { // levelx
-			printf("%6d %6d %6d %16.8f %10.3f %6d %6d\n", m, n, mt, elapsed_refL, perform_refL, leaf, panel);
+			printf("%6d %6d %6d %16.8f %10.3f %6d %6d\n", m, n, mt, elapsed_ref1, perform_ref1, leaf, panel);
 			//printf("%6d %6d %6d %s %16.8f %10.3f %6d %6d\n", m, n, mt, getenv("OPENBLAS_NUM_THREADS"), elapsed_refL, perform_refL, leaf, panel);
 		} 
 	} 
@@ -216,9 +268,23 @@ int main(int argc, char ** argv) {
 	if ( testing == 1 ){
 		normA = LAPACKE_dlange_work( LAPACK_COL_MAJOR, 'F', ml, n, As+ii*(1+lda), lda, work );
 		if (( vrtq == 1 ) || ( vrtq == 3 )){
-			info = lila_main_test( lila_param, m, n, ii, mt, A, lda, T, ldt, NULL, -1, As, normA, elapsed_refL, perform_refL );
+			info = lila_main_test( lila_param, m, n, ii, mt, A, lda, T, ldt, NULL, -1, As, normA, elapsed_ref1, perform_ref1 );
 		} else {
-			info = lila_main_test( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, As, normA, elapsed_refL, perform_refL );
+			info = lila_main_test( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, As, normA, elapsed_ref1, perform_ref1 );
+
+//			double orth_1, repres_1, repres_2_1, repres_2_2;
+
+//			orth_1   = lila_test_qq_orth_1  ( m, n, ii, Q, ldq );
+//			repres_1 = lila_test_qr_repres_1( m, n, ii, As, lda, Q, ldq, A, lda );
+//			repres_2_1, repres_2_2 = lila_test_r_represe_2( lila_param, m, n, ii, mt, As, lda, T, ldt, A, lda );
+		
+//			printf("\n");		
+//			printf("| time = %f   GFlop/sec = %f", elapsed_refL, perform_refL);
+//			printf("qq_orth = %5.1e  ",orth_1);		
+//			printf("qr_repres = %5.1e  ",repres_1);		
+//			printf("r_zero_repres = %5.1e  ",repres_2_1);		
+//			printf("r_repres = %5.1e  ",repres_2_2);		
+//			printf("\n");		
 		}
 /*		
 		// This if statement compares the T constructed using our dlarft_w03, LAPACKE_dlarft_work (with the mt-structure), with the nxn Ts  

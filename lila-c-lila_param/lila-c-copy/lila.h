@@ -88,18 +88,32 @@ extern int lila_dgeqrf_qr2           ( int *lila_param, int m, int n, int i, int
 extern int lila_dgeqrf_w03_appendcols   ( int *lila_param, int m, int k, int n, int mt, double *A, int lda, double *Q, int ldq, double *T, int ldt, double *work, int lwork );
 extern int lila_dgeqrf_LAPACK_appendcols( int m, int k, int n, int mt, double *A, int lda, double *Q, int ldq, double *T, int ldt, double *work, int lwork );
 
-
 extern int lila_main_test( int *lila_param, int m, int n, int ii, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *As, double normA, double elapsed_refL, double perform_refL );
-
-extern int lila_test_qr_repres_1( int m, int n, int i, double *A, int lda, double *Q, int ldq, double *R, int ldr );
-extern int lila_test_qq_orth_1  ( int m, int n, int i, double *Q, int ldq );
 
 extern int lila_dgeqrf_vrtq_levelx   ( int *lila_param, int n_lvl, int i_lvl, int *nb_lvl, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
 extern int lila_dgeqrf_vrtq_recursive( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
 
-extern int lila_dgeqrf          ( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
+
+
+
+
 extern int lila_dgeqrf_recursive( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
+extern int lila_dgeqrf          ( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
+extern int lila_dgeqrf_mt       ( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
+extern int lila_dgeqrf_mt_l     ( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
+extern int lila_dgeqrf_mt_hr    ( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
+extern int lila_dgeqrf_mt_hh    ( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
+extern int lila_dgeqr2          ( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
+extern int lila_dgeqr2_l        ( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
+extern int lila_dgeqr2_3        ( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
+extern int lila_dgeqr2_hr       ( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
+extern int lila_dlarft_connect  ( int *lila_param, int m, int n, int i, int j, int mt, double *A, int lda, double *T, int ldt );
+extern int lila_dormqrbz        ( int *lila_param, int m, int n, int k, int i, int j, int mt, double *A, int lda, double *Q, int ldq, double *T, int ldt, double *work, int lwork );
+extern int lila_dormqrf         ( int *lila_param, int m, int n, int k, int i, int j, int mt, double *A, int lda, double *T, int ldt, double *work, int lwork );
+extern int lila_dlarft          ( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *tau );
+extern int lila_dT2tau          ( int *lila_param, int m, int n, int i, int mt, double *T, int ldt, double *tau );
 
-
-
+extern double lila_test_qr_repres_1( int m, int n, int i, double *A, int lda, double *Q, int ldq, double *R, int ldr );
+extern double lila_test_qq_orth_1  ( int m, int n, int i, double *Q, int ldq );
+extern double lila_test_r_represe_2( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *R, int ldr );
 
