@@ -192,6 +192,7 @@ int main(int argc, char ** argv) {
 	elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
 	////
+	if( vrtq == 2 ){ lila_param[4] = 1; lila_dgeqrf( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork ); lila_param[4] = vrtq;}
 	lila_dgeqrf( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 	////
 

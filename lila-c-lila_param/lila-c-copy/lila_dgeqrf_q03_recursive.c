@@ -16,7 +16,7 @@ int lila_dgeqrf_q03_recursive( int *lila_param, int m, int n, int i, int mt, dou
 
 		info = lila_dgeqrf_q03_recursive( lila_param, m, nb1, i, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 		info = lila_dgeqrf_q03_recursive( lila_param, m, nb2, i+nb1, mt, A, lda, T, ldt, Q, ldq, work, lwork );
-		info = lila_dormqrbz_w03( m, nb2, nb1, i, i+nb1, mt, A, lda, Q, ldq, T, ldt, work, lwork );
+		info = lila_dormqrbz_w03( lila_param, m, nb2, nb1, i, i+nb1, mt, A, lda, Q, ldq, T, ldt, work, lwork );
 
 	}
 

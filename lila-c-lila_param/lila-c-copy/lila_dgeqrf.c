@@ -11,7 +11,7 @@ int lila_dgeqrf( int *lila_param, int m, int n, int i, int mt, double *A, int ld
 		lila_dgeqrf_vrtq_levelx( lila_param, n_lvl, 0, nb_lvl, m, n, i, mt, A, lda, T, ldt, Q, ldq, work, lwork );		
 	}
 	if ( mode == 'r' ){
-		lila_dgeqrf_vrtq_recursive( lila_param, m, n, i, mt, A, lda, T, ldt, Q, ldq, work, lwork );		
+		lila_dgeqrf_recursive( lila_param, m, n, i, mt, A, lda, T, ldt, Q, ldq, work, lwork );		
 	}
 
 	return 0;

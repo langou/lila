@@ -12,6 +12,7 @@ int lila_dgeqrf_t03( int *lila_param, int m, int n, int i, int mt, double *A, in
 	tau = work+n; 
 
 	// necessary, we need v (and tau) to compute T
+	// do all of the qr-factorization right away
   	info = LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, ml, n, Aii, lda, tau, work, lwork ); 
 	
 	if ( t03 == 0 ){

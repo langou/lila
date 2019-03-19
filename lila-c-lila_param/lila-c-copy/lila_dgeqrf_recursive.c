@@ -1,6 +1,6 @@
 #include "lila.h"
 
-int lila_dgeqrf_w03_recursive( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork ){
+int lila_dgeqrf_recursive( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork ){
 
 	int info, nb1, nb2, nx; 
 
@@ -27,3 +27,4 @@ int lila_dgeqrf_w03_recursive( int *lila_param, int m, int n, int i, int mt, dou
 	return 0;
 
 }
+

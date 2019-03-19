@@ -27,7 +27,7 @@ int lila_dgeqrf_w03_levelx( int *lila_param, int n_lvl, int i_lvl, int *nb_lvl, 
 
 		if ( j+nb > i+n ) vb = i+n-j; else vb = nb; 
 
-		info = lila_dormqrf_w03( m, vb, k, i, j, mt, A, lda, T, ldt, work, lwork );
+		info = lila_dormqrf_w03( lila_param, m, vb, k, i, j, mt, A, lda, T, ldt, work, lwork );
 
 	if( i_lvl == n_lvl-1 ){
 
@@ -39,8 +39,8 @@ int lila_dgeqrf_w03_levelx( int *lila_param, int n_lvl, int i_lvl, int *nb_lvl, 
 
 	}
 
-		info = lila_dlarft_connect_w03( m, vb, j, i, mt, A, lda, T, ldt );
-		info = lila_dormqrbz_w03( m, vb, k, i, j, mt, A, lda, Q, ldq, T, ldt, work, lwork );
+		info = lila_dlarft_connect_w03( lila_param, m, vb, j, i, mt, A, lda, T, ldt );
+		info = lila_dormqrbz_w03( lila_param, m, vb, k, i, j, mt, A, lda, Q, ldq, T, ldt, work, lwork );
  
 		k += vb;
 		j += vb;

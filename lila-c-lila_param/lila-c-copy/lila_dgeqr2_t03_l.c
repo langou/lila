@@ -10,7 +10,7 @@ int lila_dgeqr2_t03_l( int m, int n, int i, int mt, double *A, int lda, double *
 
 	Aii = A + i + i*lda;
 	Tki = T + k + i*ldt;
-	tau = tau + i;
+	//tau = tau + i;
 
 	info = LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', ml, n, Aii, lda, tau, Tki, ldt);
 

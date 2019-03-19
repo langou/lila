@@ -17,7 +17,7 @@ int lila_dgeqrf_v03_mt_hh( int *lila_param, int m, int n, int i, int mt, double 
 
 	while( vb != 0 ){
 
-		info = lila_dormqrf_w03( m, vb, l, i, j, mt, A, lda, T, ldt, work, lwork ); 
+		info = lila_dormqrf_w03( lila_param, m, vb, l, i, j, mt, A, lda, T, ldt, work, lwork ); 
 		info = lila_dgeqr2_v03 ( lila_param, m, vb, j, mt, A, lda, T, ldt, work, lwork );
 
 		j  += vb;

@@ -35,7 +35,7 @@ int lila_dgeqrf_q03_levelx( int *lila_param, int n_lvl, int i_lvl, int *nb_lvl, 
 		info = lila_dgeqrf_q03_levelx( lila_param, n_lvl, i_lvl+1, nb_lvl, m, vb, j, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 	}
 
-		info = lila_dormqrbz_w03( m, vb, k, i, j, mt, A, lda, Q, ldq, T, ldt, work, lwork );
+		info = lila_dormqrbz_w03( lila_param, m, vb, k, i, j, mt, A, lda, Q, ldq, T, ldt, work, lwork );
 
  
 		k += vb;
