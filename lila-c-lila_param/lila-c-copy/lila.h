@@ -64,7 +64,7 @@ extern int lila_dgeqr2_v03_3        ( int m, int n, int i, int mt, double *A, in
 
 extern int lila_dgeqrf_q03_levelx   ( int *lila_param, int n_lvl, int i_lvl, int *nb_lvl, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
 extern int lila_dgeqrf_q03_recursive( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
-int lila_test_qq_repres_1( int m, int n, int i, double *Q, int ldq  ){
+int lila_test_qq_repres_1( int m, int n, int i, double *Q, int ldq  );
 extern int lila_dgeqrf_q03_mt_hh    ( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
 extern int lila_dgeqrf_q03_mt       ( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
 extern int lila_dgeqrf_q03_mt_l     ( int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
