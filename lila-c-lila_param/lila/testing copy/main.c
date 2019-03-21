@@ -4,7 +4,7 @@ int main(int argc, char ** argv) {
 
 	int i, j, info, lda, ldq, ldt, m, n, mt, ii, ml, nx, verbose, testing;
 	int lwork, n_lvl, *nb_lvl, panel, leaf, vrtq, *lila_param;
-	double *A, *Q, *As, *T, *Ts, *work=NULL, *Aii;
+	double *A, *Q, *As, *T, *work=NULL, *Aii;
 	double normA, elapsed_ref1, perform_ref1, elapsed_ref2, perform_ref2;
 	struct timeval tp;
 	char mode;
@@ -98,40 +98,6 @@ int main(int argc, char ** argv) {
 	if( ldq < 0 ) ldq = m;
 	    	      ldt = mt;
 
-	if ( verbose == 1 ){
-
-		if ( mode == 'r' ) printf("dgeqrf_recursive - ");
-		if ( mode == 'l' ) printf("dgeqrf_levelx    - ");
-		if ( vrtq == 0 ) printf(" w03 | ");
-		if ( vrtq == 1 ) printf(" v03 | ");
-		if ( vrtq == 2 ) printf(" v03 & q03 | ");
-		if ( vrtq == 3 ) printf(" t03 | ");
-		printf("m = %4d, ",         m);
-		printf("ii = %4d, ",       ii);
-		printf("n = %4d, ",         n);
-		printf("lda = %4d, ",     lda);
-		printf("ldq = %4d, ",     ldq);
-		printf("mt = %4d, ",       mt);
-		printf("panel = %4d, ", panel); 
-		printf("leaf = %4d, ",   leaf); 
-		if ( mode == 'l' ) {
-		printf("n_lvl = %4d ( ",n_lvl);
- 		for(j = 0; j < n_lvl; j++) printf(" %4d ",nb_lvl[j]);
-		printf(")");
-		if ( n_lvl == 1 ) {
-		printf("   ");
-		}
-		if ( n_lvl == 2 ) {
-		printf("      ");
-		}
-		}
-		if ( mode == 'r' ) {
-		printf("nx = %4d, ", nx); 
-		printf("                        ");
-		}
-		printf("  ");
-	}
-
 	if ( mode == 'r' ){
 
 		lila_param = (int *) malloc(6 * sizeof(int));
@@ -160,7 +126,6 @@ int main(int argc, char ** argv) {
 	                 As = (double *) malloc(lda * (n+ii) * sizeof(double));
 	if ( vrtq != 1 ) Q  = (double *) malloc(ldq * (n+ii) * sizeof(double)); else Q = A;// if statement for wanting v03 don't allocate space for Q
    	                 T  = (double *) malloc(ldt * (n+ii) * sizeof(double));
-//	if ( vrtq == 3 ) Ts = (double *) malloc( n  *  n     * sizeof(double));
 
  	for(i = 0; i < lda * (n+ii); i++)
 		*(A + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
@@ -240,10 +205,6 @@ int main(int argc, char ** argv) {
 		perform_ref1 = ( 4.0e+00 * ((double) m) * ((double) n) * ((double) n) - 4.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_ref1 / 1.0e+9 ;
 	}
 
-
-	////
-
-
 	free( work );
 
 
@@ -252,56 +213,56 @@ int main(int argc, char ** argv) {
 	if ( verbose == 0 ){ 
 		if ( mode == 'r' ){
 
-			printf("%6d %6d %6d %6d %6d %6d %16.8f %10.3f", m, n, mt, nx, leaf, panel, elapsed_ref1, perform_ref1);
+			printf("%6d %6d %6d %6d %6d %6d %16.8f %10.3f ", m, n, mt, nx, leaf, panel, elapsed_ref1, perform_ref1);
 			if(( vrtq == 2 )||( vrtq == 3 )){ 
 				printf("%16.8f %10.3f\n", elapsed_ref2, perform_ref2);
 			} else { 
-				printf("\n");
+				//printf("\n");
 			}
 			//printf("%6d %6d %6d %6d %s %16.8f %10.3f %6d %6d\n", m, n, mt, nx, getenv("OPENBLAS_NUM_THREADS"), elapsed_refL, perform_refL, leaf, panel);
 		} else { // levelx
-			printf("%6d %6d %6d %16.8f %10.3f %6d %6d\n", m, n, mt, elapsed_ref1, perform_ref1, leaf, panel);
+			printf("%6d %6d %6d %16.8f %10.3f %6d %6d", m, n, mt, elapsed_ref1, perform_ref1, leaf, panel);
 			//printf("%6d %6d %6d %s %16.8f %10.3f %6d %6d\n", m, n, mt, getenv("OPENBLAS_NUM_THREADS"), elapsed_refL, perform_refL, leaf, panel);
 		} 
-	} 
+	if ( testing == 0 ){
 
-	if ( testing == 1 ){
-		normA = LAPACKE_dlange_work( LAPACK_COL_MAJOR, 'F', ml, n, As+ii*(1+lda), lda, work );
-		if (( vrtq == 1 ) || ( vrtq == 3 )){
-			info = lila_main_test( lila_param, m, n, ii, mt, A, lda, T, ldt, NULL, -1, As, normA, elapsed_ref1, perform_ref1 );
-		} else {
 
-			info = lila_main_test( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, As, normA, elapsed_ref1, perform_ref1 );
-
-			double orth_1, repres_1, repres_2;
+			double orth_1, repres_1, repres_2, repres_3;
 			
 //			|| I - Q^T Q ||
 			orth_1   = lila_test_qq_orth_1  ( m, n, ii, Q, ldq );
 //			|| A - Q R || / || A ||
 			repres_1 = lila_test_qr_repres_1( m, n, ii, As, lda, Q, ldq, A, lda );
-//			|| H^T A - R || / || A ||
+//			|| (apply H) A - [R;0] || / || A ||
 			repres_2 = lila_test_r_repres_2( lila_param, m, n, ii, mt, As, lda, T, ldt, A, lda );
-		
-			printf("\n");		
-			printf("| time = %f   GFlop/sec = %f  ", elapsed_ref1, perform_ref1);
+//			create m-by-m H, then || I - HH^T ||; || H A - [R;0] || / || A ||
+//			create m-by-n Q, then || I - Q^T Q ||; || A - Q R || / || A ||
+			repres_3 = lila_test_hh_repres( lila_param, m, n, ii, mt, As, lda, T, ldt, A, lda );
+
+			printf(" | time = %f   GFlop/sec = %f  ", elapsed_ref1, perform_ref1);
 			printf("qq_orth = %5.1e  ",orth_1);		
 			printf("qr_repres = %5.1e  ",repres_1);		
 			printf("r_repres = %5.1e  ",repres_2);		
-			printf("\n");		
-		}
-/*	
+			printf("h_q_orth = %5.1e  ",repres_3);		
+		
 
+		}
+		printf("\n");		
+
+/*	
+		
 
 	
 		// This if statement compares the T constructed using our dlarft_w03, LAPACKE_dlarft_work (with the mt-structure), with the nxn Ts  
 		// After t03 is working we can move this within its own script
 		if ( vrtq == 3 ){
 
-			double norm_diff_T, *Tjj;
+			double norm_diff_T, *Tjj, *Ts;
 			int vb, jj;
 			double *tau, *Akk, normv2;
 			int k; 
 
+//			Ts = (double *) malloc( n  *  n     * sizeof(double));
 			tau = (double *) malloc(n * sizeof(double));
 			Akk=Aii;
 			info = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'A', n, n, (0e+00), (0e+00), Ts, n );// this line is not needed. Just being safe
@@ -333,6 +294,7 @@ int main(int argc, char ** argv) {
 			norm_diff_T = LAPACKE_dlange_work( LAPACK_COL_MAJOR, 'F', mt, n, T, ldt, NULL );
 			printf("  diff_t = %2.1e \n", norm_diff_T );
 			free( tau ) ;
+			free( Ts );	
 		}
 */
 
@@ -340,11 +302,68 @@ int main(int argc, char ** argv) {
 
 	}
 
+	if ( verbose == 1 ){
+
+		if ( mode == 'r' ) printf("dgeqrf_recursive - ");
+		if ( mode == 'l' ) printf("dgeqrf_levelx    - ");
+		if ( vrtq == 0 ) printf(" w03 | ");
+		if ( vrtq == 1 ) printf(" v03 | ");
+		if ( vrtq == 2 ) printf(" v03 & q03 | ");
+		if ( vrtq == 3 ) printf(" t03 | ");
+		printf("m = %4d, ",         m);
+		printf("ii = %4d, ",       ii);
+		printf("n = %4d, ",         n);
+		printf("lda = %4d, ",     lda);
+		printf("ldq = %4d, ",     ldq);
+		printf("mt = %4d, ",       mt);
+		printf("panel = %4d, ", panel); 
+		printf("leaf = %4d, ",   leaf); 
+		if ( mode == 'l' ) {
+		printf("n_lvl = %4d ( ",n_lvl);
+ 		for(j = 0; j < n_lvl; j++) printf(" %4d ",nb_lvl[j]);
+		printf(")");
+		if ( n_lvl == 1 ) {
+		printf("   ");
+		}
+		if ( n_lvl == 2 ) {
+		printf("      ");
+		}
+		}
+		if ( mode == 'r' ) {
+		printf("nx = %4d ", nx); 
+		printf(" \n");
+		}
+
+		if( testing == 1 ){
+
+			double orth_1, repres_1, repres_2, repres_3;
+			
+//			|| I - Q^T Q ||
+			orth_1   = lila_test_qq_orth_1  ( m, n, ii, Q, ldq );
+//			|| A - Q R || / || A ||
+			repres_1 = lila_test_qr_repres_1( m, n, ii, As, lda, Q, ldq, A, lda );
+//			|| (apply H) A - [R;0] || / || A ||
+			repres_2 = lila_test_r_repres_2( lila_param, m, n, ii, mt, As, lda, T, ldt, A, lda );
+//			create m-by-m H, then || I - HH^T ||; || H A - [R;0] || / || A ||
+//			create m-by-n Q, then || I - Q^T Q ||; || A - Q R || / || A ||
+			repres_3 = lila_test_hh_repres( lila_param, m, n, ii, mt, As, lda, T, ldt, A, lda );
+
+			printf(" | time = %f     GFlop/sec = %f \n", elapsed_ref1, perform_ref1);
+			printf(" | qq_orth = %5.1e  ",orth_1);		
+			printf(" qr_repres = %5.1e \n",repres_1);		
+			printf(" | r_repres = %5.1e  ",repres_2);		
+			printf("h_q_orth = %5.1e  ",repres_3);		
+			printf("\n");	
+		}
+
+	}
+
+
+
 
 	if ( vrtq != 1 ) free( Q );
 	free( A );
 	free( As );
-	if ( vrtq == 3 ) free( Ts );
 	free( T );
 	free( lila_param );
 

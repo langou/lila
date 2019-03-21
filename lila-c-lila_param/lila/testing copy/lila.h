@@ -116,4 +116,5 @@ extern int lila_dT2tau          ( int *lila_param, int m, int n, int i, int mt, 
 extern double lila_test_qr_repres_1( int m, int n, int i, double *A, int lda, double *Q, int ldq, double *R, int ldr );
 extern double lila_test_qq_orth_1  ( int m, int n, int i, double *Q, int ldq );
 extern double lila_test_r_repres_2 ( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *R, int ldr );
+extern double lila_test_hh_repres( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *V, int ldv );
 
