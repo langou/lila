@@ -74,7 +74,7 @@ int lila_dgeqr2_l( int *lila_param, int m, int n, int i, int mt, double *A, int 
 	}
 
 	// vrtq == 3  ==> T
-	if( vrtq == 1 ){
+	if( vrtq == 3 ){
 
 		double *tau=NULL, *Aii, *Tki, *Akk, normv2;
 		int k, kk, ml, info; 
@@ -89,7 +89,7 @@ int lila_dgeqr2_l( int *lila_param, int m, int n, int i, int mt, double *A, int 
 		Akk = Aii;
 		for( kk = 0; kk < n; kk++){ normv2=1+cblas_ddot(ml-kk-1,Akk+1,1,Akk+1,1); tau[kk] = 2.0e+00 / normv2; Akk=Akk+1+lda; }
 
-
+		//info = lila_dlarft( lila_param, m, n, i, mt, A, lda, T, ldt, tau);
 		info = LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', ml, n, Aii, lda, tau, Tki, ldt);
 
 	}

@@ -9,6 +9,7 @@ double lila_test_hh_repres( int *lila_param, int m, int n, int i, int mt, double
 	double norm_orth, norm_repres, check;
 	int ml, info, lwork, jj, ii;
 
+	if( mt > n ) mt = n;
 	check = 0.e+00;
 
 	H = (double *) malloc(m * m * sizeof(double));
@@ -20,7 +21,8 @@ double lila_test_hh_repres( int *lila_param, int m, int n, int i, int mt, double
 
 //	explicitly construct m-by-m unitary matrix H
 	info  = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'A', ml, ml, (0e+00), (1e+00), Hii, m );
-	lwork = ml * mt;
+	lwork = ml * n;
+//	work = mt * n; // seg fault for ./xmain_recursive.exe  -vrtq 0 -testing 1 -verbose 1 -m 5000 -n 2790 -nx 100 -mt 500
 	work  = (double *) malloc( lwork * sizeof(double));
 	if( ( lila_param[1] == 1 )&&( lila_param[2] == 2) ){
 		lila_dormqrf_z03( m, m, n, i, 0, mt, V, ldv, T, ldt, H, m, work, lwork );

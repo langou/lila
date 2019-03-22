@@ -11,12 +11,17 @@
 
 (*) explain the overall design of the software
 
-(*) next step is n=1 and full T and lag
-
 (*) send an email to Almadena for funding of all this great ideas
 
+//////////////////////////////////////////////////////////////////
 
-
+(*) Next step is n=1 and full T and lag
 (*) Do a flop query as well
-(*) Create all separate routines for each test function
-(*) 
+
+(*) Get levelx working in ../src
+(*) Transfer all the (sub) mains over to ../src  ---- ? (not sure exactly if a certain format is needed or just copy over the mains and add them in the include)
+(*) t03 needs working outside -leaf 0 and -panel 0 -leaf 0? (I have it working in all excecpt for within lila_dgeqr2_3.c
+	if so I need to work on this
+(*) Construct all new lila_query for workspace (might as well do flops during this as well)
+
+

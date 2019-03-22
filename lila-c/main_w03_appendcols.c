@@ -93,7 +93,7 @@ int main(int argc, char ** argv) {
 		printf("panel = %4d, ", panel); 
 		printf("leaf = %4d, ",   leaf); 
 		printf("nx = %4d, ",       nx); 
-		}
+	}
 
 	A  = (double *) malloc(lda * n * sizeof(double));
 	As = (double *) malloc(lda * n * sizeof(double));

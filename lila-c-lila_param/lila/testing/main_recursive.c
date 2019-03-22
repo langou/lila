@@ -2,12 +2,12 @@
 
 int main(int argc, char ** argv) {
 
-	int i, j, info, lda, ldq, ldt, m, n, mt, ii, ml, nx, verbose, testing;
-	int lwork, n_lvl, *nb_lvl, panel, leaf, vrtq, *lila_param;
+	int i, info, lda, ldq, ldt, m, n, mt, ii, ml, nx, verbose, testing;
+	int lwork, panel, leaf, vrtq, *lila_param;
 	double *A, *Q, *As, *T, *work=NULL, *Aii;
 	double elapsed_ref1, perform_ref1, elapsed_ref2, perform_ref2;
 	struct timeval tp;
-	char mode;
+
 	srand(0);
 
     	m         = 87;
@@ -19,10 +19,6 @@ int main(int argc, char ** argv) {
 	nx        = 7;
 	leaf      = 1;
 	panel     = 1;
-	n_lvl     = 1;
-	nb_lvl    = (int *) malloc(n_lvl * sizeof(int));
-	nb_lvl[0] = 10;
-	mode      = 'r';
 	verbose   = 0;
 	testing   = 1;
 	vrtq      = 0;
@@ -77,18 +73,6 @@ int main(int argc, char ** argv) {
 			leaf  = atoi( *(argv + i + 1) );
 			i++;
 		}
-		if( strcmp( *(argv + i), "-n_lvl") == 0) {
-			n_lvl  = atoi( *(argv + i + 1) );
-			i++;
-			free( nb_lvl );
-			nb_lvl = (int *) malloc(n_lvl * sizeof(int));
- 			for(j = 0; j < n_lvl; j++, i++) nb_lvl[j] = atoi( *(argv + i + 1) );
-		}
-		if( strcmp( *(argv + i), "-mode") == 0) {
-			if( strcmp( *(argv + i + 1), "levelx") == 0)    mode = 'l';
-			if( strcmp( *(argv + i + 1), "recursive") == 0) mode = 'r';
-			i++;
-		}
 	}
 
 	if( m < n+ii ){ printf("\n\n YOUR CHOICE OF n AND ii HAVE MADE YOU LARGER THAN m, PLEASE RECONSIDER \n\n"); return 0; }
@@ -97,29 +81,12 @@ int main(int argc, char ** argv) {
 	if( ldq < 0 ) ldq = m;
 	    	      ldt = mt;
 
-	if ( mode == 'r' ){
-
-		lila_param = (int *) malloc(6 * sizeof(int));
-		lila_param[ 0 ] = mode;
-		lila_param[ 1 ] = leaf;
-		lila_param[ 2 ] = panel;
-		lila_param[ 3 ] = nx;
-		lila_param[ 4 ] = vrtq;
-
-	} else {
-		int k;
-		k = 5;
-		if( n_lvl > 1 ) k += n_lvl;
-		lila_param = (int *) malloc(k * sizeof(int));
-		lila_param[ 0 ] = mode;
-		lila_param[ 1 ] = leaf;
-		lila_param[ 2 ] = panel;
-		lila_param[ 3 ] = n_lvl;
-		lila_param[ 4 ] = vrtq;
-		for(j = 0; j < n_lvl; j++) nb_lvl[j] = lila_param[5+j];
-
-	}
-
+	lila_param = (int *) malloc(6 * sizeof(int));
+	lila_param[ 0 ] = 0;
+	lila_param[ 1 ] = leaf;
+	lila_param[ 2 ] = panel;
+	lila_param[ 3 ] = nx;
+	lila_param[ 4 ] = vrtq;
 
            	         A  = (double *) malloc(lda * (n+ii) * sizeof(double));
 	                 As = (double *) malloc(lda * (n+ii) * sizeof(double));
@@ -145,7 +112,7 @@ int main(int argc, char ** argv) {
 		elapsed_ref1=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
 		lila_param[4] = 1; 
-		lila_dgeqrf( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork ); 
+		lila_dgeqrf_recursive( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork ); 
 
 		gettimeofday(&tp, NULL);
 		elapsed_ref1+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -156,7 +123,7 @@ int main(int argc, char ** argv) {
 		elapsed_ref2=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
 		lila_param[4] = 2;
-		lila_dgeqrf( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+		lila_dgeqrf_recursive( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 
 		gettimeofday(&tp, NULL);
 		elapsed_ref2+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -169,7 +136,7 @@ int main(int argc, char ** argv) {
 		elapsed_ref1=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
 		lila_param[4] = 1; 
-		lila_dgeqrf( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork ); 
+		lila_dgeqrf_recursive( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork ); 
 
 		gettimeofday(&tp, NULL);
 		elapsed_ref1+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -182,7 +149,7 @@ int main(int argc, char ** argv) {
 		elapsed_ref2=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
 		lila_param[4] = 3;
-		lila_dgeqrf( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+		lila_dgeqrf_recursive( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 
 		gettimeofday(&tp, NULL);
 		elapsed_ref2+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -194,7 +161,7 @@ int main(int argc, char ** argv) {
 		gettimeofday(&tp, NULL);
 		elapsed_ref1=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-		lila_dgeqrf( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+		lila_dgeqrf_recursive( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
 
 		gettimeofday(&tp, NULL);
 		elapsed_ref1+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -207,76 +174,59 @@ int main(int argc, char ** argv) {
 
 	if ( verbose ){ 
 
-		if ( mode == 'r' ) printf("dgeqrf_recursive - ");
-		if ( mode == 'l' ) printf("dgeqrf_levelx    - ");
+		printf("dgeqrf_recursive - ");
 		if ( vrtq == 0 ) printf(" w03 | ");
 		if ( vrtq == 1 ) printf(" v03 | ");
 		if ( vrtq == 2 ) printf(" v03 & q03 | ");
 		if ( vrtq == 3 ) printf(" t03 | ");
 		printf("m = %4d, ",         m);
-		printf("ii = %4d, ",       ii);
 		printf("n = %4d, ",         n);
+		printf("ii = %4d, ",       ii);
+		printf("mt = %4d, ",       mt);
 		printf("lda = %4d, ",     lda);
 		printf("ldq = %4d, ",     ldq);
-		printf("mt = %4d, ",       mt);
 		printf("panel = %4d, ", panel); 
 		printf("leaf = %4d, ",   leaf); 
-		if ( mode == 'l' ) {
-		printf("n_lvl = %4d ( ",n_lvl);
- 		for(j = 0; j < n_lvl; j++) printf(" %4d ",nb_lvl[j]);
-		printf(")");
-		if ( n_lvl == 1 ) {
-		printf("   ");
-		}
-		if ( n_lvl == 2 ) {
-		printf("      ");
-		}
-		}
-		if ( mode == 'r' ) {
 		printf("nx = %4d ", nx); 
 		printf(" \n");
-		}
-
 		printf(" time = %f    GFlop/sec = %f ", elapsed_ref1, perform_ref1);	
 		if(( vrtq == 2 )||( vrtq == 3 )){ printf("    time2 = %f      Gflop/sec2 = %f ", elapsed_ref2, perform_ref2); }
 		printf(" \n ");
 
 	} else {
 
-		if ( mode == 'r' ){
+		printf("%6d %6d %6d %6d %6d %6d %6d %6d %6d %16.8f %10.3f ", m, n, ii, mt, lda, ldq, panel, leaf, nx, elapsed_ref1, perform_ref1);
+		if(( vrtq == 2 )||( vrtq == 3 )){ printf("%16.8f %10.3f ", elapsed_ref2, perform_ref2); }
 
-			printf("%6d %6d %6d %6d %6d %6d %6d %6d %6d %16.8f %10.3f ", m, ii, n, lda, ldq, mt, panel, leaf, nx, elapsed_ref1, perform_ref1);
-			if(( vrtq == 2 )||( vrtq == 3 )){ printf("%16.8f %10.3f ", elapsed_ref2, perform_ref2); }
-
-		} else {
- 
-			//printf("%6d %6d %6d %6d %6d %6d %6d %6d %6d %16.8f %10.3f ", m, ii, n, lda, ldq, mt, panel, leaf, n_lvl, elapsed_ref1, perform_ref1);
-			//if(( vrtq == 2 )||( vrtq == 3 )){ printf("%16.8f %10.3f ", elapsed_ref2, perform_ref2); }
-
-		} 
-
-	}
+	} 
 
 	if ( testing ){
 
-
-		double orth_1, repres_1, repres_2, repres_3;
-			
+		double orth_1, repres_1, repres_2, repres_3, repres_4;
+	
+//		vrtq == 0 || 2    ===>   we have Q to check
+//		vrtq == 1 || 3    ===>   we don't
+	
 //		|| I - Q^T Q ||
-		orth_1   = lila_test_qq_orth_1  ( m, n, ii, Q, ldq );
+		if (( vrtq == 0 )||( vrtq == 2 )) orth_1   = lila_test_qq_orth_1( m, n, ii, Q, ldq );
+
 //		|| A - Q R || / || A ||
-		repres_1 = lila_test_qr_repres_1( m, n, ii, As, lda, Q, ldq, A, lda );
+		if (( vrtq == 0 )||( vrtq == 2 )) repres_1 = lila_test_qr_repres_1( m, n, ii, As, lda, Q, ldq, A, lda );
+
 //		|| (apply H) A - [R;0] || / || A ||
 		repres_2 = lila_test_r_repres_2( lila_param, m, n, ii, mt, As, lda, T, ldt, A, lda );
+
 //		create m-by-m H, then || I - HH^T ||; || H A - [R;0] || / || A ||
 		repres_3 = lila_test_hh_repres( lila_param, m, n, ii, mt, As, lda, T, ldt, A, lda );
-//		create m-by-n Q, then || I - Q^T Q ||; || A - Q R || / || A ||
-//// THIS NEEDS TOP BE DONE
 
-		if ( verbose ) printf("qq_orth   = %5.1e  \n ",orth_1); else printf(" %5.1e  ",orth_1); 
-		if ( verbose ) printf("qr_repres = %5.1e  \n ",repres_1); else printf(" %5.1e  ",repres_1); 
+//		create m-by-n Q, then || I - Q^T Q ||; || A - Q R || / || A ||
+		if (( vrtq == 1 )||( vrtq == 3 )) repres_4 = lila_test_vt_repres( lila_param, m, n, ii, mt, As, lda, T, ldt, A, lda );
+
+		if (( vrtq == 0 )||( vrtq == 2 )){ if ( verbose ) printf("qq_orth   = %5.1e  \n ",orth_1); else printf(" %5.1e  ",orth_1); }
+		if (( vrtq == 0 )||( vrtq == 2 )){ if ( verbose ) printf("qr_repres = %5.1e  \n ",repres_1); else printf(" %5.1e  ",repres_1); }
 		if ( verbose ) printf("r_repres  = %5.1e  \n ",repres_2); else printf(" %5.1e  ",repres_2); 
 		if ( verbose ) printf("h_q_orth  = %5.1e  \n ",repres_3); else printf(" %5.1e  ",repres_3); 
+		if (( vrtq == 1 )||( vrtq == 3 )){ if ( verbose ) printf("vt_repres = %5.1e  \n ",repres_4); else printf(" %5.1e  ",repres_4); }
 
 	}
 

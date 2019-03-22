@@ -85,6 +85,33 @@ int lila_dgeqr2_3( int *lila_param, int m, int n, int i, int mt, double *A, int 
 
 	}
 
+	// THIS ONE NEEDS FIXING 
+	// vrtq == 3  ==> T
+	if( vrtq == 3 ){
+
+		double *Aii, *Akk, *Tki, *tau=NULL, normv2;
+		int j, k, ml, info, kk; 
+
+		ml = m - i;
+
+		tau = work;
+		Aii = A + i*lda + i;
+		Tki = T + i*ldt + (i%mt);
+		Akk = Aii;
+		for( kk = 0; kk < n; kk++){ normv2=1+cblas_ddot(ml-kk-1,Akk+1,1,Akk+1,1); tau[kk] = 2.0e+00 / normv2; Akk=Akk+1+lda; }
+
+		for( k = 0; k < n; k++){
+
+	  		info = dgeqr3( ml, 1, tau, 1, Tki, ldt );
+			ml -= 1;
+			j  += 1;
+			tau += 1;
+			Tki = T + j*ldt + (i%mt);
+
+		}
+
+	}
+
 	return 0;
 
 }
