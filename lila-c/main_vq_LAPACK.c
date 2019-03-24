@@ -77,19 +77,21 @@ int main(int argc, char ** argv) {
 	Qii   = Q + ii + ii*ldq;
 	ml    = m - ii;
 	info  = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n+ii, A, lda, As, lda );
-	normA = LAPACKE_dlange_work   ( LAPACK_COL_MAJOR, 'F', ml, n, Aii, lda, work );
+	normA = LAPACKE_dlange_work( LAPACK_COL_MAJOR, 'F', ml, n, Aii, lda, NULL );
 
 	tau  = (double *) malloc( (n+ii) * sizeof(double));
 
-	work = (double *) malloc( 1 * sizeof(double));
-	lwork = -1;
-  	info = LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, ml, n, Aii, lda, tau, work, lwork ); 
-	i = (int) work[0]; 
-	info = LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, ml, n, n, Qii, ldq, tau, work, lwork );
-	j = (int) work[0]; 
-	if ( i > j ) lwork = i; else lwork = j;
-	free( work );
+	//work = (double *) malloc( n * sizeof(double));
+	//lwork = -1;
+  	//info = LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, ml, n, Aii, lda, tau, work, lwork ); 
+	//return 0;
+	//i = (int) work[0]; 
+	//info = LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, ml, n, n, Qii, ldq, tau, work, lwork );
+	//j = (int) work[0]; 
+	//if ( i > j ) lwork = i; else lwork = j;
+	//free( work );
 
+	lwork = m*n;
 	work = (double *) malloc( lwork * sizeof(double));
 
 	gettimeofday(&tp, NULL);
@@ -102,9 +104,9 @@ int main(int argc, char ** argv) {
 	gettimeofday(&tp, NULL);
 	elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-	free( work );
-
 	perform_refL = ( 4.0e+00 * ((double) m) * ((double) n) * ((double) n) - 4.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_refL / 1.0e+9 ;
+
+	free( work );
 
 	if (verbose == 0){ 
 		printf("%6d %6d %16.8f %10.3f\n", m, n, elapsed_refL, perform_refL);
@@ -232,7 +234,7 @@ int main(int argc, char ** argv) {
 	free( Q );
 	free( A );
 	free( As );
-	free( tau ); // I have a problem with MKL and tau
+	free( tau );
 
 	return 0;
 }

@@ -39,9 +39,11 @@ int main(int argc, char ** argv) {
 	if (lda < m) lda=m;
 	if (ldq < m) ldq=m;
 	
-	printf("m = %4d; ",m);
-	printf("n = %4d; ",n);
-	printf("lda = %4d; ",lda);
+	//printf("m = %4d; ",m);
+	//printf("n = %4d; ",n);
+	//printf("lda = %4d; ",lda);
+	
+	printf(" %5d %5d ",m,n);
 
 	A  = (double *) malloc(lda * n * sizeof(double));
 	As  = (double *) malloc(lda * n * sizeof(double));
@@ -60,10 +62,10 @@ int main(int argc, char ** argv) {
 	work = (double *) malloc(1 * sizeof(double));
 	lwork = -1;
 	info = LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, n, A, lda, tau, work, -1);
-	printf("work[0] = %f;", work[0] );
+//	printf("work[0] = %f;", work[0] );
 	lwork = ((int) work[0]);
 	info = LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, m, n, n, Q, ldq, tau, work, -1);
-	printf(" work[0] = %f;", work[0] );
+//	printf(" work[0] = %f;", work[0] );
 	if( lwork < ((int) work[0]) ) lwork = ((int) work[0]);
 	free( work );
 	work = (double *) malloc(lwork * sizeof(double));
@@ -76,11 +78,15 @@ int main(int argc, char ** argv) {
 	info = LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, m, n, n, Q, ldq, tau, work, lwork);
 	gettimeofday(&tp, NULL);
 	elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
-	printf(" time = %f;", elapsed_refL );
-	printf(" perf = %f;", ( 4.0e+00 * ((double) m) * ((double) n) * ((double) n) - 4.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_refL / 1.0e+9 );
+//	printf(" time = %f;", elapsed_refL );
+//	printf(" perf = %f;", ( 4.0e+00 * ((double) m) * ((double) n) * ((double) n) - 4.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_refL / 1.0e+9 );
+	printf(" %f", elapsed_refL );
+	printf(" %f\n", ( 4.0e+00 * ((double) m) * ((double) n) * ((double) n) - 4.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_refL / 1.0e+9 );
 
 	free(work);
 	free(tau);
+
+	return 0;
 
 
 
