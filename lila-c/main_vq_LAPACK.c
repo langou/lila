@@ -79,6 +79,8 @@ int main(int argc, char ** argv) {
 	info  = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n+ii, A, lda, As, lda );
 	normA = LAPACKE_dlange_work   ( LAPACK_COL_MAJOR, 'F', ml, n, Aii, lda, work );
 
+	tau  = (double *) malloc( (n+ii) * sizeof(double));
+
 	work = (double *) malloc( 1 * sizeof(double));
 	lwork = -1;
   	info = LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, ml, n, Aii, lda, tau, work, lwork ); 
@@ -88,7 +90,6 @@ int main(int argc, char ** argv) {
 	if ( i > j ) lwork = i; else lwork = j;
 	free( work );
 
-	tau  = (double *) malloc( (n+ii) * sizeof(double));
 	work = (double *) malloc( lwork * sizeof(double));
 
 	gettimeofday(&tp, NULL);
@@ -231,8 +232,7 @@ int main(int argc, char ** argv) {
 	free( Q );
 	free( A );
 	free( As );
-	free( tau );
-
+	free( tau ); // I have a problem with MKL and tau
 
 	return 0;
 }
