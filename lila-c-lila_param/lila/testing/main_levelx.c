@@ -213,7 +213,9 @@ int main(int argc, char ** argv) {
 
 	} else {
 
-			printf("%6d %6d %6d %6d %6d %6d %6d %6d %6d %16.8f %10.3f ", m, ii, n, lda, ldq, mt, panel, leaf, n_lvl, elapsed_ref1, perform_ref1);
+			printf("%6d %6d %6d %6d %6d %6d %6d %6d %6d ", m, ii, n, lda, ldq, mt, panel, leaf, n_lvl );
+ 			for(j = 0; j < n_lvl; j++) printf(" %4d ",nb_lvl[j]);
+			printf(" %16.8f %10.3f ", elapsed_ref1, perform_ref1);
 			if(( vrtq == 2 )||( vrtq == 3 )){ printf("%16.8f %10.3f ", elapsed_ref2, perform_ref2); }
 
 	}
