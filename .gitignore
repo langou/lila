@@ -3,3 +3,4 @@
 make.inc
 *.o
 *.exe
+*.a
