@@ -109,7 +109,8 @@ int main(int argc, char ** argv) {
 	gettimeofday(&tp, NULL);
 	elapsed_ref1=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-	lila_dgeqrf_recursive( lila_param, m, n, ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+	lila_dgeqrf_recursive ( lila_param, m, n-2,       ii, mt, A, lda, T, ldt, Q, ldq, work, lwork );
+	lila_dgeqrf_appendcols( lila_param, m,   2, ii+(n-2), mt, A, lda, T, ldt, Q, ldq, work, lwork );
 
 	gettimeofday(&tp, NULL);
 	elapsed_ref1+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
