@@ -90,6 +90,8 @@ extern int lila_dgeqrf_qr2           ( int *lila_param, int m, int n, int i, int
 extern int lila_dgeqrf_w03_appendcols   ( int *lila_param, int m, int k, int n, int mt, double *A, int lda, double *Q, int ldq, double *T, int ldt, double *work, int lwork );
 extern int lila_dgeqrf_LAPACK_appendcols( int m, int k, int n, int mt, double *A, int lda, double *Q, int ldq, double *T, int ldt, double *work, int lwork );
 
+extern int lila_dgeqrf_appendcols       ( int *lila_param, int m, int n, int k, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
+
 
 extern int lila_dgeqrf_recursive( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
 extern int lila_dgeqrf_levelx   ( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork );
