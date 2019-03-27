@@ -64,10 +64,9 @@ int main(int argc, char ** argv) {
 	gettimeofday(&tp, NULL);
 	elapsed_ref1=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-	info = LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, n, A, lda, tau, work, lwork ); 
-
-//	info = LAPACKE_dormqr_work( LAPACK_COL_MAJOR, 'L', 'N', m-n1, n2, n1, A, lda, tau, A+n1*(1+lda), lda, work, lwork );
-//	info = LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m-n1, n2, A+n1*(1+lda), lda, tau, work, lwork ); 
+	info = LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, n1, A, lda, tau, work, lwork ); 
+	info = LAPACKE_dormqr_work( LAPACK_COL_MAJOR, 'L', 'T', m, n2, n1, A, lda, tau, A+n1*lda, lda, work, lwork );
+	info = LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m-n1, n2, A+n1*(1+lda), lda, tau, work, lwork ); 
 
 	gettimeofday(&tp, NULL);
 	elapsed_ref1+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
