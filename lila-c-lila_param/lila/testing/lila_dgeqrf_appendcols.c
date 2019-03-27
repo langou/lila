@@ -19,8 +19,7 @@ int lila_dgeqrf_appendcols( int *lila_param, int m, int n, int k, int mt, double
 
 		tau = work;
 		Akk = Aii;
-		for( kk = 0; kk < n; kk++){ normv2=1+cblas_ddot(ml-kk-1,Akk+1,1,Akk+1,1); tau[kk] = 2.0e+00 / normv; Akk=Akk+1+lda; }
+		for( kk = 0; kk < n; kk++){ normv = 1 + cblas_ddot(ml-kk-1,Akk+1,1,Akk+1,1); tau[kk] = 2.0e+00 / normv; Akk=Akk+1+lda; }
 
-		
 
 */
