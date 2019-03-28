@@ -2,9 +2,9 @@
    clear
 %
    fprintf('\n');
-   m = 100;
-   n = 30;
-   mt = 10;
+   m = 31;
+   n = 15;
+   mt = 15;
    log10KA = 2;
 %
    U = randn(m,n); [U,~]=qr(U,0);

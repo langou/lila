@@ -1,19 +1,24 @@
 #include "lila.h"
 
+extern int xN2T( int n, double *tau, double *T, int ldt );
+extern int xV2N( int n, double *T, int ldt );
+
+
+
 int main(int argc, char ** argv) {
 
-	int i, info, lda, ldt, m, n, nx, verbose, testing;
+	int i, j, info, lda, ldt, m, n, nx, verbose, testing;
 	int lwork, leaf, vrtq, *lila_param;
-	double *A, *As, *T, *work=NULL;
+	double *A, *As, *T, *tau, *work=NULL;
 	double elapsed_ref1, perform_ref1, elapsed_ref2, perform_ref2;
 	struct timeval tp;
 
 	srand(0);
 
-    	m         = 87;
-    	n         = 53;
+    	m         = 27;
+    	n         = 17;
 	lda       = -1;
-	nx        = 7;
+	nx        = 100;
 	leaf      = 0;
 	verbose   = 0;
 	testing   = 1;
@@ -68,46 +73,86 @@ int main(int argc, char ** argv) {
 
 	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n, A, lda, As, lda );
 
-	lwork = lila_query_dgeqrf_w03_recursive( lila_param, m, n, 0, n, A, lda, T, ldt, NULL, -1, work=NULL, -1 );
+	tau   = (double *) malloc( n * sizeof(double));
+	lwork = -1;
+	work  = (double *) malloc( 1 * sizeof(double));
+	info = LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, n, A, lda, tau, work, lwork ); 
+	lwork = (int) work[0];
+	free(work);
 	work  = (double *) malloc( lwork * sizeof(double));
 
 	gettimeofday(&tp, NULL);
 	elapsed_ref1=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
-
-	// Getting V for the checks below and the consrtuction of T
-	lila_param[4] = 1; //   ==>  VRT
-	lila_dgeqrf_recursive( lila_param, m, n, 0, n, A, lda, T, ldt, NULL, -1, work, lwork ); 
+	info = LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, n, A, lda, tau, work, lwork ); 
 	gettimeofday(&tp, NULL);
 	elapsed_ref1+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 	perform_ref1 = ( 2.0e+00 * ((double) m) * ((double) n) * ((double) n) - 2.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_ref1 / 1.0e+9 ;
-	info = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'A', n, n, (0e+00), (0e+00), T, ldt );
-
-
-
 
 	gettimeofday(&tp, NULL);
 	elapsed_ref2=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+	//info = LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', m, n, A, lda, tau, T, ldt);
+	//nV2T( m, n, A, lda, tau, T, ldt, work, lwork );
 
-	double *tau;
+	//double *V;
+	//V  = (double *) malloc( n * n * sizeof(double));
+	//for(i=0;i<n;i++){V[i+i*n] = 1.0e+00; for(j=0;j<i;j++){ V[j+i*n] = A[i+j*lda];}}
+	//cblas_dsyrk( CblasColMajor, CblasUpper, CblasNoTrans, n, n, (+1.0e+00), V, n, (+0.0e+00), T, ldt );
+	//free( V );
+
+//	V  = (double *) malloc( n * n * sizeof(double));
+//	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'L', n, n, A, lda, V, n );
+//	info = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'U', n, n, (0.0e+00), (1.0e+00), V, n );
+//	cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, n, n, (+1.0e+00), V, n, (+0.0e+00), T, ldt );
+//	free( V );
+
+
+	// What we want working
 	int n1, n2;
-	n1 = 15; n2 = n - n1;
-	tau   = (double *) malloc( n * sizeof(double));
+	double *T11, *T12, *T22, *Tc;
+	Tc  = (double *) malloc( ldt * n * sizeof(double));
+	for(i=0;i<n;i++){Tc[i+i*n] = 1.0e+00; for(j=0;j<i;j++){ Tc[j+i*n] = A[i+j*lda];}}
 
+	n1 = n / 2;
+	n2 = n - n1;
 
+	T11 = Tc;
+	T12 = Tc+n1*ldt;
+	T22 = Tc+n1+n1*ldt;
 
+	xV2N( n1, T11, ldt );
+	cblas_dsyrk( CblasColMajor, CblasUpper, CblasNoTrans, n1, n2, (+1.0e+00), T12, ldt, (+1.0e+00), T11, ldt );
+	cblas_dtrmm( CblasColMajor, CblasRight, CblasUpper, CblasTrans, CblasUnit,  n1, n2, (+1.0e+00), T22, ldt, T12, ldt );
+	xV2N( n2, T22, ldt );
+	cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, n, m-n, (+1.0e+00), A+n, lda, (+1.0e+00), Tc, ldt );
+	xN2T( n, tau, Tc, ldt );
 
+	// Working recursive version
+	for(i=0;i<n;i++){T[i+i*n] = 1.0e+00; for(j=0;j<i;j++){ T[j+i*n] = A[i+j*lda];}}
+	xV2N( n, T, ldt );
+	cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, n, m-n, (+1.0e+00), A+n, lda, (+1.0e+00), T, ldt );
+	xN2T( n, tau, T, ldt );
+
+	//    CHECKS 
+	//T11
+	for(i=0;i<n1;i++){for(j=0;j<n1;j++){ printf(" %+1.2f ", Tc[i+j*ldt]-T[i+j*ldt]); }printf("\n");}
+	printf("\n");
+	//T22
+	for(i=n1;i<n1+n2;i++){for(j=n1;j<n1+n2;j++){ printf(" %+1.2f ", Tc[i+j*ldt]-T[i+j*ldt]); }printf("\n");}
+	printf("\n");
+	//T12
+	for(i=0;i<n1;i++){for(j=n1;j<n1+n2;j++){ printf(" %+1.2f ", Tc[i+j*ldt]-T[i+j*ldt]); }printf("\n");}
+	printf("\n");
 
 	gettimeofday(&tp, NULL);
 	elapsed_ref2+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
-	//perform_ref2 = ( UNKNOWN - ((double)n)*((double)n) - maybe )  / elapsed_ref2 / 1.0e+9 ;
-
+	perform_ref2 = ( ((double) m)*((double) n)*((double) n)-(1/3)*((double) n)*((double) n)*((double) n) )  / elapsed_ref2 / 1.0e+9 ;
 
 	free( work );
-
+	free( tau );
 
 	if ( verbose ){ 
 
-		printf("dgeqrf_recursive - ");
+		printf("larft_recursive - ");
 		printf("m = %4d, ",         m);
 		printf("n = %4d, ",         n);
 		printf("lda = %4d, ",     lda);
@@ -125,27 +170,37 @@ int main(int argc, char ** argv) {
 
 	if ( testing ){
 
-		double repres_1, repres_2, repres_3;
-	
-//		vrtq == 0 || 2    ===>   we have Q to check
-//		vrtq == 1 || 3    ===>   we don't
-	
-//		|| (apply H) A - [R;0] || / || A ||
-		repres_1 = lila_test_r_repres_2( lila_param, m, n, 0, n, As, lda, T, ldt, A, lda );
+		double *Q, orth;
+		double repres_1;
+		int ldq;
+		ldq = m;
+		Q  = (double *) malloc( ldq * n * sizeof(double));
+		work  = (double *) malloc( n * n * sizeof(double));
 
-//		create m-by-m H, then || I - HH^T ||; || H A - [R;0] || / || A ||
-		repres_2 = lila_test_hh_repres( lila_param, m, n, 0, n, As, lda, T, ldt, A, lda );
-
+		info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'L', m, n, A, lda, Q, ldq );
+		info = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'U', n, n, (0.0e+00), (1.0e+00), Q, ldq);
+		info = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'A', n, n, (0.0e+00), (0.0e+00), work, n);
+		info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', n, n, T, ldt, work, n );
+//		note that this is a triangle times triangle so we could have dtrtrmm() and dived # of FLOPS by 3x
+		cblas_dtrmm( CblasColMajor, CblasRight, CblasLower, CblasTrans, CblasUnit, n, n, (+1.0e+00), A, lda, work, n );
+//		note that the top n-by-n part is a lower times a upper and can be done dlauum
+		cblas_dtrmm( CblasColMajor, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, m, n, (-1.0e+00), work, n, Q, ldq );
+	 	for(i = 0; i < n; i++) Q[ i + ldq * i ] = 1.00e+00 + Q[ i + ldq * i ];
+//		|| I - Q^T Q ||
+		orth = lila_test_qq_orth_1( m, n, 0, Q, ldq );		
 //		create m-by-n Q, then || I - Q^T Q ||; || A - Q R || / || A ||
-		repres_3 = lila_test_vt_repres( lila_param, m, n, 0, n, As, lda, T, ldt, A, lda );
+		repres_1 = lila_test_vt_repres( lila_param, m, n, 0, n, As, lda, T, ldt, A, lda );
+		if ( verbose ) printf("qq_orth  = %5.1e  \n ",orth); else printf(" %5.1e  ",orth); 
+		if ( verbose ) printf("vt_repres = %5.1e  \n ",repres_1); else printf(" %5.1e  ",repres_1); 
 
-		if ( verbose ) printf("r_repres  = %5.1e  \n ",repres_1); else printf(" %5.1e  ",repres_1); 
-		if ( verbose ) printf("h_q_orth  = %5.1e  \n ",repres_2); else printf(" %5.1e  ",repres_2); 
-		if ( verbose ) printf("vt_repres = %5.1e  \n ",repres_3); else printf(" %5.1e  ",repres_3); 
+		free( work );
+		free( Q );
 
 	}
 
 	if ( !verbose ) printf("\n");		
+
+	free( Tc );
 
 	free( A );
 	free( As );

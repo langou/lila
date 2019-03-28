@@ -3,19 +3,18 @@
 int main(int argc, char ** argv) {
 
 	int i, info, lda, ldt, m, n, nx, verbose, testing;
-	int lwork, panel, leaf, vrtq, *lila_param;
+	int lwork, leaf, vrtq, *lila_param;
 	double *A, *As, *T, *work=NULL;
-	double elapsed_ref1, perform_ref1;
+	double elapsed_ref1, perform_ref1, elapsed_ref2, perform_ref2;
 	struct timeval tp;
 
 	srand(0);
 
-    	m         = 87;
-    	n         = 53;
+    	m         = 37;
+    	n         = 23;
 	lda       = -1;
-	nx        = 7;
-	leaf      = 1;
-	panel     = 1;
+	nx        = 100;
+	leaf      = 0;
 	verbose   = 0;
 	testing   = 1;
 	vrtq      = 3;
@@ -46,14 +45,6 @@ int main(int argc, char ** argv) {
 			nx  = atoi( *(argv + i + 1) );
 			i++;
 		}
-		if( strcmp( *(argv + i), "-panel") == 0) {
-			panel  = atoi( *(argv + i + 1) );
-			i++;
-		}
-		if( strcmp( *(argv + i), "-leaf") == 0) {
-			leaf  = atoi( *(argv + i + 1) );
-			i++;
-		}
 	}
 
 	if( m < n ){ printf("\n\n YOUR CHOICE OF n AND ii HAVE MADE YOU LARGER THAN m, PLEASE RECONSIDER \n\n"); return 0; }
@@ -64,7 +55,7 @@ int main(int argc, char ** argv) {
 	lila_param = (int *) malloc(6 * sizeof(int));
 	lila_param[ 0 ] = 0;
 	lila_param[ 1 ] = leaf;
-	lila_param[ 2 ] = panel;
+	lila_param[ 2 ] = -1;
 	lila_param[ 3 ] = nx;
 	lila_param[ 4 ] = vrtq;
 
@@ -80,36 +71,45 @@ int main(int argc, char ** argv) {
 	lwork = lila_query_dgeqrf_w03_recursive( lila_param, m, n, 0, n, A, lda, T, ldt, NULL, -1, work=NULL, -1 );
 	work  = (double *) malloc( lwork * sizeof(double));
 
-
 	gettimeofday(&tp, NULL);
 	elapsed_ref1=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-	lila_dgeqrf_recursive( lila_param, m, n, 0, n, A, lda, T, ldt, NULL, -1, work, lwork );
-
+	// Getting V for the checks below and the consrtuction of T
+	lila_param[4] = 1; //   ==>  VRT
+	lila_dgeqrf_recursive( lila_param, m, n, 0, n, A, lda, T, ldt, NULL, -1, work, lwork ); 
 	gettimeofday(&tp, NULL);
 	elapsed_ref1+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
-	perform_ref1 = ( 4.0e+00 * ((double) m) * ((double) n) * ((double) n) - 4.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_ref1 / 1.0e+9 ;
+	perform_ref1 = ( 2.0e+00 * ((double) m) * ((double) n) * ((double) n) - 2.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_ref1 / 1.0e+9 ;
+	info = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'A', n, n, (0e+00), (0e+00), T, ldt );
 
+
+	gettimeofday(&tp, NULL);
+	elapsed_ref2=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+
+	lila_param[4] = 3; //   ==> T
+	lila_dgeqrf_recursive( lila_param, m, n, 0, n, A, lda, T, ldt, NULL, -1, work, lwork ); 
+
+	gettimeofday(&tp, NULL);
+	elapsed_ref2+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+	perform_ref2 = ( (2/3)*((double) n)*((double) n)*((double) n) )  / elapsed_ref2 / 1.0e+9 ;
 
 	free( work );
 
-
 	if ( verbose ){ 
 
-		printf("dgeqrf_recursive - ");
+		printf("larft_recursive - ");
 		printf("m = %4d, ",         m);
 		printf("n = %4d, ",         n);
 		printf("lda = %4d, ",     lda);
-		printf("panel = %4d, ", panel); 
-		printf("leaf = %4d, ",   leaf); 
 		printf("nx = %4d ", nx); 
 		printf(" \n");
 		printf(" time = %f    GFlop/sec = %f ", elapsed_ref1, perform_ref1);	
+		printf(" timeT = %f    GFlop/secT = %f ", elapsed_ref2, perform_ref2);	
 		printf(" \n ");
 
 	} else {
 
-		printf("%6d %6d %6d %6d %6d %6d %16.8f %10.3f ", m, n, lda, panel, leaf, nx, elapsed_ref1, perform_ref1);
+		printf("%6d %6d %6d %6d %16.8f %10.3f %16.8f %10.3f ", m, n, lda, nx, elapsed_ref1, perform_ref1, elapsed_ref2, perform_ref2);
 
 	} 
 

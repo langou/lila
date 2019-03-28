@@ -116,3 +116,6 @@ extern double lila_test_r_repres_2 ( int *lila_param, int m, int n, int i, int m
 extern double lila_test_hh_repres  ( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *V, int ldv );
 extern double lila_test_vt_repres  ( int *lila_param, int m, int n, int i, int mt, double *A, int lda, double *T, int ldt, double *V, int ldv );
 
+
+extern int nV2T( int m, int n, double *A, int lda, double *tau, double *T, int ldt, double *work, int lwork );
+

@@ -3,6 +3,15 @@ include ../make.inc
 
 all:  xmain_LAPACK.exe xmain_qr3.exe 
 
+xN2T.o: xN2T.c
+	$(CC) -c $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) -I$(INCLUDELILA) xN2T.c
+
+xV2N.o: xV2N.c
+	$(CC) -c $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) -I$(INCLUDELILA) xV2N.c
+
+nV2T.o: nV2T.c
+	$(CC) -c $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) -I$(INCLUDELILA) nV2T.c
+
 main_LAPACK.o: main_LAPACK.c
 	$(CC) -c $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) -I$(INCLUDELILA) main_LAPACK.c
 
@@ -51,12 +60,12 @@ liblila.a: ../src/dgeqr3.c \
 	../src/lila_dgeqrf_levelx.c 
 	make -C ../src/
 
-xmain_LAPACK.exe: main_LAPACK.o liblila.a 
-	$(LOADER) -o $@ main_LAPACK.o ../src/liblila.a $(LIBLAPACKE) $(LIBLAPACK) $(LIBCBLAS) $(LIBBLAS) $(LIBS)
+xmain_LAPACK.exe: main_LAPACK.o liblila.a nV2T.o xN2T.o xV2N.o
+	$(LOADER) -o $@ main_LAPACK.o ../src/liblila.a nV2T.o xN2T.o xV2N.o $(LIBLAPACKE) $(LIBLAPACK) $(LIBCBLAS) $(LIBBLAS) $(LIBS)
 
 xmain_qr3.exe: main_qr3.o liblila.a 
 	$(LOADER) -o $@ main_qr3.o ../src/liblila.a $(LIBLAPACKE) $(LIBLAPACK) $(LIBCBLAS) $(LIBBLAS) $(LIBS)
 
 clean:
-	rm -f  xmain_LAPACK.exe xmain_qr3.exe main_LAPACK.o main_qr3.o
+	rm -f  xmain_LAPACK.exe xmain_qr3.exe main_LAPACK.o main_qr3.o nV2T.o xN2T.o xV2N.o
  

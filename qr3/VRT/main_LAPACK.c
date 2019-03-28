@@ -65,7 +65,16 @@ int main(int argc, char ** argv) {
 	elapsed_ref1=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
 	info = LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, n1, A, lda, tau, work, lwork ); 
-	info = LAPACKE_dormqr_work( LAPACK_COL_MAJOR, 'L', 'T', m, n2, n1, A, lda, tau, A+n1*lda, lda, work, lwork );
+
+//	info = LAPACKE_dormqr_work( LAPACK_COL_MAJOR, 'L', 'T', m, n2, n1, A, lda, tau, A+n1*lda, lda, work, lwork );
+		cblas_dtrmm( CblasColMajor, CblasLeft, CblasLower, CblasTrans, CblasUnit, n1, n2, (1.0e+00), A, lda, work, lwork );
+		cblas_dgemm( CblasColMajor, CblasTrans, CblasNoTrans, n1, n2, m-n1, (1.0e+00), A+n1, lda, A+n1*(1+lda), lda, (1.0e+00), work, lwork );
+		cblas_dtrmm( CblasColMajor, CblasLeft, CblasUpper, CblasTrans, CblasNonUnit, n1, n2, (1.0e+00), T, ldt, work, lwork );
+		cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans, m-n1, n2, n1, (-1.0e+00), A+n1, lda, work, lwork, (1.0e+00), A+n1*(1+lda), lda );
+		cblas_dtrmm( CblasColMajor, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, n1, n2, (+1.0e+00), A, lda, work, lwork );
+
+
+
 	info = LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m-n1, n2, A+n1*(1+lda), lda, tau, work, lwork ); 
 
 	gettimeofday(&tp, NULL);
