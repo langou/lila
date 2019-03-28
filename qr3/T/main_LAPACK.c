@@ -132,6 +132,11 @@ int main(int argc, char ** argv) {
 	cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, n, m-n, (+1.0e+00), A+n, lda, (+1.0e+00), T, ldt );
 	xN2T( n, tau, T, ldt );
 
+
+
+
+
+
 	//    CHECKS 
 	//T11
 	for(i=0;i<n1;i++){for(j=0;j<n1;j++){ printf(" %+1.2f ", Tc[i+j*ldt]-T[i+j*ldt]); }printf("\n");}
