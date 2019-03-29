@@ -90,51 +90,23 @@ int main(int argc, char ** argv) {
 
 	gettimeofday(&tp, NULL);
 	elapsed_ref2=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+
 	//info = LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', m, n, A, lda, tau, T, ldt);
+
 	//nV2T( m, n, A, lda, tau, T, ldt, work, lwork );
 
-	//double *V;
-	//V  = (double *) malloc( n * n * sizeof(double));
-	//for(i=0;i<n;i++){V[i+i*n] = 1.0e+00; for(j=0;j<i;j++){ V[j+i*n] = A[i+j*lda];}}
-	//cblas_dsyrk( CblasColMajor, CblasUpper, CblasNoTrans, n, n, (+1.0e+00), V, n, (+0.0e+00), T, ldt );
-	//free( V );
-
-//	V  = (double *) malloc( n * n * sizeof(double));
-//	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'L', n, n, A, lda, V, n );
-//	info = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'U', n, n, (0.0e+00), (1.0e+00), V, n );
-//	cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, n, n, (+1.0e+00), V, n, (+0.0e+00), T, ldt );
-//	free( V );
-
-
-	// What we want working
-//	int n1, n2;
-//	double *T11, *T12, *T22, *Tc;
-//	Tc  = (double *) malloc( ldt * n * sizeof(double));
-//	for(i=0;i<n;i++){Tc[i+i*n] = 1.0e+00; for(j=0;j<i;j++){ Tc[j+i*n] = A[i+j*lda];}}
-
-//	n1 = n / 2;
-//	n2 = n - n1;
-
-//	T11 = Tc;
-//	T12 = Tc+n1*ldt;
-//	T22 = Tc+n1+n1*ldt;
-
-//	xV2N( n1, T11, ldt );
-//	cblas_dsyrk( CblasColMajor, CblasUpper, CblasNoTrans, n1, n2, (+1.0e+00), T12, ldt, (+1.0e+00), T11, ldt );
-//	cblas_dtrmm( CblasColMajor, CblasRight, CblasUpper, CblasTrans, CblasUnit,  n1, n2, (+1.0e+00), T22, ldt, T12, ldt );
-//	xV2N( n2, T22, ldt );
-//	cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, n, m-n, (+1.0e+00), A+n, lda, (+1.0e+00), Tc, ldt );
-//	xN2T( n, tau, Tc, ldt );
-
-	// Working recursive version
 	for(i=0;i<n;i++){T[i+i*n] = 1.0e+00; for(j=0;j<i;j++){ T[j+i*n] = A[i+j*lda];}}
 	xV2N( n, T, ldt );
 	cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, n, m-n, (+1.0e+00), A+n, lda, (+1.0e+00), T, ldt );
+	if (m==n) T[n-1+ldt*(n-1)]=0.0e+00;
 	xN2T( n, tau, T, ldt );
 
-	for(i=0;i<n;i++){ printf(" %+6.4f ", tau[i] ); }printf("\n");
+	gettimeofday(&tp, NULL);
+	elapsed_ref2+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+	perform_ref2 = ( ((double) m)*((double) n)*((double) n)-(1/3)*((double) n)*((double) n)*((double) n) )  / elapsed_ref2 / 1.0e+9 ;
 
 	//    CHECKS 
+//	for(i=0;i<n;i++){ printf(" %+6.4f ", tau[i] ); }printf("\n");
 	//T11
 //	for(i=0;i<n1;i++){for(j=0;j<n1;j++){ printf(" %+1.2f ", Tc[i+j*ldt]-T[i+j*ldt]); }printf("\n");}
 //	printf("\n");
@@ -146,10 +118,6 @@ int main(int argc, char ** argv) {
 //	printf("\n");
 
 //	free( Tc );
-
-	gettimeofday(&tp, NULL);
-	elapsed_ref2+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
-	perform_ref2 = ( ((double) m)*((double) n)*((double) n)-(1/3)*((double) n)*((double) n)*((double) n) )  / elapsed_ref2 / 1.0e+9 ;
 
 	free( work );
 	free( tau );

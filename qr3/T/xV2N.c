@@ -7,7 +7,7 @@ int xV2N( int n, double *T, int ldt ){
 
 	if ( n <= 1 ) {
 
-		*T = 1.0e+00;
+		(*T) = 1.0e+00;
 
 	} else {
 
