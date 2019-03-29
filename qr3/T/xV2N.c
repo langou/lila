@@ -2,45 +2,30 @@
 
 int xV2N( int n, double *T, int ldt ){
 
-	//double *Tii, *taui;
-	//double *T0i;
-	//int info, n1, n2, ii, jj; 
-
-	double *V; int i,j;
-	V  = (double *) malloc( n * n * sizeof(double));
-	cblas_dsyrk( CblasColMajor, CblasUpper, CblasNoTrans, n, n, (+1.0e+00), T, ldt, (+0.0e+00), V, n );
-
-	for(i=0;i<n;i++){for(j=i;j<n;j++){ T[i+j*ldt] = V[i+j*n];}}
-
-	free( V );
-
-/*
+	int n1, n2;
+	double *T11, *T12, *T22;
 
 	if ( n <= 1 ) {
 
-//		(*T) = (*tau);
-		(*T) = (+2.0e+00) / (*T);
+		*T = 1.0e+00;
 
 	} else {
 
 		n1 = n / 2;
 		n2 = n - n1;
 
-		Tii = T + n1 + n1*ldt;
-		taui = tau + n1;
+		T11 = T;
+		T12 = T+n1*ldt;
+		T22 = T+n1+n1*ldt;
 
-		T0i = T + n1*ldt;
-
-		info = xV2N( n1, tau, T, ldt );
-		info = xV2N( n2, taui, Tii, ldt );
-
-		cblas_dtrmm( CblasColMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit,  n1, n2, (-1.0e+00), T, ldt, T0i, ldt );
-		cblas_dtrmm( CblasColMajor, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, n1, n2, (+1.0e+00), Tii, ldt, T0i, ldt );
+		xV2N( n1, T11, ldt );
+		cblas_dsyrk( CblasColMajor, CblasUpper, CblasNoTrans, n1, n2, (+1.0e+00), T12, ldt, (+1.0e+00), T11, ldt );
+		cblas_dtrmm( CblasColMajor, CblasRight, CblasUpper, CblasTrans, CblasUnit,  n1, n2, (+1.0e+00), T22, ldt, T12, ldt );
+		xV2N( n2, T22, ldt );
 
 	}
 
 	return 0;
-*/
 
 }
 

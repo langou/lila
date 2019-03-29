@@ -107,24 +107,24 @@ int main(int argc, char ** argv) {
 
 
 	// What we want working
-	int n1, n2;
-	double *T11, *T12, *T22, *Tc;
-	Tc  = (double *) malloc( ldt * n * sizeof(double));
-	for(i=0;i<n;i++){Tc[i+i*n] = 1.0e+00; for(j=0;j<i;j++){ Tc[j+i*n] = A[i+j*lda];}}
+//	int n1, n2;
+//	double *T11, *T12, *T22, *Tc;
+//	Tc  = (double *) malloc( ldt * n * sizeof(double));
+//	for(i=0;i<n;i++){Tc[i+i*n] = 1.0e+00; for(j=0;j<i;j++){ Tc[j+i*n] = A[i+j*lda];}}
 
-	n1 = n / 2;
-	n2 = n - n1;
+//	n1 = n / 2;
+//	n2 = n - n1;
 
-	T11 = Tc;
-	T12 = Tc+n1*ldt;
-	T22 = Tc+n1+n1*ldt;
+//	T11 = Tc;
+//	T12 = Tc+n1*ldt;
+//	T22 = Tc+n1+n1*ldt;
 
-	xV2N( n1, T11, ldt );
-	cblas_dsyrk( CblasColMajor, CblasUpper, CblasNoTrans, n1, n2, (+1.0e+00), T12, ldt, (+1.0e+00), T11, ldt );
-	cblas_dtrmm( CblasColMajor, CblasRight, CblasUpper, CblasTrans, CblasUnit,  n1, n2, (+1.0e+00), T22, ldt, T12, ldt );
-	xV2N( n2, T22, ldt );
-	cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, n, m-n, (+1.0e+00), A+n, lda, (+1.0e+00), Tc, ldt );
-	xN2T( n, tau, Tc, ldt );
+//	xV2N( n1, T11, ldt );
+//	cblas_dsyrk( CblasColMajor, CblasUpper, CblasNoTrans, n1, n2, (+1.0e+00), T12, ldt, (+1.0e+00), T11, ldt );
+//	cblas_dtrmm( CblasColMajor, CblasRight, CblasUpper, CblasTrans, CblasUnit,  n1, n2, (+1.0e+00), T22, ldt, T12, ldt );
+//	xV2N( n2, T22, ldt );
+//	cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, n, m-n, (+1.0e+00), A+n, lda, (+1.0e+00), Tc, ldt );
+//	xN2T( n, tau, Tc, ldt );
 
 	// Working recursive version
 	for(i=0;i<n;i++){T[i+i*n] = 1.0e+00; for(j=0;j<i;j++){ T[j+i*n] = A[i+j*lda];}}
@@ -132,21 +132,20 @@ int main(int argc, char ** argv) {
 	cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, n, m-n, (+1.0e+00), A+n, lda, (+1.0e+00), T, ldt );
 	xN2T( n, tau, T, ldt );
 
-
-
-
-
+	for(i=0;i<n;i++){ printf(" %+6.4f ", tau[i] ); }printf("\n");
 
 	//    CHECKS 
 	//T11
-	for(i=0;i<n1;i++){for(j=0;j<n1;j++){ printf(" %+1.2f ", Tc[i+j*ldt]-T[i+j*ldt]); }printf("\n");}
-	printf("\n");
+//	for(i=0;i<n1;i++){for(j=0;j<n1;j++){ printf(" %+1.2f ", Tc[i+j*ldt]-T[i+j*ldt]); }printf("\n");}
+//	printf("\n");
 	//T22
-	for(i=n1;i<n1+n2;i++){for(j=n1;j<n1+n2;j++){ printf(" %+1.2f ", Tc[i+j*ldt]-T[i+j*ldt]); }printf("\n");}
-	printf("\n");
+//	for(i=n1;i<n1+n2;i++){for(j=n1;j<n1+n2;j++){ printf(" %+1.2f ", Tc[i+j*ldt]-T[i+j*ldt]); }printf("\n");}
+//	printf("\n");
 	//T12
-	for(i=0;i<n1;i++){for(j=n1;j<n1+n2;j++){ printf(" %+1.2f ", Tc[i+j*ldt]-T[i+j*ldt]); }printf("\n");}
-	printf("\n");
+//	for(i=0;i<n1;i++){for(j=n1;j<n1+n2;j++){ printf(" %+1.2f ", Tc[i+j*ldt]-T[i+j*ldt]); }printf("\n");}
+//	printf("\n");
+
+//	free( Tc );
 
 	gettimeofday(&tp, NULL);
 	elapsed_ref2+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -204,8 +203,6 @@ int main(int argc, char ** argv) {
 	}
 
 	if ( !verbose ) printf("\n");		
-
-	free( Tc );
 
 	free( A );
 	free( As );
