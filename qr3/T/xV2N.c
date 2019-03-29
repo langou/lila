@@ -8,9 +8,9 @@ int xV2N( int n, double *T, int ldt ){
 
 	double *V; int i,j;
 	V  = (double *) malloc( n * n * sizeof(double));
-	cblas_dsyrk( CblasColMajor, CblasUpper, CblasNoTrans, n, n, (+1.0e+00), T, n, (+0.0e+00), V, ldt );
+	cblas_dsyrk( CblasColMajor, CblasUpper, CblasNoTrans, n, n, (+1.0e+00), T, ldt, (+0.0e+00), V, n );
 
-	for(i=0;i<n;i++){for(j=i;j<n;j++){ T[i+j*n] = V[i+j*n];}}
+	for(i=0;i<n;i++){for(j=i;j<n;j++){ T[i+j*ldt] = V[i+j*n];}}
 
 	free( V );
 
