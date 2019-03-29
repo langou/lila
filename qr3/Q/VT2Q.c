@@ -35,11 +35,11 @@ int VT2Q( int m, int n, double *A, int lda, double *T, int ldt, double *Q, int l
 	//	for(i = 0; i < n2; i++) Q22[ i + ldq * i ] = 1.00e+00 + Q22[ i + ldq * i ];
 
 		// dormqrbz
-	//	cblas_dgemm( CblasColMajor, CblasTrans, CblasNoTrans, n1, n2, m-n1, (1.0e+00), A+n1, lda, Q02+n1, ldq, (0.0e+00), work, n1 );
-	//	cblas_dtrmm( CblasColMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, n1, n2, (1.0e+00), T, ldt, work, n1 );
-	//	LAPACKE_dlacpy( LAPACK_COL_MAJOR, 'A', n1, n2, work, n1, Q02, ldq );
-	//	cblas_dtrmm( CblasColMajor, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, n1, n2, (-1.0e+00), A, lda, Q02, ldq );
-	//	cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans, m-n1, n2, n1, (-1.0e+00), A+n1, lda, work, n1, (1.0e+00), Q02+n1, ldq );
+		cblas_dgemm( CblasColMajor, CblasTrans, CblasNoTrans, n, n, m-n, (1.0e+00), A+n, lda, Q02+n, ldq, (0.0e+00), work, n );
+		cblas_dtrmm( CblasColMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, n, n, (1.0e+00), T, ldt, work, n );
+		LAPACKE_dlacpy( LAPACK_COL_MAJOR, 'A', n, n, work, n, Q02, ldq );
+		cblas_dtrmm( CblasColMajor, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, n, n, (-1.0e+00), A, lda, Q02, ldq );
+		cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans, m-n, n, n, (-1.0e+00), A+n, lda, work, n, (1.0e+00), Q02+n, ldq );
 
 
 

@@ -1,13 +1,19 @@
 
 include ../make.inc
 
-all:  xmain_LAPACK_VT2Q.exe  
+all:  xmain_VT2Q.exe  
 
 VT2Q.o: VT2Q.c
 	$(CC) -c $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) -I$(INCLUDELILA) VT2Q.c
 
-main_LAPACK_VT2Q.o: main_LAPACK_VT2Q.c
-	$(CC) -c $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) -I$(INCLUDELILA) main_LAPACK_VT2Q.c
+ULTinU.o: ULTinU.c
+	$(CC) -c $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) -I$(INCLUDELILA) ULTinU.c
+
+LUinQ.o: LUinQ.c
+	$(CC) -c $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) -I$(INCLUDELILA) LUinQ.c
+
+main_VT2Q.o: main_VT2Q.c
+	$(CC) -c $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) -I$(INCLUDELILA) main_VT2Q.c
 
 liblila.a: ../src/dgeqr3.c \
 	../src/lila_dgeqrf_mt.c \
@@ -51,9 +57,9 @@ liblila.a: ../src/dgeqr3.c \
 	../src/lila_dgeqrf_levelx.c 
 	make -C ../src/
 
-xmain_LAPACK_VT2Q.exe: main_LAPACK_VT2Q.o liblila.a VT2Q.o
-	$(LOADER) -o $@ main_LAPACK_VT2Q.o ../src/liblila.a VT2Q.o $(LIBLAPACKE) $(LIBLAPACK) $(LIBCBLAS) $(LIBBLAS) $(LIBS)
+xmain_VT2Q.exe: main_VT2Q.o liblila.a VT2Q.o ULTinU.o LUinQ.o
+	$(LOADER) -o $@ main_VT2Q.o ../src/liblila.a VT2Q.o ULTinU.o LUinQ.o $(LIBLAPACKE) $(LIBLAPACK) $(LIBCBLAS) $(LIBBLAS) $(LIBS)
 
 clean:
-	rm -f  xmain_LAPACK_VT2Q.exe main_LAPACK_VT2Q.o VT2Q.o
+	rm -f  xmain_VT2Q.exe main_VT2Q.o VT2Q.o ULTinU.o LUinQ.o
  
