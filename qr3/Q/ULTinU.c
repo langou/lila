@@ -1,9 +1,9 @@
-#include "lila.h"
+#include "qr3.h"
 
 int ULTinU( int n, double *L, int ldl, double *U, int ldu ){
 
-	int info, n1, n2; 
-	double *work, *U11, *U12, *U22, *L11, *L12, *L22;
+	int n1, n2; 
+	double *U11, *U12, *U22, *L11, *L21, *L22;
 
 	if ( n <= 1 ){
 
@@ -17,13 +17,16 @@ int ULTinU( int n, double *L, int ldl, double *U, int ldu ){
 		U11 = U;
 
 		U12 = U + n1*ldu;
-		L12 = L + n1; 
+		L21 = L + n1; 
 
 		U22 = U + n1 + n1*ldu;  
 		L22 = L + n1 + n1*ldl; 
 
+//		U12 = U12*L22^T
 		cblas_dtrmm( CblasColMajor, CblasRight, CblasLower, CblasTrans, CblasUnit, n1, n2, (+1.0e+00), L22, ldl, U12, ldu );
-		cblas_dgemm( CblasColMajor, CblasNoTrans, CblasTrans, n1, n2, n1, (+1.0e+00), U11, ldu, L12, ldl, (+1.0e+00), U12, ldu );
+
+//		U12 = U12 + U11*L21^T
+		ApUBTinA ( n1, n2, U12, ldu, U11, ldu, L21, ldl );
 
 		ULTinU( n1, L11, ldl, U11, ldu );
 		ULTinU( n2, L22, ldl, U22, ldu );

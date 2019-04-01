@@ -2,7 +2,7 @@
 
 int VT2Q( int m, int n, double *A, int lda, double *T, int ldt, double *Q, int ldq, double *work, int lwork ){
 
-	int n1, n2, i, info; 
+	int n1, n2, info; 
 	double *Q11, *Q22, *Q02;
 
 	if ( n <= 1 ) {
