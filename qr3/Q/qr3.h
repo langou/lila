@@ -19,4 +19,8 @@ extern int xN2T( int n, double *tau, double *T, int ldt );
 
 
 
+extern unsigned long int flops_orgqr( int m, int n, int k );
+extern unsigned long int flops_gemm( int m, int n, int k );
+extern unsigned long int flops_trmm( int m, int n, char S );
+extern unsigned long int flops_syrk( int n, int k );
 

@@ -2,7 +2,7 @@
 
 int main(int argc, char ** argv) {
 
-	int i, info, lda, ldq, m, n, verbose, testing;
+	int i, info, lda, ldq, m, n, nb, verbose, testing;
 	int lwork;
 	double *A, *As, *Q, *tau, *work=NULL;
 	double orth, repres_1;
@@ -15,32 +15,37 @@ int main(int argc, char ** argv) {
     	n         = 17;
 	lda       = -1;
 	ldq       = -1;
+	nb        = 10;
 	verbose   = 0;
 	testing   = 1;
 
 	for(i = 1; i < argc; i++){
 		if( strcmp( *(argv + i), "-lda") == 0) {
-			lda  = atoi( *(argv + i + 1) );
+			lda = atoi( *(argv + i + 1) );
 			i++;
 		}
 		if( strcmp( *(argv + i), "-ldq") == 0) {
-			ldq  = atoi( *(argv + i + 1) );
+			ldq = atoi( *(argv + i + 1) );
+			i++;
+		}
+		if( strcmp( *(argv + i), "-nb") == 0) {
+			nb = atoi( *(argv + i + 1) );
 			i++;
 		}
 		if( strcmp( *(argv + i), "-verbose") == 0) {
-			verbose  = atoi( *(argv + i + 1) );
+			verbose = atoi( *(argv + i + 1) );
 			i++;
 		}
 		if( strcmp( *(argv + i), "-testing") == 0) {
-			testing  = atoi( *(argv + i + 1) );
+			testing = atoi( *(argv + i + 1) );
 			i++;
 		}
 		if( strcmp( *(argv + i), "-m") == 0) {
-			m  = atoi( *(argv + i + 1) );
+			m = atoi( *(argv + i + 1) );
 			i++;
 		}
 		if( strcmp( *(argv + i), "-n") == 0) {
-			n  = atoi( *(argv + i + 1) );
+			n = atoi( *(argv + i + 1) );
 			i++;
 		}
 	}
@@ -79,19 +84,16 @@ int main(int argc, char ** argv) {
 
 	free( work );
 
-	lwork = m; // don't want to think about the workspace yet
-	work  = (double *) malloc( lwork * m * sizeof(double));	
+	lwork = m+nb; // don't want to think about the workspace yet
+	work  = (double *) malloc( lwork * (m+nb) * sizeof(double));	
 
 	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'L', m-1, n, A+1, lda, Q+1, ldq );
-	info = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'U', n, n, (0.0e+00), (1.0e+00), Q, ldq);
-
-	int nb;
-	nb = 10;
+	info = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'U', n, n, (3.0e+00), (2.0e+00), Q, ldq);
 
 	gettimeofday(&tp, NULL);
 	elapsed_ref2=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-	dorgqr( m, n, n, nb, nb, 0, Q, ldq, tau, work, lwork,  info );
+	dorgqr( m, n, n, nb, nb, 0, Q, ldq, tau, work, lwork, info );
 
 	gettimeofday(&tp, NULL);
 	elapsed_ref2+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
