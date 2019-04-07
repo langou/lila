@@ -39,8 +39,10 @@ int dV2Q( int m, int n, int k, int nb, int nbmin, int nx, double *A, int lda, do
 	flops += flops_syrk( ib, ml-ib );
 	cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, ib, ml-ib, (+1.0e+00), Akk+ib, lda, (+1.0e+00), Akk, lda );
 
+	flops += flops_N2T( ib );
 	dN2T( ib, tauk, Akk, lda );
 
+	flops += flops_VT2Q( ml, ib );
 	dVT2Q( ml, ib, Akk, lda );
 
 //	Use blocked code
@@ -68,6 +70,7 @@ int dV2Q( int m, int n, int k, int nb, int nbmin, int nx, double *A, int lda, do
 		flops += flops_syrk( ib, ml-ib );
 		cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, ib, ml-ib, (+1.0e+00), Akk+ib, lda, (+1.0e+00), Akk, lda );
 
+		flops += flops_N2T( ib );
 		dN2T( ib, tauk, Akk, lda );
 
 //	 	Popping Q up to current world - (bz)
@@ -79,20 +82,22 @@ int dV2Q( int m, int n, int k, int nb, int nbmin, int nx, double *A, int lda, do
 		flops += flops_gemm( ib, nl-ib, ml-nl );
 		cblas_dgemm( CblasColMajor, CblasTrans, CblasNoTrans, ib, nl-ib, ml-nl, (+1.0e+00), Akk+nl, lda, Aik+nl, lda, (+1.0e+00), Aik, lda );
 //		Q1 = T * Q1
-		flops += flops_gemm( ib, nl-ib, 'L' );
+		flops += flops_trmm( ib, nl-ib, 'L' );
 		cblas_dtrmm( CblasColMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, ib, nl-ib, (+1.0e+00), Akk, lda, Aik, lda );
 //		Q2 = Q2 - V2 * Q1
 //		Q3   Q3   V3
 		flops += flops_gemm( ml-ib, nl-ib, ib );
 		cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans, ml-ib, nl-ib, ib, (-1.0e+00), Akk+ib, lda, Aik, lda, (+1.0e+00), Aik+ib, lda );
 //		Q1 = - V1 * Q1
-		flops += flops_gemm( ib, nl-ib, 'L' );
+		flops += flops_trmm( ib, nl-ib, 'L' );
 		cblas_dtrmm( CblasColMajor, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, ib, nl-ib, (-1.0e+00), Akk, lda, Aik, lda );
 
 //		Constructing (ml x ib) panel of Q
 
 //		flops += flops_org2r( ml, ib, ib );
 //		dorg2r_( &ml, &ib, &ib, Akk, &lda, tauk, work, &lwork );
+
+		flops += flops_VT2Q( ml, ib );
 		dVT2Q( ml, ib, Akk, lda );
 //
 	}	

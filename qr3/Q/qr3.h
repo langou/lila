@@ -29,4 +29,8 @@ extern unsigned long int flops_larft( int m, int k );
 extern unsigned long int flops_larfb( int m, int n, int k );
 
 extern unsigned long int flops_V2N( int n );
+extern unsigned long int flops_VT2Q( int m, int n );
+extern unsigned long int flops_N2T( int n );
+
+
 
