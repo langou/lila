@@ -13,7 +13,7 @@ xmain_flops_org2r.exe: main_flops_org2r.o flops_org2r.o
 	$(LOADER) -o $@ main_flops_org2r.o flops_org2r.o
 
 .c.o:
-	$(CC) $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) -I$(INCLUDELILA) -c -o $@ $<
+	$(CC) $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) -c -o $@ $<
 
 clean:
 	rm -f *o *exe
