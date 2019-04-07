@@ -95,13 +95,8 @@ int main(int argc, char ** argv) {
 
 	info = LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, m, n, n, Q, ldq, tau, work, lwork );
 //	dorgqr_( &m, &n, &n, Q, &ldq, tau, work, &lwork, &info );
-<<<<<<< HEAD
 //	our_dorgqr( m, n, n, nb, nb, 0, Q, ldq, tau, work, lwork, info );
 	dV2Q( m, n, n, nb, nb, 0, Q, ldq, tau, work, lwork, info );
-=======
-//	dorgqr( m, n, n, nb, nb, 0, Q, ldq, tau, work, lwork, info );
-	//dV2Q( m, n, n, nb, nb, 0, Q, ldq, tau, work, lwork, info );
->>>>>>> 083e7f011c41cac6c9424cb8be23afccae9610ba
 
 	gettimeofday(&tp, NULL);
 	elapsed_ref2+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
