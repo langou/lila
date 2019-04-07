@@ -113,18 +113,18 @@ int main(int argc, char ** argv) {
 	elapsed_refL=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
 	info = dgeqr3( ml, n, Aii, lda, Tii, ldt );
-	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', ml, n, Aii, lda, Qii, ldq );
-	info = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'U', n, n, (0.0e+00), (1.0e+00), Qii, ldq);
-	info = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'A', n, n, (0.0e+00), (0.0e+00), work, n);
-	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', n, n, Tii, ldt, work, n );
-	cblas_dtrmm( CblasColMajor, CblasRight, CblasLower, CblasTrans, CblasUnit, n, n, (+1.0e+00), Aii, lda, work, n );
-	cblas_dtrmm( CblasColMajor, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, ml, n, (-1.0e+00), work, n, Qii, ldq );
- 	for(j = 0; j < n; j++) Qii[ j + ldq * j ] = 1.00e+00 + Qii[ j + ldq * j ];
+	//info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', ml, n, Aii, lda, Qii, ldq );
+	//info = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'U', n, n, (0.0e+00), (1.0e+00), Qii, ldq);
+	//info = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'A', n, n, (0.0e+00), (0.0e+00), work, n);
+	//info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', n, n, Tii, ldt, work, n );
+	//cblas_dtrmm( CblasColMajor, CblasRight, CblasLower, CblasTrans, CblasUnit, n, n, (+1.0e+00), Aii, lda, work, n );
+	//cblas_dtrmm( CblasColMajor, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, ml, n, (-1.0e+00), work, n, Qii, ldq );
+ 	//for(j = 0; j < n; j++) Qii[ j + ldq * j ] = 1.00e+00 + Qii[ j + ldq * j ];
 
 	gettimeofday(&tp, NULL);
 	elapsed_refL+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-	perform_refL = ( 4.0e+00 * ((double) m) * ((double) n) * ((double) n) - 4.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_refL / 1.0e+9 ;
+	perform_refL = ( 2.0e+00 * ((double) m) * ((double) n) * ((double) n) - 2.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_refL / 1.0e+9 ;
 	free( work );
 
 	if ( verbose == 0 ){
