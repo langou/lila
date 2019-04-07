@@ -7,11 +7,8 @@ unsigned long int flops_syrk( int n, int k ){
 	u_n = ( unsigned long int ) n;
 	u_k = ( unsigned long int ) k;
 
-	flops = u_k*u_n*(u_n+1);
-//	flops = u_k*u_n*(u_n);
+	flops = u_k * u_n * u_n;
 
 	return flops;
 
 }
-
-

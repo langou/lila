@@ -84,8 +84,8 @@ int main(int argc, char ** argv) {
 
 	free( work );
 
-	lwork = m+nb; // don't want to think about the workspace yet
-	work  = (double *) malloc( lwork * (m+nb) * sizeof(double));	
+	lwork = nb * n;
+	work  = (double *) malloc( nb * n * sizeof(double));	
 
 	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'L', m-1, n, A+1, lda, Q+1, ldq );
 	info = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'U', n, n, (3.0e+00), (2.0e+00), Q, ldq);
@@ -93,7 +93,10 @@ int main(int argc, char ** argv) {
 	gettimeofday(&tp, NULL);
 	elapsed_ref2=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-	dorgqr( m, n, n, nb, nb, 0, Q, ldq, tau, work, lwork, info );
+//	info = LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, m, n, n, Q, ldq, tau, work, lwork );
+//	dorgqr_( &m, &n, &n, Q, &ldq, tau, work, &lwork, &info );
+//	dorgqr( m, n, n, nb, nb, 0, Q, ldq, tau, work, lwork, info );
+	dV2Q( m, n, n, nb, nb, 0, Q, ldq, tau, work, lwork, info );
 
 	gettimeofday(&tp, NULL);
 	elapsed_ref2+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -104,10 +107,10 @@ int main(int argc, char ** argv) {
 
 	if ( verbose ){ 
 
-		printf("ORGQR_""recursive"" - ");
+		printf("ORGQR");
 		printf("m = %4d, ",         m);
 		printf("n = %4d, ",         n);
-		printf("lda = %4d, ",     lda);
+		printf("nb = %4d, ",     nb);
 		printf(" \n");
 		printf(" time = %f    GFlop/sec = %f ", elapsed_ref1, perform_ref1);	
 		printf(" timeT = %f    GFlop/secT = %f ", elapsed_ref2, perform_ref2);	
@@ -115,7 +118,7 @@ int main(int argc, char ** argv) {
 
 	} else {
 
-		printf("%6d %6d %6d %16.8f %10.3f %16.8f %10.3f ", m, n, lda, elapsed_ref1, perform_ref1, elapsed_ref2, perform_ref2);
+		printf("%6d %6d %6d %16.8f %10.3f %16.8f %10.3f ", m, n, nb, elapsed_ref1, perform_ref1, elapsed_ref2, perform_ref2);
 
 	} 
 

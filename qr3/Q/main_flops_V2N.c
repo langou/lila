@@ -1,7 +1,5 @@
 #include "qr3.h"
 
-extern unsigned long int flops_xV2N( int n );
-
 int main(int argc, char ** argv) {
 
 	int i, n;
@@ -15,7 +13,7 @@ int main(int argc, char ** argv) {
 		}
 	}
 
-	printf("%d %lu\n", n, flops_xV2N( n ) );
+	printf("%d %lu\n", n, flops_V2N( n ) );
 
 	return 0;
 

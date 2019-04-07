@@ -1,4 +1,4 @@
-#include "lila.h"
+#include "qr3.h"
 
 unsigned long int flops_gemm( int m, int n, int k ){
 
@@ -8,7 +8,7 @@ unsigned long int flops_gemm( int m, int n, int k ){
 	u_n = ( unsigned long int ) n;
 	u_k = ( unsigned long int ) k;
 
-	flops = (+2.0e00)*u_m*u_n*u_k;
+	flops = (( unsigned long int ) 2) * u_m * u_n * u_k;
 
 	return flops;
 

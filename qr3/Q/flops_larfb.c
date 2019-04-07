@@ -1,6 +1,6 @@
-#include "lila.h"
+#include "qr3.h"
 
-unsigned long int flops_orgqr( int m, int n, int k ){
+unsigned long int flops_larfb( int m, int n, int k ){
 
 	unsigned long int u_m, u_n, u_k, flops;
 
@@ -8,10 +8,8 @@ unsigned long int flops_orgqr( int m, int n, int k ){
 	u_n = ( unsigned long int ) n;
 	u_k = ( unsigned long int ) k;
 
-	flops = ;
+	flops = (( unsigned long int ) 4) * u_k * u_m * u_n - u_k * u_k * u_n ;
 
 	return flops;
 
 }
-
-

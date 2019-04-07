@@ -1,16 +1,16 @@
 
 include ../make.inc
 
-include ../make.inc
+all: xmain_dorgqr.exe xmain_flops_V2N.exe xmain_flops_org2r.exe
 
-all: xmain_VT2Q.exe 
-all: xmain_dorgqr.exe 
+xmain_dorgqr.exe: main_dorgqr.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o dorgqr.o dV2Q.o dV2N.o dN2T.o dVT2Q.o ULTinU.o mLUinA.o ApUBTinA.o flops_org2r.o flops_gemm.o flops_trmm.o flops_syrk.o flops_V2N.o flops_larft.o flops_larfb.o
+	$(LOADER) -o $@ main_dorgqr.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o dorgqr.o dV2Q.o dV2N.o dN2T.o dVT2Q.o ULTinU.o mLUinA.o ApUBTinA.o flops_org2r.o flops_gemm.o flops_trmm.o flops_syrk.o flops_V2N.o flops_larft.o flops_larfb.o $(LIBLAPACKE) $(LIBLAPACK) $(LIBCBLAS) $(LIBBLAS) $(LIBS)
 
-xmain_VT2Q.exe: main_VT2Q.o VT2Q.o ULTinU.o mLUinA.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o ApUBTinA.o
-	$(LOADER) -o $@ main_VT2Q.o VT2Q.o ULTinU.o mLUinA.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o ApUBTinA.o $(LIBLAPACKE) $(LIBLAPACK) $(LIBCBLAS) $(LIBBLAS) $(LIBS)
+xmain_flops_V2N.exe: main_flops_V2N.o flops_trmm.o flops_syrk.o flops_V2N.o
+	$(LOADER) -o $@ main_flops_V2N.o flops_trmm.o flops_syrk.o flops_V2N.o
 
-xmain_dorgqr.exe: main_dorgqr.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o dorgqr.o xV2N.o xN2T.o flops_orgqr.o flops_gemm.o flops_trmm.o flops_syrk.o
-	$(LOADER) -o $@ main_dorgqr.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o dorgqr.o xV2N.o xN2T.o flops_orgqr.o flops_gemm.o flops_trmm.o flops_syrk.o $(LIBLAPACKE) $(LIBLAPACK) $(LIBCBLAS) $(LIBBLAS) $(LIBS)
+xmain_flops_org2r.exe: main_flops_org2r.o flops_org2r.o
+	$(LOADER) -o $@ main_flops_org2r.o flops_org2r.o
 
 .c.o:
 	$(CC) $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) -I$(INCLUDELILA) -c -o $@ $<

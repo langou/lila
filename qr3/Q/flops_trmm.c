@@ -8,15 +8,13 @@ unsigned long int flops_trmm( int m, int n, char S ){
 	u_n = ( unsigned long int ) n;
 
 	if( S == 'L' ){
-		flops = (+2.0e00)*u_n*u_m*u_m;
+		flops = u_n * u_m * u_m;
 	}
 
 	if( S == 'R' ){
-		flops = (+2.0e00)*u_n*u_n*u_m;
+		flops = u_n * u_n * u_m;
 	}
 
 	return flops;
 
 }
-
-
