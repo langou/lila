@@ -68,44 +68,52 @@ int main(int argc, char ** argv) {
 	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n, A, lda, As, lda );
 
 	tau   = (double *) malloc( n * sizeof(double));
-	lwork = -1;
-	work  = (double *) malloc( 1 * sizeof(double));
-	info = LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, n, A, lda, tau, work, lwork ); 
-	printf("\ninfo = %d\n",info);
-	lwork = (int) work[0];
-	free(work);
-	work  = (double *) malloc( lwork * sizeof(double));
+//	lwork = -1;
+//	work  = (double *) malloc( 1 * sizeof(double));
+//	dgeqrf_( &m, &n, A, &lda, tau, work, &lwork, &info ); 
+//	info = LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, n, A, lda, tau, work, lwork ); 
+//	printf("\ninfo = %d\n",info);
+//	lwork = (int) work[0];
+//	lwork = m * m;
+//	free(work);
+//	work  = (double *) malloc( lwork * sizeof(double));
 
 	gettimeofday(&tp, NULL);
 	elapsed_ref1=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
-	info = LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, n, A, lda, tau, work, lwork ); 
-	printf("\ninfo = %d\n",info);
+//	dgeqrf_( &m, &n, A, &lda, tau, work, &lwork, &info ); 
+//	info = LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, n, A, lda, tau, work, lwork ); 
+	info = LAPACKE_dgeqrf( LAPACK_COL_MAJOR, m, n, A, lda, tau ); 
 	gettimeofday(&tp, NULL);
 	elapsed_ref1+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 	perform_ref1 = ( 2.0e+00 * ((double) m) * ((double) n) * ((double) n) - 2.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_ref1 / 1.0e+9 ;
 
-	free( work );
+//	free( work );
 
 //	lwork = nb * n;
-//	work  = (double *) malloc( nb * n * sizeof(double));	
+//	work  = (double *) malloc( lwork * sizeof(double));	
 
-	lwork = -1;
-	work  = (double *) malloc( 1 * sizeof(double));
-	info = LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, m, n, n, Q, ldq, tau, work, lwork );
-	lwork = (int) work[0];
-	free(work);
-	work  = (double *) malloc( lwork * sizeof(double));
+//	lwork = -1;
+//	work  = (double *) malloc( n * sizeof(double));
+//	dorgqr_( &m, &n, &n, Q, &ldq, tau, work, &lwork, &info );
+//	info = LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, m, n, n, Q, ldq, tau, work, lwork );
+//	lwork = (int) work[0];
+//	lwork = m * m;
+//	printf("\nlwork=%d\n",lwork);
+//	free(work);
+//	work  = (double *) malloc( lwork * sizeof(double));
 
-	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n, A, lda, Q, ldq );
-	printf("\ninfo = %d\n",info);
-//	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'L', m-1, n, A+1, lda, Q+1, ldq );
-//	info = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'U', n, n, (3.0e+00), (2.0e+00), Q, ldq);
+//	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n, A, lda, Q, ldq );
+
+	info = LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'L', m-1, n, A+1, lda, Q+1, ldq );
+	info = LAPACKE_dlaset( LAPACK_COL_MAJOR, 'U', n, n, (3.0e+00), (2.0e+00), Q, ldq);
 
 	gettimeofday(&tp, NULL);
 	elapsed_ref2=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-	info = LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, m, n, n, Q, ldq, tau, work, lwork );
-	printf("\ninfo = %d\n",info);
+//	dorgqr_( &m, &n, &n, Q, &ldq, tau, work, &lwork, &info );
+//	info = LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, m, n, n, Q, ldq, tau, work, lwork );
+	info = LAPACKE_dorgqr( LAPACK_COL_MAJOR, m, n, n, Q, ldq, tau );
+
 //	dorgqr_( &m, &n, &n, Q, &ldq, tau, work, &lwork, &info );
 //	our_dorgqr( m, n, n, nb, nb, 0, Q, ldq, tau, work, lwork, info );
 //	dV2Q( m, n, n, nb, nb, 0, Q, ldq, tau, work, lwork, info );
@@ -115,7 +123,7 @@ int main(int argc, char ** argv) {
 	perform_ref2 = ( 2.0e+00 * ((double) m) * ((double) n) * ((double) n) - 2.0e+00 / 3.0e+00 * ((double) n) * ((double) n) * ((double) n) )  / elapsed_ref2 / 1.0e+9 ;
 
 	free( tau );
-	free( work );
+//	free( work );
 
 	if ( verbose ){ 
 
@@ -134,14 +142,15 @@ int main(int argc, char ** argv) {
 
 	} 
 
+	//int j;
+	//printf("\n A=["); for(i = 0; i < m; i++){ for(j = 0; j < n; j++){ printf("%f ",As[i+j*lda]); } printf(";"); } printf("];\n");
+	//printf("\n Q=["); for(i = 0; i < m; i++){ for(j = 0; j < n; j++){ printf("%f ",Q[i+j*ldq]); } printf(";"); } printf("];\n");
+	//printf("\n R=["); for(i = 0; i < n; i++){ for(j = 0; j < n; j++){ printf("%f ",A[i+j*lda]); } printf(";"); } printf("];\n");
+
 	if ( testing ){
 
 		info = qr3_test_qq_orth_1( &orth, m, n, Q, ldq );		
 		if ( verbose ) printf("qq_orth  = %5.1e  \n ",orth); else printf(" %5.1e  ",orth); 
-
-	printf("\n||A|| = %f\n", LAPACKE_dlange_work( LAPACK_COL_MAJOR, 'F', m, n, As, lda, NULL ) );
-	printf("%f\n",As[0]);
-
 
 		info = qr3_test_qr_repres_1( &repres_1, m, n, As, lda, Q, ldq, A, lda );
 		if ( verbose ) printf("qr_repres = %5.1e  \n ",repres_1); else printf(" %5.1e  ",repres_1); 
