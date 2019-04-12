@@ -4,16 +4,16 @@ include ../make.inc
 all:  xmain_LAPACK.exe  
 
 xN2T.o: xN2T.c
-	$(CC) -c $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) -I$(INCLUDELILA) xN2T.c
+	$(CC) -c $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) xN2T.c
 
 xV2N.o: xV2N.c
-	$(CC) -c $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) -I$(INCLUDELILA) xV2N.c
+	$(CC) -c $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) xV2N.c
 
 nV2T.o: nV2T.c
-	$(CC) -c $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) -I$(INCLUDELILA) nV2T.c
+	$(CC) -c $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) nV2T.c
 
 main_LAPACK.o: main_LAPACK.c
-	$(CC) -c $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) -I$(INCLUDELILA) main_LAPACK.c
+	$(CC) -c $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) main_LAPACK.c
 
 liblila.a: ../src/dgeqr3.c \
 	../src/lila_dgeqrf_mt.c \
