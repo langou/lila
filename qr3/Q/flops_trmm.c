@@ -1,6 +1,6 @@
 #include "qr3.h"
 
-unsigned long int flops_trmm( int m, int n, char S ){
+unsigned long int flops_trmm( char S, int m, int n ){
 
 	unsigned long int u_m, u_n, flops;
 

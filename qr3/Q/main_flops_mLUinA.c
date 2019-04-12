@@ -13,7 +13,7 @@ int main(int argc, char ** argv) {
 		}
 	}
 
-	printf("%d %lu %lu\n", n, flops_V2N( n ), flops_V2N_check( n ) );
+	printf("%d %lu %lu\n", n, flops_mLUinA( n ), flops_mLUinA_check( n ) );
 
 	return 0;
 
