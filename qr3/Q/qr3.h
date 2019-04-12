@@ -13,7 +13,9 @@
 #include "mkl.h"
 #endif
 
-//extern int dorg2r_( int *m, int *n, int *k, double *a, int *lda, double *tau, double *work, int *info );
+#if !defined(USE_MKL)
+extern int dorg2r_( int *m, int *n, int *k, double *a, int *lda, double *tau, double *work, int *info );
+#endif
 
 extern int ULTinU( int n, double *L, int ldl, double *U, int ldu );
 extern int ApUBTinA( int m, int n, double *A, int lda, double *U, int ldu, double *B, int ldb );
