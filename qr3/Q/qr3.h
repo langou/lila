@@ -3,9 +3,15 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
+
+#if !defined(USE_MKL)
+#include "cblas.h"
+#include "lapacke.h"
+#endif
+
+#if defined(USE_MKL)
 #include "mkl.h"
-//#include "cblas.h"
-//#include "lapacke.h"
+#endif
 
 //extern int dorg2r_( int *m, int *n, int *k, double *a, int *lda, double *tau, double *work, int *info );
 
