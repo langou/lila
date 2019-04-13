@@ -1,22 +1,19 @@
 
 unix("make  && source ./test-tmp.sh > K");
 load("K");
-k=K(:,1);
-f=K(:,2);
+m=K(:,1);
+n=K(:,2);
+f=K(:,4);
 
 b = f;
-b = f - 2/3.*(k).^3 + 2/3 * k;
+k = m.^2.*n + m.*n;
 
+[ b k b-k ]
 
-%[ k f (2/3.*(k).^3 - 2/3.*k) b b./f]
-
-%return
-
-%A = [ k k.*ceil(log2(k)) k.*floor(log2(k)) ceil(log2(k)) floor(log2(k)) ones(size(k)) ];
-A = [ k.^3 k.^2 k  ones(size(k)) ];
+%A = [ m.^2.*n + m.*n  ];
 %format rat
-x = A\b
+%x = A\b
 
-format long g
-[ k b round(b) A*x b-A*x ]
+%format long g
+%[ k b round(b) A*x b-A*x ]
 

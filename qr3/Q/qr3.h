@@ -37,11 +37,15 @@ extern unsigned long int flops_syrk( int n, int k );
 extern unsigned long int flops_larft( int m, int k );
 extern unsigned long int flops_larfb( int m, int n, int k );
 
-extern unsigned long int flops_V2N( int n );
 extern unsigned long int flops_VT2Q( int m, int n );
 extern unsigned long int flops_N2T( int n );
+
 extern unsigned long int flops_mLUinA( int n );
+extern unsigned long int flops_V2N( int n );
+extern unsigned long int flops_ApUBTinA( int m, int n );
 
 extern unsigned long int flops_mLUinA_check( int n );
 extern unsigned long int flops_V2N_check( int n );
+extern unsigned long int flops_ApUBTinA_check( int m, int n );
+
 
