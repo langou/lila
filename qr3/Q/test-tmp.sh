@@ -1,8 +1,5 @@
 #!/bin/bash
-for i in {1..50}
+for i in {1..10}
 do
-for j in {1..50}
-do
-./xmain_flops_ApUBTinA.exe -m $i -n $j
-done
+./xmain_flops_ULTinU.exe -n $i
 done

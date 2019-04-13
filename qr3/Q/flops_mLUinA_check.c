@@ -10,11 +10,10 @@ unsigned long int flops_mLUinA_check( int n ){
 
 	if ( n <= 1 ){
 
-		return (( unsigned long int ) 0 );
-
 	} else {
 
 		n1 = n/2; 
+
 		n2 = n - n1;
 
 		flops += flops_mLUinA( n2 );
@@ -27,8 +26,8 @@ unsigned long int flops_mLUinA_check( int n ){
 
 		flops += flops_mLUinA( n1 );
 
-		return flops;
-
 	}
+
+	return flops;
 
 }

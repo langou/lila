@@ -1,19 +1,20 @@
 
 unix("make  && source ./test-tmp.sh > K");
 load("K");
-m=K(:,1);
-n=K(:,2);
-f=K(:,4);
+n=K(:,1);
+f=K(:,3);
 
 b = f;
-k = m.^2.*n + m.*n;
+k = [ (2*n.^3+3*n.^2-5*n)/6   ];
 
-[ b k b-k ]
+[ n b k b-k ]
+return
 
-%A = [ m.^2.*n + m.*n  ];
-%format rat
-%x = A\b
+A = [ n.^3 n.^2 n ones(size(n))  ];
+format rat
+x = A\b
 
-%format long g
-%[ k b round(b) A*x b-A*x ]
+
+format long g
+[ k b round(b) A*x b-A*x ]
 

@@ -43,9 +43,12 @@ extern unsigned long int flops_N2T( int n );
 extern unsigned long int flops_mLUinA( int n );
 extern unsigned long int flops_V2N( int n );
 extern unsigned long int flops_ApUBTinA( int m, int n );
+extern unsigned long int flops_ULTinU( int n );
 
 extern unsigned long int flops_mLUinA_check( int n );
 extern unsigned long int flops_V2N_check( int n );
 extern unsigned long int flops_ApUBTinA_check( int m, int n );
+extern unsigned long int flops_ULTinU_check( int n );
+
 
 
