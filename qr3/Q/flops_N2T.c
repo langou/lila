@@ -6,7 +6,7 @@ unsigned long int flops_N2T( int n ){
 
 	u_n = ( unsigned long int ) n;
 
-	flops = 0;
+	flops = ( u_n * u_n * u_n - u_n ) / (( unsigned long int ) 3 );
 
 	return flops;
 

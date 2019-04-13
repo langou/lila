@@ -23,7 +23,7 @@ int main(int argc, char ** argv) {
 		}
 	}
 
-	printf("%d %d %d %lu\n", m, n, k, flops_org2r( m, n, k ) );
+	printf("%5d %5d %5d %15lu\n", m, n, k, flops_org2r( m, n, k ) );
 
 	return 0;
 

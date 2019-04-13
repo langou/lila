@@ -12,7 +12,7 @@ unsigned long int flops_trmm( char S, int m, int n ){
 	}
 
 	if( S == 'R' ){
-		flops = u_n * u_n * u_m;
+		flops = u_m * u_n * u_n;
 	}
 
 	return flops;

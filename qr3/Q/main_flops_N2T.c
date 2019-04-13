@@ -13,7 +13,7 @@ int main(int argc, char ** argv) {
 		}
 	}
 
-	printf("%5d %15lu %15lu\n", n, flops_ULTinU( n ), flops_ULTinU_check( n ) );
+	printf("%5d %15lu %15lu\n", n, flops_N2T( n ), flops_N2T_check( n ) );
 
 	return 0;
 
