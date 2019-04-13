@@ -115,7 +115,7 @@ int main(int argc, char ** argv) {
 //	info = LAPACKE_dorgqr( LAPACK_COL_MAJOR, m, n, n, Q, ldq, tau );
 
 //	dorgqr_( &m, &n, &n, Q, &ldq, tau, work, &lwork, &info );
-//	our_dorgqr( m, n, n, nb, nb, 0, Q, ldq, tau, work, lwork, info );
+//	our_dorgqr( m, n, n, nb, Q, ldq, tau, work, lwork, info );
 //	dV2Q( m, n, n, nb, nb, 0, Q, ldq, tau, work, lwork, info );
 
 	gettimeofday(&tp, NULL);
