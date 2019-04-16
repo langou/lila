@@ -7,7 +7,7 @@ int our_dorgqr( int m, int n, int k, int nb, double *A, int lda, double *tau, do
 	
 	ldwork = n;
 
-	kk    = n;
+	kk  = n;
 
 	ml  = m-kk;
 	nl  = n-kk;
