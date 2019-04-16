@@ -29,9 +29,11 @@ unsigned long int flops_lapack_orgqr_check( int m, int n, int k, int nb ){
 		nl += ib;		
 		kk -= ib;
 	
-		flops += flops_larft( ml, ib );
+		//printf("larft = %lu\n",flops_larft( ml, ib ) - (ml-1));
+		flops += flops_larft( ml, ib ) - (ml-1);
+		//flops += flops_larft( ml, ib );
 
-		flops += flops_larfb( ml, nl-ib, ib );
+		flops += flops_lapack_larfb( ml, nl-ib, ib );
 
 		flops += flops_org2r( ml, ib, ib );
 

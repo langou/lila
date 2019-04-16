@@ -2,9 +2,13 @@
 
 unsigned long int flops_ApUBTinA( int m, int n ){
 
-	unsigned long int flops;
+	unsigned long int u_m, u_n, flops;
 
-	flops = (( unsigned long int ) m ) * (( unsigned long int ) m ) * (( unsigned long int ) n ) + (( unsigned long int ) m ) * (( unsigned long int ) n );
+	u_m = ( unsigned long int ) m;
+
+	u_n = ( unsigned long int ) n;
+
+	flops = u_m * u_m * u_n + u_m * u_n ;
 
 	return flops;
 

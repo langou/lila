@@ -25,6 +25,8 @@ extern int qr3_test_qr_repres_1( double *repres, int m, int n, double *A, int ld
 extern int qr3_test_qq_orth_1( double *norm_orth_1, int m, int n, double *Q, int ldq  );
 
 extern int our_dorgqr( int m, int n, int k, int nb, double *A, int lda, double *tau, double *work, int lwork, int info );
+extern int our_dlarfb_lnfc( int m, int n, int k, double *V, int ldv, double *T, int ldt, double *C, int ldc, double *W );
+
 extern int dV2N( int n, double *T, int ldt );
 extern int dN2T( int n, double *tau, double *T, int ldt );
 extern int dV2Q( int m, int n, int k, int nb, int nbmin, int nx, double *A, int lda, double *tau, double *work, int lwork, int info );
@@ -51,7 +53,11 @@ extern unsigned long int flops_ULTinU_check( int n );
 extern unsigned long int flops_N2T_check( int n );
 extern unsigned long int flops_VT2Q_check( int m, int n );
 
-unsigned long int flops_lapack_orgqr( int m, int n, int k, int nb );
-unsigned long int flops_lapack_orgqr_check( int m, int n, int k, int nb );
+extern unsigned long int flops_lapack_orgqr( int m, int n, int k, int nb );
+extern unsigned long int flops_lapack_orgqr_check( int m, int n, int k, int nb );
+
+extern unsigned long int flops_lapack_larfb( int m, int n, int k );
+extern unsigned long int flops_lapack_larfb_check( int m, int n, int k );
+
 
 

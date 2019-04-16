@@ -8,16 +8,17 @@ unsigned long int flops_org2r( int m, int n, int k ){
 	u_n = ( unsigned long int ) n;
 	u_k = ( unsigned long int ) k;
 
-	flops = ( (( unsigned long int ) 12 ) * u_m * u_n * u_k
-		- (( unsigned long int )  6 ) * ( u_m + u_n ) * u_k * u_k 
-		+ (( unsigned long int )  4 ) * u_k * u_k * u_k
-		+ (( unsigned long int )  6 ) * u_m * u_k 
-		- (( unsigned long int )  3 ) * u_k * u_k 
-		- (( unsigned long int )  1 ) * u_k ) 
-		/ (( unsigned long int )  3 );
+//	flops = ( (( unsigned long int ) 12 ) * u_m * u_n * u_k
+//		- (( unsigned long int )  6 ) * ( u_m + u_n ) * u_k * u_k 
+//		+ (( unsigned long int )  4 ) * u_k * u_k * u_k
+//		+ (( unsigned long int )  6 ) * u_m * u_k 
+//		- (( unsigned long int )  3 ) * u_k * u_k 
+//		- (( unsigned long int )  1 ) * u_k ) 
+//		/ (( unsigned long int )  3 );
+
+	flops = ( (( unsigned long int ) 6 ) * u_m * u_n * u_n + (( unsigned long int ) 6 ) * u_m * u_n
+		- (( unsigned long int ) 2 ) * u_n * u_n * u_n - (( unsigned long int ) 4 ) * u_n ) / ((unsigned long int ) 3 );
 
 	return flops;
 
 }
-
-

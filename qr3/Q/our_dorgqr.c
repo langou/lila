@@ -3,11 +3,9 @@
 int our_dorgqr( int m, int n, int k, int nb, double *A, int lda, double *tau, double *work, int lwork, int info ){
 
 	double *Akk, *A0k, *Aik, *tauk;
-	int kk, ml, nl, ib, i, j, flops, ldwork;
+	int kk, ml, nl, ib, i, j, ldwork;
 	
 	ldwork = n;
-
-	flops = 0;
 
 	kk    = n;
 
@@ -30,7 +28,6 @@ int our_dorgqr( int m, int n, int k, int nb, double *A, int lda, double *tau, do
 
 	for( i = 0; i < kk; i++){ for( j = 0; j < ib; j++ ){ A0k[i+j*lda] = (+0.0e00); } }
 
-	flops += flops_org2r( ml, ib, ib );
 	dorg2r_( &ml, &ib, &ib, Akk, &lda, tauk, work, &lwork );
 
 	while( kk > 0 ){
@@ -46,20 +43,18 @@ int our_dorgqr( int m, int n, int k, int nb, double *A, int lda, double *tau, do
 		nl += ib;		
 		kk -= ib;
 	
-		flops += flops_larft( ml, ib );
-		info = LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', ml, ib, Akk, lda, tauk, work, ldwork);
+//		info = LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', ml, ib, Akk, lda, tauk, work, ldwork);
+		info = LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', ml, ib, Akk, lda, tauk, work, ib);
 
-		flops += flops_larfb( ml, nl-ib, ib );
-		info = LAPACKE_dlarfb_work( LAPACK_COL_MAJOR, 'L', 'N', 'F', 'C', ml, nl-ib, ib, Akk, lda, work, ldwork, Akk+ib*lda, lda, work+ib, ldwork);
+//		info = LAPACKE_dlarfb_work( LAPACK_COL_MAJOR, 'L', 'N', 'F', 'C', ml, nl-ib, ib, Akk, lda, work, ldwork, Akk+ib*lda, lda, work+ib, ldwork);
+		info = our_dlarfb_lnfc( ml, nl-ib, ib, Akk, lda, work, ib, Akk+ib*lda, lda, work+ib*ib );
 
-		flops += flops_org2r( ml, ib, ib );
 		dorg2r_( &ml, &ib, &ib, Akk, &lda, tauk, work, &lwork );
 
 		for( i = 0; i < kk; i++){ for( j = 0; j < ib; j++ ){ A0k[i+j*lda] = (+0.0e00); } }
 
 	}	
 
-	printf("flops in total = %d\n", flops);
-	return flops;
+	return 0;
 
 }
