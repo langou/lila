@@ -1,13 +1,13 @@
 #include "qr3.h"
 
-unsigned long int flops_larft( int m, int k ){
+long int flops_larft( int int_m, int int_k ){
 
-	unsigned long int u_m, u_k, flops;
+	long int m, k, flops;
 
-	u_m = ( unsigned long int ) m;
-	u_k = ( unsigned long int ) k;
+	m = ( long int ) int_m;
+	k = ( long int ) int_k;
 
-	flops = ((( unsigned long int ) 3) * u_m * u_k * u_k - u_k * u_k * u_k ) / (( unsigned long int ) 3) ;
+	flops = ((( long int ) 3) * m * k * k - k * k * k - (( long int ) 3) * m + (( long int ) 3) ) / (( long int ) 3) ;
 
 	return flops;
 

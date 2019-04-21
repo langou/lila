@@ -1,18 +1,18 @@
 #include "qr3.h"
 
-unsigned long int flops_trmm( char S, int m, int n ){
+long int flops_trmm( char S, int int_m, int int_n ){
 
-	unsigned long int u_m, u_n, flops;
+	long int m, n, flops;
 
-	u_m = ( unsigned long int ) m;
-	u_n = ( unsigned long int ) n;
+	m = ( long int ) int_m;
+	n = ( long int ) int_n;
 
 	if( S == 'L' ){
-		flops = u_n * u_m * u_m;
+		flops = n * m * m;
 	}
 
 	if( S == 'R' ){
-		flops = u_m * u_n * u_n;
+		flops = m * n * n;
 	}
 
 	return flops;

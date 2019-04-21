@@ -1,57 +1,50 @@
 #include "qr3.h"
 
-int our_dorgqr( int m, int n, int k, int nb, double *A, int lda, double *tau, double *work, int lwork, int info ){
+int our_dorgqr( int m, int n, int k, int nb, double *A, int lda, double *tau, double *work, int lwork ){
 
-	double *Akk, *A0k, *Aik, *tauk;
-	int kk, ml, nl, ib, i, j, ldwork;
+	double *A11, *A01, *A12, *tau1;
+	int k0, m1, n1, n2, ib, i, j, ldwork;
 	
 	ldwork = n;
 
-	kk    = n;
+	ib = k%nb; if (ib==0) ib=nb;
 
-	ml  = m-kk;
-	nl  = n-kk;
+	k0 = k-ib;
 
-	A0k  = A+kk*lda;
-	Akk  = A+kk+kk*lda;
-	tauk = tau+kk;
+	m1 = m-k0;
+	n1 = n-k0;
 
-	ib = nb; if( kk - ib < 0 ) ib = n - nl;
+	A01 = A+k0*lda;
+	A11 = A+k0*(1+lda);
+	tau1 = tau+k0;
 
-	A0k  -= ib*lda;	
-	Akk  -= ib*(1+lda);
-	tauk -= ib;
+	dorg2r_( &m1, &n1, &ib, A11, &lda, tau1, work, &lwork );
 
-	ml += ib;		
-	nl += ib;		
-	kk -= ib;
+	for( i = 0; i < k0; i++){ for( j = 0; j < n1; j++ ){ A01[i+j*lda] = (+0.0e00); } }
 
-	for( i = 0; i < kk; i++){ for( j = 0; j < ib; j++ ){ A0k[i+j*lda] = (+0.0e00); } }
+	while( k0 > 0 ){
 
-	dorg2r_( &ml, &ib, &ib, Akk, &lda, tauk, work, &lwork );
+		ib = nb; if( k0 - ib < 0 ) ib = k0;
 
-	while( kk > 0 ){
+		A01  -= ib*lda;
+		A11  -= ib*(1+lda);
+		A12   = A11+ib*lda;
+		tau1 -= ib;
 
-		ib = nb; if( kk - ib < 0 ) ib = n - nl;
-
-		A0k  -= ib*lda;
-		Akk  -= ib*(1+lda);
-		Aik   = Akk+ib*lda;
-		tauk -= ib;
-
-		ml += ib;		
-		nl += ib;		
-		kk -= ib;
+		n2 = n1;
+		m1 += ib;		
+		n1 += ib;
+		k0 -= ib;		
 	
-//		info = LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', ml, ib, Akk, lda, tauk, work, ldwork);
-		info = LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', ml, ib, Akk, lda, tauk, work, ib);
+//		LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', m1, ib, A11, lda, tau1, work, ldwork);
+		LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', m1, ib, A11, lda, tau1, work, ib);
 
-//		info = LAPACKE_dlarfb_work( LAPACK_COL_MAJOR, 'L', 'N', 'F', 'C', ml, nl-ib, ib, Akk, lda, work, ldwork, Akk+ib*lda, lda, work+ib, ldwork);
-		info = our_dlarfb_lnfc( ml, nl-ib, ib, Akk, lda, work, ib, Akk+ib*lda, lda, work+ib*ib );
+//		LAPACKE_dlarfb_work( LAPACK_COL_MAJOR, 'L', 'N', 'F', 'C', m1, n2, ib, A11, lda, work, ldwork, A12, lda, work+ib, ldwork);
+		our_dlarfb_lnfc( m1, n2, ib, A11, lda, work, ib, A12, lda, work+ib*ib );
 
-		dorg2r_( &ml, &ib, &ib, Akk, &lda, tauk, work, &lwork );
+		dorg2r_( &m1, &ib, &ib, A11, &lda, tau1, work, &lwork );
 
-		for( i = 0; i < kk; i++){ for( j = 0; j < ib; j++ ){ A0k[i+j*lda] = (+0.0e00); } }
+		for( i = 0; i < k0; i++){ for( j = 0; j < ib; j++ ){ A01[i+j*lda] = (+0.0e00); } }
 
 	}	
 

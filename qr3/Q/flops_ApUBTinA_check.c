@@ -1,16 +1,16 @@
 #include "qr3.h"
 
-unsigned long int flops_ApUBTinA_check( int m, int n ){
+long int flops_ApUBTinA_check( int m, int n ){
 
-	unsigned long int flops;
+	long int flops;
 
 	int m1, m2, n1, n2;
 
-	flops = (( unsigned long int ) 0 );
+	flops = (( long int ) 0 );
 
 	if (( m <= 1 )&&( n<=1 )){
 
-		return (( unsigned long int ) 2 );
+		return (( long int ) 2 );
 
 	} else {
 

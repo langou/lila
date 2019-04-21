@@ -1,12 +1,12 @@
 #include "qr3.h"
 
-unsigned long int flops_mLUinA( int n ){
+long int flops_mLUinA( int int_n ){
 
-	unsigned long int u_n, flops;
+	long int n, flops;
 
-	u_n = ( unsigned long int ) n;
+	n = ( long int ) int_n;
 
-	flops = ( (( unsigned long int ) 2 ) * ( u_n * u_n * u_n - u_n ) ) / (( unsigned long int ) 3 );
+	flops = ( (( long int ) 2 ) * ( n * n * n - n ) ) / (( long int ) 3 );
 
 	return flops;
 

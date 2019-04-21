@@ -1,10 +1,10 @@
 #include "qr3.h"
 
-unsigned long int flops_VT2Q_check( int m, int n ){
+long int flops_VT2Q_check( int m, int n ){
 
-	unsigned long int flops;
+	long int flops;
 
-	flops = (( unsigned long int ) 0 );
+	flops = (( long int ) 0 );
 
 	flops += flops_ULTinU( n );
 
@@ -12,7 +12,7 @@ unsigned long int flops_VT2Q_check( int m, int n ){
 
 	flops += flops_mLUinA( n );
 
-	flops += (( unsigned long int ) n );
+	flops += (( long int ) n );
 
 	return flops;
 

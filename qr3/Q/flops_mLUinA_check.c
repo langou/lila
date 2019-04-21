@@ -1,12 +1,12 @@
 #include "qr3.h"
 
-unsigned long int flops_mLUinA_check( int n ){
+long int flops_mLUinA_check( int n ){
 
-	unsigned long int flops;
+	long int flops;
 
 	int n1, n2;
 
-	flops = (( unsigned long int ) 0 );
+	flops = (( long int ) 0 );
 
 	if ( n <= 1 ){
 

@@ -1,12 +1,12 @@
 #include "qr3.h"
 
-extern unsigned long int flops_N2T_check( int n ){
+long int flops_N2T_check( int n ){
 
-	unsigned long int flops;
+	long int flops;
 
 	int n1, n2; 
 
-	flops = (( unsigned long int ) 0 );
+	flops = (( long int ) 0 );
 
 	if ( n <= 1 ) {
 

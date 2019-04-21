@@ -1,14 +1,14 @@
 #include "qr3.h"
 
-unsigned long int flops_gemm( int m, int n, int k ){
+long int flops_gemm( int int_m, int int_n, int int_k ){
 
-	unsigned long int u_m, u_n, u_k, flops;
+	long int m, n, k, flops;
 
-	u_m = ( unsigned long int ) m;
-	u_n = ( unsigned long int ) n;
-	u_k = ( unsigned long int ) k;
+	m = ( long int ) int_m;
+	n = ( long int ) int_n;
+	k = ( long int ) int_k;
 
-	flops = (( unsigned long int ) 2) * u_m * u_n * u_k;
+	flops = (( long int ) 2) * m * n * k;
 
 	return flops;
 

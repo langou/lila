@@ -1,11 +1,14 @@
 #!/bin/bash
-for i in {11..20}
+for (( m=11; m<=20; m++ ))
 do
-for j in {1..10}
+for (( k=5; k<=$m; k+=2 ))
 do
-for k in {1..10}
+for (( n=$k; n<=$m; n++ ))
 do
-./xmain_flops_lapack_orgqr.exe -m $i -n $j -k $k -nb 1
+for (( nb=1; nb<=10; nb+=3 ))
+do
+./xmain_flops_lapack_orgqr.exe -m $m -n $n -k $k -nb $nb
+done
 done
 done
 done

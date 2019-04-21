@@ -1,10 +1,10 @@
 #include "qr3.h"
 
-unsigned long int flops_lapack_larfb_check( int m, int n, int k ){
+long int flops_lapack_larfb_check( int m, int n, int k ){
 
-	unsigned long int flops;
+	long int flops;
 
-	flops = (( unsigned long int ) 0 );
+	flops = (( long int ) 0 );
 
 	flops += flops_trmm( 'L', k, n );
 
@@ -16,7 +16,7 @@ unsigned long int flops_lapack_larfb_check( int m, int n, int k ){
 
 	flops += flops_trmm( 'L', k, n );
 
-	flops += (( unsigned long int ) n ) * (( unsigned long int ) k );
+	flops += (( long int ) n ) * (( long int ) k );
 
 	return flops;
 

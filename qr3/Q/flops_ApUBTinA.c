@@ -1,14 +1,14 @@
 #include "qr3.h"
 
-unsigned long int flops_ApUBTinA( int m, int n ){
+long int flops_ApUBTinA( int int_m, int int_n ){
 
-	unsigned long int u_m, u_n, flops;
+	long int m, n, flops;
 
-	u_m = ( unsigned long int ) m;
+	m = ( long int ) int_m;
 
-	u_n = ( unsigned long int ) n;
+	n = ( long int ) int_n;
 
-	flops = u_m * u_m * u_n + u_m * u_n ;
+	flops = m * m * n + m * n ;
 
 	return flops;
 

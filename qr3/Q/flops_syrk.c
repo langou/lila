@@ -1,13 +1,13 @@
 #include "qr3.h"
 
-unsigned long int flops_syrk( int n, int k ){
+long int flops_syrk( int int_n, int int_k ){
 
-	unsigned long int u_n, u_k, flops;
+	long int n, k, flops;
 
-	u_n = ( unsigned long int ) n;
-	u_k = ( unsigned long int ) k;
+	n = ( long int ) int_n;
+	k = ( long int ) int_k;
 
-	flops = u_k * u_n * u_n;
+	flops = k * n * n;
 
 	return flops;
 

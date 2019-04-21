@@ -1,41 +1,39 @@
 #include "qr3.h"
 
-unsigned long int flops_lapack_orgqr_check( int m, int n, int k, int nb ){
+long int flops_lapack_orgqr_check( int m, int n, int k, int nb ){
 
-	unsigned long int flops;
+	long int flops;
 
-	int kk, ml, nl, ib;
+	int k0, m1, n1, n2, ib;
 
-	flops = (( unsigned long int ) 0 );
-
-	kk    = n;
-
-	ml  = m-kk;
-	nl  = n-kk;
-
-	ib = nb; if( kk - ib < 0 ) ib = n - nl;
-
-	ml += ib;		
-	nl += ib;		
-	kk -= ib;
-
-	flops += flops_org2r( ml, ib, ib );
-
-	while( kk > 0 ){
-
-		ib = nb; if( kk - ib < 0 ) ib = n - nl;
-
-		ml += ib;		
-		nl += ib;		
-		kk -= ib;
+	flops = (( long int ) 0 );
 	
-		//printf("larft = %lu\n",flops_larft( ml, ib ) - (ml-1));
-		flops += flops_larft( ml, ib ) - (ml-1);
-		//flops += flops_larft( ml, ib );
+	ib = k%nb; if (ib==0) ib=nb;
 
-		flops += flops_lapack_larfb( ml, nl-ib, ib );
+	k0 = k-ib;
 
-		flops += flops_org2r( ml, ib, ib );
+	m1 = m-k0;
+	n1 = n-k0;
+
+	//flops += flops_org2r( m1, n1, ib );
+
+	int kb;
+	kb = 1;
+
+	while( k0 > 0 ){
+
+		ib = nb; if( k0 - ib < 0 ) ib = k0;
+
+		n2 = n1;
+		m1 += ib;		
+		n1 += ib;
+		k0 -= ib;		
+
+//		flops += flops_larft( m1, ib );
+	
+//		flops += flops_lapack_larfb( m1, n2, ib );
+
+//		flops += flops_org2r( m1, ib, ib );
 
 	}	
 

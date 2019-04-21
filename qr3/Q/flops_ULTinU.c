@@ -1,12 +1,12 @@
 #include "qr3.h"
 
-unsigned long int flops_ULTinU( int n ){
+long int flops_ULTinU( int int_n ){
 
-	unsigned long int u_n, flops;
+	long int n, flops;
 
-	u_n = ( unsigned long int ) n;
+	n = ( long int ) int_n;
 
-	flops = ( (( unsigned long int ) 2 ) * u_n * u_n * u_n + (( unsigned long int ) 3 ) * u_n * u_n - (( unsigned long int ) 5 ) * u_n ) / (( unsigned long int ) 6 );
+	flops = ( (( long int ) 2 ) * n * n * n + (( long int ) 3 ) * n * n - (( long int ) 5 ) * n ) / (( long int ) 6 );
 
 	return flops;
 
