@@ -61,6 +61,13 @@ extern long int flops_lapack_larfb_check( int m, int n, int k );
 
 extern long int flops_lapack_orgqr_from_last_org2r( int int_m, int int_n, int int_k, int int_b );
 extern long int flops_lapack_orgqr_from_first_org2r( int int_m, int int_n, int int_k, int int_b );
+extern long int flops_lapack_orgqr_from_larft( int int_m, int int_n, int int_k, int int_b );
+
+extern long int flops_org2r_n1( int int_m );
+extern long int flops_lapack_larf( int int_m, int int_n );
+extern long int flops_org2r_check( int m, int n, int k );
+
+
 
 
 

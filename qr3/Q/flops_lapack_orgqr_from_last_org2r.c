@@ -2,13 +2,12 @@
 
 long int flops_lapack_orgqr_from_last_org2r( int int_m, int int_n, int int_k, int int_b ){
 
-	long int m, n, k, b, flops;
+	long int m, k, b, flops;
 	long int kb;
 
 	flops = (( long int ) 0 );
 
 	m = ( long int ) int_m;
-	n = ( long int ) int_n;
 	k = ( long int ) int_k;
 	b = ( long int ) int_b;
 

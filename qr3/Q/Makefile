@@ -21,8 +21,8 @@ xmain_flops_VT2Q.exe: main_flops_VT2Q.o flops_trmm.o flops_ULTinU.o flops_mLUinA
 xmain_flops_mLUinA.exe: main_flops_mLUinA.o flops_trmm.o flops_gemm.o flops_mLUinA.o flops_mLUinA_check.o
 	$(LOADER) -o $@ main_flops_mLUinA.o flops_trmm.o flops_gemm.o flops_mLUinA.o flops_mLUinA_check.o
 
-xmain_flops_org2r.exe: main_flops_org2r.o flops_org2r.o
-	$(LOADER) -o $@ main_flops_org2r.o flops_org2r.o
+xmain_flops_org2r.exe: main_flops_org2r.o flops_org2r.o flops_org2r_check.o
+	$(LOADER) -o $@ main_flops_org2r.o flops_org2r.o flops_org2r_check.o
 
 xmain_flops_ApUBTinA.exe: main_flops_ApUBTinA.o flops_gemm.o flops_ApUBTinA.o flops_ApUBTinA_check.o
 	$(LOADER) -o $@  main_flops_ApUBTinA.o flops_gemm.o flops_ApUBTinA.o flops_ApUBTinA_check.o
@@ -30,8 +30,8 @@ xmain_flops_ApUBTinA.exe: main_flops_ApUBTinA.o flops_gemm.o flops_ApUBTinA.o fl
 xmain_flops_ULTinU.exe: main_flops_ULTinU.o flops_ULTinU.o flops_ULTinU_check.o flops_ApUBTinA.o flops_trmm.o
 	$(LOADER) -o $@  main_flops_ULTinU.o flops_ULTinU.o flops_ULTinU_check.o flops_ApUBTinA.o flops_trmm.o
 
-xmain_flops_lapack_orgqr.exe: main_flops_lapack_orgqr.o flops_larft.o flops_lapack_larfb.o flops_org2r.o flops_lapack_orgqr.o flops_lapack_orgqr_check.o flops_lapack_orgqr_from_last_org2r.o flops_lapack_orgqr_from_first_org2r.o
-	$(LOADER) -o $@  main_flops_lapack_orgqr.o flops_larft.o flops_lapack_larfb.o flops_org2r.o flops_lapack_orgqr.o flops_lapack_orgqr_check.o flops_lapack_orgqr_from_last_org2r.o flops_lapack_orgqr_from_first_org2r.o
+xmain_flops_lapack_orgqr.exe: main_flops_lapack_orgqr.o flops_larft.o flops_lapack_larfb.o flops_org2r.o flops_lapack_orgqr.o flops_lapack_orgqr_check.o flops_lapack_orgqr_from_last_org2r.o flops_lapack_orgqr_from_first_org2r.o flops_lapack_orgqr_from_larft.o  flops_org2r_n1.o flops_lapack_larf.o
+	$(LOADER) -o $@  main_flops_lapack_orgqr.o flops_larft.o flops_lapack_larfb.o flops_org2r.o flops_lapack_orgqr.o flops_lapack_orgqr_check.o flops_lapack_orgqr_from_last_org2r.o flops_lapack_orgqr_from_first_org2r.o  flops_lapack_orgqr_from_larft.o flops_org2r_n1.o flops_lapack_larf.o
 
 xmain_flops_lapack_larfb.exe: main_flops_lapack_larfb.o flops_gemm.o flops_trmm.o flops_lapack_larfb.o flops_lapack_larfb_check.o
 	$(LOADER) -o $@  main_flops_lapack_larfb.o flops_gemm.o flops_trmm.o flops_lapack_larfb.o flops_lapack_larfb_check.o

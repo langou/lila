@@ -12,10 +12,10 @@ long int flops_org2r( int int_m, int int_n, int int_k ){
 		- (( long int )  6 ) * m * k * k 
 		- (( long int )  6 ) * n * k * k 
 		+ (( long int )  4 ) * k * k * k
-		+ (( long int )  6 ) * m * k 
-		- (( long int )  3 ) * k * k 
-		- (( long int )  1 ) * k 
-		- (( long int )  3 ) ) 
+		+ (( long int )  9 ) * n * k 
+		- (( long int )  3 ) * m * k 
+		- (( long int )  3 ) * k * k
+		- (( long int )  4 ) * k ) 
 		/ (( long int )  3 );
 
 	return flops;

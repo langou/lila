@@ -1,10 +1,12 @@
 #include "qr3.h"
 
-long int flops_lapack_orgqr_check( int m, int n, int k, int nb ){
+long int flops_org2r_check( int m, int n, int k ){
 
 	long int flops;
 
 	int k0, m1, n1, n2, ib;
+
+	int nb = 1;
 
 	flops = (( long int ) 0 );
 	
