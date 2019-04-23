@@ -15,7 +15,7 @@ long int flops_lapack_orgqr_check( int m, int n, int k, int nb ){
 	m1 = m-k0;
 	n1 = n-k0;
 
-	//flops += flops_org2r( m1, n1, ib );
+	flops += flops_org2r( m1, n1, ib );
 
 	int kb;
 	kb = 1;
