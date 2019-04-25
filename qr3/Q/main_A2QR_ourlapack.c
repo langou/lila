@@ -95,7 +95,8 @@ int main(int argc, char ** argv) {
 
 	gettimeofday(&tp, NULL);
 	elapsed_ref=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
-	LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, k, Q, ldq, tau, work, lwork ); 
+//	LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, k, Q, ldq, tau, work, lwork ); 
+	our_dgeqrf( m, k, nb, Q, ldq, tau, work, lwork );
 	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', m, k, Q, ldq, R, ldr );
 //	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'L', m-1, k, A+1, lda, Q+1, ldq );
 //	LAPACKE_dlaset( LAPACK_COL_MAJOR, 'U', k, k, (3.0e+00), (2.0e+00), Q, ldq);

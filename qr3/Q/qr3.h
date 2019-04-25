@@ -26,6 +26,7 @@ extern int qr3_test_qq_orth_1( double *norm_orth_1, int m, int n, double *Q, int
 
 extern int our_dorgqr( int m, int n, int k, int nb, double *A, int lda, double *tau, double *work, int lwork );
 extern int our_dlarfb_lnfc( int m, int n, int k, double *V, int ldv, double *T, int ldt, double *C, int ldc, double *W );
+extern int our_dgeqrf( int m, int n, int nb, double *A, int lda, double *tau, double *work, int lwork );
 
 extern int dV2N( int n, double *T, int ldt );
 extern int dN2T( int n, double *tau, double *T, int ldt );
@@ -65,9 +66,12 @@ extern long int flops_lapack_orgqr_from_larft( int int_m, int int_n, int int_k, 
 
 extern long int flops_org2r_n1( int int_m );
 extern long int flops_lapack_larf( int int_m, int int_n );
+extern long int flops_lapack_larfg( int int_m );
 extern long int flops_org2r_check( int m, int n, int k );
 
-
+extern long int flops_lapack_geqrf_check( int m, int n, int nb );
+extern long int flops_lapack_geqr2( int int_m, int int_n );
+extern long int flops_lapack_geqrf( int int_m, int int_n, int int_nb );
 
 
 
