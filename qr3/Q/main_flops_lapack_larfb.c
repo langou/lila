@@ -23,7 +23,7 @@ int main(int argc, char ** argv) {
 		}
 	}
 
-	printf("%5d %5d %5d %15lu %15lu\n", m, n, k, flops_lapack_larfb( m, n, k ), flops_lapack_larfb_check( m, n, k ) );
+	printf("%5d %5d %5d %15ld %15ld ( %3ld )\n", m, n, k, flops_lapack_larfb( m, n, k ), flops_lapack_larfb_check( m, n, k ), flops_lapack_larfb( m, n, k ) - flops_lapack_larfb_check( m, n, k ) );
 
 	return 0;
 

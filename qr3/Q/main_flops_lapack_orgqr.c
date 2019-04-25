@@ -28,7 +28,7 @@ int main(int argc, char ** argv) {
 		}
 	}
 
-	printf("%5d %5d %5d %5d %15ld %15ld %15ld\n", m, n, k, nb,
+	printf("%5d %5d %5d %5d %15ld %15ld ( %3ld )\n", m, n, k, nb,
 		flops_lapack_orgqr_check( m, n, k, nb ),
 //		flops_lapack_orgqr_from_larft( m, n, k, nb ) );
 //		flops_lapack_orgqr_from_first_org2r( m, n, k, nb ) );
@@ -37,9 +37,7 @@ int main(int argc, char ** argv) {
 		flops_org2r( m, n, k ),
 		flops_lapack_orgqr_check( m, n, k, nb )-
 		flops_org2r( m, n, k )
-
-
- );
+	);
 
 	return 0;
 

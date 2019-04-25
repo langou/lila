@@ -19,5 +19,5 @@ long int flops_lapack_larfb_check( int m, int n, int k ){
 	flops += (( long int ) n ) * (( long int ) k );
 
 	return flops;
-
+	
 }

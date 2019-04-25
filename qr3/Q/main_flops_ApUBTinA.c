@@ -18,7 +18,7 @@ int main(int argc, char ** argv) {
 		}
 	}
 
-	printf("%5d %5d %15lu %15lu\n", m, n, flops_ApUBTinA( m, n ), flops_ApUBTinA_check( m, n ) );
+	printf("%5d %5d %15ld %15ld ( %3ld )\n", m, n, flops_ApUBTinA( m, n ), flops_ApUBTinA_check( m, n ), flops_ApUBTinA( m, n ) - flops_ApUBTinA_check( m, n ) );
 
 	return 0;
 
