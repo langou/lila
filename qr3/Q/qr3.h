@@ -33,6 +33,8 @@ extern int dN2T( int n, double *tau, double *T, int ldt );
 extern int dV2Q( int m, int n, int k, int nb, int nbmin, int nx, double *A, int lda, double *tau, double *work, int lwork, int info );
 extern int dVT2Q( int m, int n, double *Q, int ldq  );
 
+extern int dorgqr_after( int m, int n, int k, double *A, int lda, double *T, int ldt, double *Q, int ldq );
+
 extern long int flops_org2r( int m, int n, int k );
 extern long int flops_gemm( int m, int n, int k );
 extern long int flops_trmm( char S, int m, int n );
