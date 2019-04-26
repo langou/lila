@@ -77,15 +77,16 @@ long int flops_lapack_geqrf( int m, int n, int nb ){
 	flops_from_larft -= ( ( (( long int ) 2) * nb * nb * nb - nb * nb ) / (( long int ) 6) ) * kb;
 	flops_from_larft += ( ( (( long int ) 2) * nb * nb - nb ) / (( long int ) 6) ) * kb;
 
-	flops +=  flops_from_larft;
+//	flops +=  flops_from_larft;
 
 
 //	LARFB Within the loop
 
 //	this is the flops in larfb due to the ( 3: TRMM )
 	int flops_from_larfb_1 = 0;
-	flops_from_larfb_1 = ( 2 * n * nb * nb * kb - nb * nb * nb * kb * kb - nb * nb * nb * kb ) /2 ;
-//	flops_from_larfb_1 = ( n * n - n ) /2 ; // this the formula for when nb = 1
+//	flops_from_larfb_1 = ( 2 * n * nb * nb * kb - nb * nb * nb * kb * kb - nb * nb * nb * kb ) /2 ;
+	flops_from_larfb_1 = ( n * n - n ) /2 ; // this the formula for when nb = 1
+//	flops_from_larfb_1 += n * (n - kb * nb ) ; // this the formula for when nb = 1
 
 	flops +=  flops_from_larfb_1;
 
