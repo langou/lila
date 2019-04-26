@@ -28,9 +28,9 @@ long int flops_lapack_larfb( int int_m, int int_n, int int_k ){
 
 //	instead of doing:
 //	flops += k * k * n ;            // 1: TRMM
-//	flops += 2 * k * n * ( m-k );   // 2: TRMM
+//	flops += 2 * k * n * ( m-k );   // 2: GEMM
 //	flops += k * k * n ;            // 3: TRMM
-//	flops += 2 * k * n * ( m-k );   // 4: TRMM
+//	flops += 2 * k * n * ( m-k );   // 4: GEMM
 //	flops += k * k * n ;            // 5: TRMM
 //	flops += n * k;                 // 6: ADD
 
