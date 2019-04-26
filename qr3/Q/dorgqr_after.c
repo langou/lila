@@ -15,7 +15,6 @@ int dorgqr_after( int m, int n, int k, double *A, int lda, double *T, int ldt, d
 	Q3 = Q + n;
 
 	// copy V2^T into Q1
-//	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', k, n-k, A2, lda, Q1, ldq );
 	for ( i = 0; i < k; i++ ) for ( j = 0; j < n-k; j++ ) Q1[i+j*ldq] = A2[j+i*lda];
 
 	// - T * V2^T -- note putting the minus sign on this term
