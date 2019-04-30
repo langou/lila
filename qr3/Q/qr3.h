@@ -78,6 +78,11 @@ extern long int flops_lapack_geqrf( int int_m, int int_n, int int_nb );
 extern long int flops_dorgqr_after_check( int m, int n, int k );
 extern long int flops_dorgqr_after( int m, int n, int k );
  
+extern int dgeqr3_right( int m, int n, double *A, int lda, double *T, int ldt );
+extern int dgeqr3_left( int m, int n, double *A, int lda, double *T, int ldt );
+
+extern int qr3_larft( int m, int n, double *A, int lda, double *T, int ldt, double *tau ); 
+extern int qr3_dorgqr( int m, int n, double *A, int lda, double *T, int ldt, double *work, int lwork, double *tau );
 
 
 
