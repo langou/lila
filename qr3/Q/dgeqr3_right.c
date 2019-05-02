@@ -10,8 +10,7 @@ int dgeqr3_right( int m, int n, double *A, int lda, double *T, int ldt ){
 
 	if ( n == 1){
 		info = LAPACKE_dlarfg_work( m, (&A[0]), &(A[1]), 1, &(T[0]));
-	}
-	else {
+	} else {
 
 	n1 = n/2;
 	n2 = n-n1;
