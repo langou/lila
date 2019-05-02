@@ -2,9 +2,8 @@
 
 int main(int argc, char ** argv) {
 
-	int i, lda, ldq, ldr, ldt, m, n, verbose, testing;
-	int lwork;
-	double *A, *As, *Q, *R, *T, *tau, *work;
+	int i, lda, ldq, ldt, m, n, verbose, testing;
+	double *A, *As, *Q, *T;
 	double orth, repres;
 	double elapsed_ref, perform_ref;
 	struct timeval tp;
@@ -15,7 +14,6 @@ int main(int argc, char ** argv) {
     	n         = 20;
 	lda       = -1;
 	ldq       = -1;
-	ldr       = -1;
 	ldt       = -1;
 	verbose   = 0;
 	testing   = 1;
@@ -27,10 +25,6 @@ int main(int argc, char ** argv) {
 		}
 		if( strcmp( *(argv + i), "-ldq") == 0) {
 			ldq = atoi( *(argv + i + 1) );
-			i++;
-		}
-		if( strcmp( *(argv + i), "-ldr") == 0) {
-			ldr = atoi( *(argv + i + 1) );
 			i++;
 		}
 		if( strcmp( *(argv + i), "-ldt") == 0) {
@@ -59,13 +53,11 @@ int main(int argc, char ** argv) {
 
 	if( lda < 0 ) lda = m;
 	if( ldq < 0 ) ldq = m;
-	if( ldr < 0 ) ldr = n;
 	if( ldt < 0 ) ldt = n;
 
 	A  = (double *) malloc( lda * n * sizeof(double));
 	As = (double *) malloc( lda * n * sizeof(double));
 	Q  = (double *) malloc( ldq * n * sizeof(double));
- 	R  = (double *) malloc( ldr * n * sizeof(double));
  	T  = (double *) malloc( ldt * n * sizeof(double));
 
  	for(i = 0; i < lda * n; i++)
@@ -74,36 +66,18 @@ int main(int argc, char ** argv) {
 	for(i = 0; i < ldq * n; i++)
 		*(Q + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
 
-	for(i = 0; i < ldr * n; i++)
-		*(R + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
-
 	for(i = 0; i < ldt * n; i++)
-		*(R + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
+		*(T + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
 
-	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', m, n, A, lda, As, lda );
-	tau = (double *) malloc( n * sizeof(double));
-
-	work = (double *) malloc( 1 * sizeof(double));
-	LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, n, Q, ldq, tau, work, -1 ); 
-	lwork = ((int) work[0]);
-	LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, m, n, n, Q, ldq, tau, work, -1 );
-	if (lwork < ((int) work[0])) lwork = ((int) work[0]); 
-	free( work );
-	work = (double *) malloc( lwork * sizeof(double));
+	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n, A, lda, As, lda );
 
 	gettimeofday(&tp, NULL);
 	elapsed_ref=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-	qr3_dA2QRTV_fake( m, n, A, lda, Q, ldq, T, ldt );
-
-	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', n, n, A, lda, R, ldr );
-
+	qr3_dA2QRTV( m, n, A, lda, Q, ldq, T, ldt );
 
 	gettimeofday(&tp, NULL);
 	elapsed_ref+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
-
-	free( tau );
-	free( work );
 
 	perform_ref = ((double) flops_org2r( m, n, n )) / elapsed_ref / 1.0e+9 ;
 
@@ -127,17 +101,17 @@ int main(int argc, char ** argv) {
 		qr3_test_qq_orth_1( &orth, m, n, Q, ldq );		
 		if ( verbose ) printf("qq_orth  = %5.1e  \n ",orth); else printf(" %5.1e  ",orth); 
 
-		qr3_test_qr_repres_1( &repres, m, n, As, lda, A, lda, R, ldr );
+		qr3_test_qr_repres_1( &repres, m, n, As, lda, Q, lda, A, lda );
 		if ( verbose ) printf("qr_repres = %5.1e  \n ",repres); else printf(" %5.1e  ",repres); 
 
 	}
 
 	if ( !verbose ) printf("\n");		
 
-	free( A );
-	free( Q );
-	free( T );
-	free( R );
+	free( A  );
+	free( As );
+	free( Q  );
+	free( T  );
 
 	return 0;
 

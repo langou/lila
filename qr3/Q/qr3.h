@@ -85,4 +85,5 @@ extern int qr3_larft( int m, int n, double *A, int lda, double *T, int ldt, doub
 extern int qr3_dorgqr( int m, int n, double *A, int lda, double *T, int ldt, double *tau );
 
 extern int qr3_dA2QRTV_fake( int m, int n, double *A, int lda, double *Q, int ldq, double *T, int ldt );
+extern int qr3_dA2QRTV( int m, int n, double *A, int lda, double *Q, int ldq, double *T, int ldt );
 

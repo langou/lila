@@ -1,54 +1,69 @@
 #include "qr3.h"
 
-int qr3_dA2QRTV( int m, int n, double *A, int lda, double *Q, int ldq, double *R, int ldr, double *T, int ldt, double *V, int ldv ){
+int qr3_dA2QRTV( int m, int n, double *A, int lda, double *Q, int ldq, double *T, int ldt ){
 
-	double A1, A2;
-	double Q11, Q22, Q12, Q21;
-	double R1, R2;
-	double T1, T2;
-	double V1, V2;
+//	if( n <= 1 ){
 
-	int n1, n2;
+//		LAPACKE_dlarfg_work( m, (&A[0]), &(A[1]), 1, &(T[0]));
 
-	n1 = n / 2;
-	n2 = n - n1;
-
-	A11 = A;
-	A21 = A+n1;
-	A12 = A+n1*lda;
-	A22 = A+n1+n1*lda;
-
-	Q11 = Q;
-	Q21 = Q+n1;
-	Q12 = Q+n1*ldq;
-	Q22 = Q+n1+n1*ldq;
-
-	R11 = R;
-	R21 = R+n1;
-	R12 = R+n1*ldr;
-	R22 = R+n1+n1*ldr;
-
-	T11 = T;
-	T21 = T+n1;
-	T12 = T+n1*ldt;
-	T22 = T+n1+n1*ldt;
-
-	V11 = V;
-	V21 = V+n1;
-	V12 = V+n1*ldv;
-	V22 = V+n1+n1*ldv;
-
-	qr3_dA2QRTV( m, n1, A, lda, Q, ldq, R, ldr, T, ldt, V, ldv );
-
-	cblas_dgemm( CblasColMajor, CblasTrans, CblasNoTrans, n1, n2, m-n1, (+1.0e+00), Q21, ldq, Q22, ldq, (+0.0e+00), Q12, ldq );
-	cblas_dtrmm( CblasColMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, n1, n2, (+1.0e+00), T11, ldt, Q12, ldq );
-	cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans, m-n1, n2, n1, (-1.0e+00), Q21, ldq, Q12, ldq, (+1.0e+00), Q22, ldq );
-	cblas_dtrmm( CblasColMajor, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, n1, n2, (-1.0e+00), Q11, ldq, Q12, ldq );
-
-	qr3_dA2QRTV( m, n1, A, lda, Q, ldq, R, ldr, T, ldt, V, ldv );
+//		for( int i=1; i<m; i++)  Q[i] *= -(*T);
+//		(*Q) = (+1.0e+00) - (*T);
 
 
+//	} else {
 
+		double *A11, *A12, *A21, *A22;
+		double *Q11, *Q12, *Q21, *Q22;
+		double *T11, *T12, *T22;
+
+		int n1, n2, i, j;
+
+		n1 = n / 2;
+		n2 = n - n1;
+
+		A11 = A;
+		A21 = A+n1;
+		A12 = A+n1*lda;
+		A22 = A+n1+n1*lda;
+
+		Q11 = Q;
+		Q21 = Q+n1;
+		Q12 = Q+n1*ldq;
+		Q22 = Q+n1+n1*ldq;
+
+		T11 = T;
+		T12 = T+n1*ldt;
+		T22 = T+n1+n1*ldt;
+
+//		qr3_dA2QRTV( m, n1, A11, lda, Q11, ldq, T11, ldt );
+		qr3_dA2QRTV_fake( m, n1, A11, lda, Q11, ldq, T11, ldt );
+
+		// push
+		for (i=0;i<n1;i++) for (j=0;j<n2;j++) T12[i+j*ldt] = A12[i+j*lda];
+		cblas_dtrmm( CblasColMajor, CblasLeft, CblasLower, CblasTrans, CblasUnit, n1, n2, (+1.0e+00), A11, lda, T12, ldt );
+		cblas_dgemm( CblasColMajor, CblasTrans, CblasNoTrans, n1, n2, m-n1, (+1.0e+00), A21, lda, A22, lda, (+1.0e+00), T12, ldt );
+		cblas_dtrmm( CblasColMajor, CblasLeft, CblasUpper, CblasTrans, CblasNonUnit, n1, n2, (+1.0e+00), T11, ldt, T12, ldt );
+		cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans, m-n1, n2, n1, (-1.0e+00), A21, lda, T12, ldt, (+1.0e+00), A22, lda );
+		cblas_dtrmm( CblasColMajor, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, n1, n2, (+1.0e+00), A11, lda, T12, ldt );
+		for (i=0;i<n1;i++) for (j=0;j<n2;j++) A12[i+j*lda] -= T12[i+j*ldt];
+
+//		qr3_dA2QRTV( m-n1, n2, A22, lda, Q22, ldq, T22, ldt );
+		qr3_dA2QRTV_fake( m-n1, n2, A22, lda, Q22, ldq, T22, ldt );
+
+		// pop
+		cblas_dgemm( CblasColMajor, CblasTrans, CblasNoTrans, n1, n2, m-n1, (+1.0e+00), A21, lda, Q22, ldq, (+0.0e+00), Q12, ldq );
+		cblas_dtrmm( CblasColMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, n1, n2, (+1.0e+00), T11, ldt, Q12, ldq );
+		cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans, m-n1, n2, n1, (-1.0e+00), A21, lda, Q12, ldq, (+1.0e+00), Q22, ldq );
+		cblas_dtrmm( CblasColMajor, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, n1, n2, (-1.0e+00), A11, lda, Q12, ldq );
+
+		// connect
+		for (i=0;i<n1;i++) for (j=0;j<n2;j++) T12[i+j*ldt] = A21[j+i*lda];
+		cblas_dtrmm ( CblasColMajor, CblasRight, CblasLower, CblasNoTrans, CblasUnit, n1, n2, 1.0e+00, A22, lda, T12, ldt); 
+		cblas_dgemm ( CblasColMajor, CblasTrans, CblasNoTrans, n1, n2, m-n, +1.0e+00, A21+n2, lda, A22+n2,lda, +1.0e+00, T12, ldt);
+		cblas_dtrmm ( CblasColMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, n1, n2, -1.0e+00, T11, ldt, T12, ldt); 
+		cblas_dtrmm ( CblasColMajor, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, n1, n2, +1.0e+00, T22, ldt, T12, ldt); 
+
+//	}
 
 	return 0;
 

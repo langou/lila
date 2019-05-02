@@ -110,11 +110,11 @@ int main(int argc, char ** argv) {
 //	LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', m, k, Q, ldq, tau, T, ldt );
 //	qr3_larft( m, k, Q, ldq, T, ldt, tau );
 
-//	for(i=0;i<k;i++){tau[i] = T[i+i*ldt];}
-//	qr3_dorgqr( m, k, Q, ldq, T, ldt, tau );
+	for(i=0;i<k;i++){tau[i] = T[i+i*ldt];}
+	qr3_dorgqr( m, k, Q, ldq, T, ldt, tau );
 
-	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', k, k, T, ldt, Q, ldq );
-	dVT2Q( m, k, Q, ldq );
+//	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', k, k, T, ldt, Q, ldq );
+//	dVT2Q( m, k, Q, ldq );
 
 
 	gettimeofday(&tp, NULL);
