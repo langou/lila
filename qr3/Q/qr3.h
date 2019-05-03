@@ -35,7 +35,6 @@ extern int dVT2Q( int m, int n, double *Q, int ldq  );
 
 extern int dorgqr_after( int m, int n, int k, double *A, int lda, double *T, int ldt, double *Q, int ldq );
 
-extern long int flops_org2r( int m, int n, int k );
 extern long int flops_gemm( int m, int n, int k );
 extern long int flops_trmm( char S, int m, int n );
 extern long int flops_syrk( int n, int k );
@@ -56,28 +55,25 @@ extern long int flops_ULTinU_check( int n );
 extern long int flops_N2T_check( int n );
 extern long int flops_VT2Q_check( int m, int n );
 
-extern long int flops_lapack_orgqr( int m, int n, int k, int nb );
-extern long int flops_lapack_orgqr_check( int m, int n, int k, int nb );
-
 extern long int flops_lapack_larfb( int m, int n, int k );
 extern long int flops_lapack_larfb_check( int m, int n, int k );
 
-extern long int flops_lapack_orgqr_from_last_org2r( int int_m, int int_n, int int_k, int int_b );
-extern long int flops_lapack_orgqr_from_first_org2r( int int_m, int int_n, int int_k, int int_b );
-extern long int flops_lapack_orgqr_from_larft( int int_m, int int_n, int int_k, int int_b );
+extern long int flops_lapack_larf( int m, int n );
+extern long int flops_lapack_larfg( int m );
 
-extern long int flops_org2r_n1( int int_m );
-extern long int flops_lapack_larf( int int_m, int int_n );
-extern long int flops_lapack_larfg( int int_m );
-extern long int flops_org2r_check( int m, int n, int k );
-
+extern long int flops_lapack_geqr2_check( int m, int n );
+extern long int flops_lapack_geqr2( int m, int n );
 extern long int flops_lapack_geqrf_check( int m, int n, int nb );
-extern long int flops_lapack_geqr2( int int_m, int int_n );
-extern long int flops_lapack_geqrf( int int_m, int int_n, int int_nb );
+extern long int flops_lapack_geqrf( int m, int n, int nb );
 
-extern long int flops_dorgqr_after_check( int m, int n, int k );
-extern long int flops_dorgqr_after( int m, int n, int k );
- 
+extern long int flops_lapack_orgqr_check( int m, int n, int k, int nb );
+extern long int flops_lapack_org2r_check( int m, int n, int k );
+
+extern long int flops_lapack_org2r( int int_m, int int_n, int int_k );
+
+
+
+
 extern int dgeqr3_right( int m, int n, double *A, int lda, double *T, int ldt );
 extern int dgeqr3_left( int m, int n, double *A, int lda, double *T, int ldt );
 
