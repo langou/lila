@@ -16,9 +16,10 @@ long int flops_lapack_org2r_check( int m, int n, int k ){
 //	dorg2r_( &m1, &n1, &ib, A11, &lda, tau1, work, &lwork );
 //	flops += flops_lapack_org2r( m1, n1, ib );
 
-	flops += flops_lapack_larfb( m1, n1, 1 );
+	flops += flops_lapack_larfb( m1, n1-1, 1 );
 
-//	flops += 4 * m1 - 3;
+	flops += 4 * m1 - 3;
+//	flops += flops_lapack_larfb( m1, 1, 1 );
 
 	while( k0 > 0 ){
 
@@ -36,8 +37,7 @@ long int flops_lapack_org2r_check( int m, int n, int k ){
 //		dorg2r_( &m1, &ib, &ib, A11, &lda, tau1, work, &lwork );
 //		flops += flops_lapack_org2r( m1, 1, 1 );
 
-		flops += flops_lapack_larfb( m1, 1, 1 );
-//		flops += 4 * m1 - 3;
+		flops += 4 * m1 - 3;
 
 	}	
 
