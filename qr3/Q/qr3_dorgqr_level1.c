@@ -1,6 +1,6 @@
 #include "qr3.h"
 
-int our_dorgqr( int m, int n, int k, int nb, double *A, int lda, double *tau, double *work, int lwork ){
+int qr3_dorgqr_level1( int m, int n, int k, int nb, double *A, int lda, double *tau, double *work, int lwork ){
 
 	double *A11, *A01, *A12, *tau1;
 	int k0, m1, n1, n2, ib, i, j, ldwork;
