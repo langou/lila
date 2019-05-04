@@ -23,9 +23,9 @@ int main(int argc, char ** argv) {
 		}
 	}
 
-//	printf("%5d %5d %5d %15ld %15ld ( %3ld )\n", m, n, nb, flops_lapack_geqrf( m, n, nb ), flops_lapack_geqrf_check( m, n, nb ),  flops_lapack_geqrf( m, n, nb )-flops_lapack_geqrf_check( m, n, nb )) ;
-	printf("%5d %5d %5d %15ld %15ld %3ld\n", m, n, nb, flops_lapack_geqrf( m, n, nb ), flops_lapack_geqr2( m, n ),  flops_lapack_geqrf( m, n, nb )-flops_lapack_geqr2( m, n )) ;
-//	printf("%5d %5d %5d %15ld %15ld ( %3ld )\n", m, n, nb, flops_lapack_geqr2( m, n ), flops_lapack_geqrf_check( m, n, nb ),  flops_lapack_geqr2( m, n )-flops_lapack_geqrf_check( m, n, nb ) ); // will work when nb == n
+//	printf("%5d %5d %5d %15ld %15ld %3ld\n", m, n, nb, flops_lapack_geqrf_check( m, n, nb ), flops_lapack_geqr2_check( m, n ),  flops_lapack_geqrf_check( m, n, nb )-flops_lapack_geqr2_check( m, n )) ;
+
+	printf("%5d %5d %5d %15ld %15ld %3ld\n", m, n, nb, flops_lapack_geqrf( m, n, nb ), flops_lapack_geqrf_check( m, n, nb ),  flops_lapack_geqrf( m, n, nb )-flops_lapack_geqrf_check( m, n, nb )) ;
 
 	return 0;
 

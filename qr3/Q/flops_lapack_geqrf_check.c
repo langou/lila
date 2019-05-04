@@ -16,20 +16,16 @@ long int flops_lapack_geqrf_check( int m, int n, int nb ){
 	ml = m;
 	nl = n;
 
-// 	Within the while, ib is nb
-//	ml = m - j*nb
-//	nl = n - j*nb
 	while( k - i > nb ){
 
 //		GEQR2
-//		flops += flops_lapack_larfg( ml );
 		flops += flops_lapack_geqr2( ml, ib );
+//		flops += flops_lapack_geqr2_check( ml, ib );
 
 //		LARFT
 		flops += flops_larft( ml, ib );
 
 //		LARFB
-//		flops += flops_lapack_larf( ml, nl-ib );
 		flops += flops_lapack_larfb( ml, nl-ib, ib );
 
 		ml -= ib;		
@@ -44,7 +40,7 @@ long int flops_lapack_geqrf_check( int m, int n, int nb ){
 //	GEQR2 cleanup
 
 	flops += flops_lapack_geqr2( ml, nl );
-
+//	flops += flops_lapack_geqr2_check( ml, nl );
 
 	return flops;
 

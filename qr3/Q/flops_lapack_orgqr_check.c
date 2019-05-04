@@ -2,9 +2,9 @@
 
 long int flops_lapack_orgqr_check( int m, int n, int k, int nb ){
 
-	long int flops;
-
 	int k0, m1, n1, n2, ib;
+
+	long int flops;
 
 	flops = (( long int ) 0 );
 	
@@ -15,13 +15,11 @@ long int flops_lapack_orgqr_check( int m, int n, int k, int nb ){
 	m1 = m-k0;
 	n1 = n-k0;
 
-	printf("\n");
-//	flops += flops_org2r( m1, n1, ib );
-	flops += 4 * m1 * (n1-1) + (n1-1);
-	printf("larf(%3d,%3d)\n",m1,n1);
-	flops += m1-1 ;
-	flops ++ ;
-	printf("org2r_n1(%d)\n",m1);
+//	dorg2r_( &m1, &n1, &ib, A11, &lda, tau1, work, &lwork );
+//	flops += flops_lapack_org2r_check( m1, n1, ib );
+
+	flops += flops_lapack_larfb( m1, n1-ib, ib );
+	flops += flops_lapack_org2r_check( m1, ib, ib );
 
 	while( k0 > 0 ){
 
@@ -31,29 +29,17 @@ long int flops_lapack_orgqr_check( int m, int n, int k, int nb ){
 		m1 += ib;		
 		n1 += ib;
 		k0 -= ib;		
+	
+//		LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', m1, ib, A11, lda, tau1, work, ib);
+//		flops += flops_larft( m1, ib );
 
-	//	flops += flops_larft( m1, ib );
+//		our_dlarfb_lnfc( m1, n2, ib, A11, lda, work, ib, A12, lda, work+ib*ib );
+		flops += flops_lapack_larfb( m1, n2, ib );
 
-		//flops += flops_lapack_larfb( m1, n2, ib );
-		//printf(" %d %d %ld %ld %ld \n", m1 , n2, flops_lapack_larf( m1, n2 ), flops_lapack_larfb( m1, n2, ib ), flops_lapack_larf( m1, n2 ) - flops_lapack_larfb( m1, n2, ib ) );
-		//flops += flops_lapack_larf( m1, n2 );
+//		dorg2r_( &m1, &ib, &ib, A11, &lda, tau1, work, &lwork );
+		flops += flops_lapack_org2r_check( m1, ib, ib );
 
-		flops += 4 * m1 * n2 + n2 ;
-		printf("larf(%3d,%3d)\n",m1,n2);
-
-
-		//flops += flops_org2r( m1, ib, ib );
-//		printf(" %ld %ld \n ", flops_org2r_n1( m1 ), flops_org2r( m1, ib, ib ) );
-
-		printf("org2r_n1(%d)\n",m1);
-		flops += m1-1 ;
-		flops ++ ;
-
-// 		we would like that org2r returns larfg when nb=1
-// 		we would like that larft returns 0 when nb=1
-// 		we would like that larfb returns larf when nb=1
-
-	}	
+	}
 
 	return flops;
 
