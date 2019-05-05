@@ -86,6 +86,10 @@ extern int qr3_dA2QRTV( int m, int n, double *A, int lda, double *Q, int ldq, do
 extern long int flops_legacy_lapack_org2r( int m, int n, int k );
 extern long int flops_legacy_lapack_org2r_check( int m, int n, int k );
 extern long int flops_legacy_lapack_larf( int m, int n );
+extern long int flops_legacy_lapack_geqr2_check( int m, int n );
+extern long int flops_legacy_lapack_geqr2( int m, int n );
+
+
 
 
 
