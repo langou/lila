@@ -1,6 +1,6 @@
 #include "qr3.h"
 
-int qr3_dorgqr_level1( int m, int n, int k, int nb, double *A, int lda, double *tau, double *work, int lwork ){
+int qr3_dorgqr_level1_UT( int m, int n, int k, int nb, double *A, int lda, double *tau, double *work, int lwork ){
 
 	double *A11, *A01, *A12, *tau1;
 	int k0, m1, n1, n2, ib;
@@ -41,7 +41,7 @@ int qr3_dorgqr_level1( int m, int n, int k, int nb, double *A, int lda, double *
 		{ int i,j; for(i=0;i<ib;i++){ for(j=0;j<i;j++){ A11[j+i*lda] = A11[i+j*lda];}} }
 		dV2N( ib, A11, lda );
 		cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, ib, m1-ib, (+1.0e+00), A11+ib, lda, (+1.0e+00), A11, lda );
-		dN2T( ib, tau1, A11, lda );
+		{ int i; for(i=0;i<ib;i++){ A11[i+i*lda] = 1/tau1[i]; } }
 
 ////////////////
 
@@ -51,7 +51,7 @@ int qr3_dorgqr_level1( int m, int n, int k, int nb, double *A, int lda, double *
 //		our_dlarfb_lnfc( m1, n2, ib, A11, lda, A11, lda, A12, lda, work );
 
 		cblas_dgemm( CblasColMajor, CblasTrans, CblasNoTrans, ib, n2, m1-ib, (+1.0e+00), A11+ib, lda, A12+ib, lda, (+0.0e+00), A12, lda );
-		cblas_dtrmm( CblasColMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, ib, n2, (+1.0e+00), A11, lda, A12, lda );
+		cblas_dtrsm( CblasColMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, ib, n2, (+1.0e+00), A11, lda, A12, lda );
 		cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans, m1-ib, n2, ib, (-1.0e+00), A11+ib, lda, A12, lda, (+1.0e+00), A12+ib, lda );
 		cblas_dtrmm( CblasColMajor, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, ib, n2, (-1.0e+00), A11, lda, A12, lda );
 
@@ -59,9 +59,9 @@ int qr3_dorgqr_level1( int m, int n, int k, int nb, double *A, int lda, double *
 
 ////////////////
 
-		dorg2r_( &m1, &ib, &ib, A11, &lda, tau1, work, &lwork );
+//		dorg2r_( &m1, &ib, &ib, A11, &lda, tau1, work, &lwork );
 
-//		dVT2Q( m1, ib, A11, lda  );
+		dVS2Q( m1, ib, A11, lda  );
 
 ////////////////
 

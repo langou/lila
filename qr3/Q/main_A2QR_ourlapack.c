@@ -4,9 +4,9 @@ extern void our_dorgqr_fortran_( int *m, int *n, int *k, double *a, int *lda, do
 
 int main(int argc, char ** argv) {
 
-	int i, lda, ldq, ldr, m, n, k, nb, verbose, testing;
+	int i, lda, ldq, ldr, ldt, m, n, k, nb, verbose, testing;
 	int lwork;
-	double *A, *Q, *R, *tau, *work;
+	double *A, *Q, *R, *T, *tau, *work;
 	double orth, repres;
 	double elapsed_ref, perform_ref;
 	struct timeval tp;
@@ -19,6 +19,7 @@ int main(int argc, char ** argv) {
 	lda       = -1;
 	ldq       = -1;
 	ldr       = -1;
+	ldt       = -1;
 	nb        = 10;
 	verbose   = 0;
 	testing   = 1;
@@ -67,10 +68,12 @@ int main(int argc, char ** argv) {
 	if( lda < 0 ) lda = m;
 	if( ldq < 0 ) ldq = m;
 	if( ldr < 0 ) ldr = k;
+	if( ldt < 0 ) ldt = k;
 
 	A = (double *) malloc( lda * k * sizeof(double));
 	Q = (double *) malloc( ldq * n * sizeof(double));
  	R = (double *) malloc( ldr * k * sizeof(double));
+ 	T = (double *) malloc( ldt * k * sizeof(double));
 
  	for(i = 0; i < lda * k; i++)
 		*(A + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
@@ -80,6 +83,9 @@ int main(int argc, char ** argv) {
 
 	for(i = 0; i < ldr * k; i++)
 		*(R + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
+
+	//for(i = 0; i < ldt * k; i++)
+	//	*(T + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
 
 	tau = (double *) malloc( k * sizeof(double));
 
@@ -96,13 +102,19 @@ int main(int argc, char ** argv) {
 	gettimeofday(&tp, NULL);
 	elapsed_ref=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 //	LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, k, Q, ldq, tau, work, lwork ); 
-	our_dgeqrf( m, k, nb, Q, ldq, tau, work, lwork );
-	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', m, k, Q, ldq, R, ldr );
+//	our_dgeqrf( m, k, nb, Q, ldq, tau, work, lwork );
+	dgeqr3( m, k, Q, ldq, T, ldt, R, ldr );
+	for(i=0;i<k;i++){tau[i] = T[i+i*ldt];}
+//	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', m, k, Q, ldq, R, ldr );
 //	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'L', m-1, k, A+1, lda, Q+1, ldq );
 //	LAPACKE_dlaset( LAPACK_COL_MAJOR, 'U', k, k, (3.0e+00), (2.0e+00), Q, ldq);
 //	LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, m, n, k, Q, ldq, tau, work, lwork );
 //	int info; our_dorgqr_fortran_( &m, &n, &k, Q, &ldq, tau, work, &lwork, &info );
-	our_dorgqr( m, n, k, nb, Q, ldq, tau, work, lwork );
+	//our_dorgqr( m, n, k, nb, Q, ldq, tau, work, lwork );
+
+	//qr3_dorgqr_level1( m, n, k, nb, Q, ldq, tau, work, lwork );
+	qr3_dorgqr_level1_UT( m, n, k, nb, Q, ldq, tau, work, lwork );
+
 	gettimeofday(&tp, NULL);
 	elapsed_ref+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
@@ -112,7 +124,7 @@ int main(int argc, char ** argv) {
 	free( tau );
 	free( work );
 
-	perform_ref = ((double) flops_org2r( m, n, k )) / elapsed_ref / 1.0e+9 ;
+	perform_ref = ((double) flops_lapack_org2r( m, n, k )) / elapsed_ref / 1.0e+9 ;
 
 	if ( verbose ){ 
 
@@ -146,6 +158,7 @@ int main(int argc, char ** argv) {
 	free( A );
 	free( Q );
 	free( R );
+	free( T );
 
 	return 0;
 
