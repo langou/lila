@@ -74,6 +74,7 @@ extern long int flops_lapack_org2r( int int_m, int int_n, int int_k );
 
 
 
+extern int dgeqr3( int m, int n, double *A, int lda, double *T, int ldt, double *R, int ldr );
 extern int dgeqr3_right( int m, int n, double *A, int lda, double *T, int ldt );
 extern int dgeqr3_left( int m, int n, double *A, int lda, double *T, int ldt );
 
@@ -93,6 +94,11 @@ extern long int flops_legacy_lapack_larfg( int int_m );
 
 
 
+extern int qr3_dorgqr_level1( int m, int n, int k, int nb, double *A, int lda, double *tau, double *work, int lwork );
+extern int qr3_dorgqr_level1_UT( int m, int n, int k, int nb, double *A, int lda, double *tau, double *work, int lwork );
+extern int UinvLTinU( int n, double *L, int ldl, double *U, int ldu );
+extern int UinvLTinU_cheat( int n, double *L, int ldl, double *U, int ldu );
+extern int dVS2Q( int m, int n, double *Q, int ldq  );
 
 
 
