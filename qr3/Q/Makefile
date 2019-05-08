@@ -54,11 +54,11 @@ xmain_flops_lapack_orgqr.exe: main_flops_lapack_orgqr.o flops_lapack_orgqr_check
 xmain_flops_lapack_org2r.exe: main_flops_lapack_org2r.o flops_lapack_orgqr_check.o flops_larft.o flops_lapack_org2r_check.o flops_lapack_larfb.o flops_lapack_org2r.o
 	$(LOADER) -o $@  main_flops_lapack_org2r.o flops_lapack_orgqr_check.o flops_larft.o flops_lapack_org2r_check.o  flops_lapack_larfb.o flops_lapack_org2r.o
 
-xmain_flops_legacy_lapack_org2r.exe: main_flops_legacy_lapack_org2r.o flops_legacy_lapack_org2r.o flops_legacy_lapack_org2r_check.o flops_legacy_lapack_larf.o
-	$(LOADER) -o $@  main_flops_legacy_lapack_org2r.o flops_legacy_lapack_org2r.o flops_legacy_lapack_org2r_check.o flops_legacy_lapack_larf.o
+xmain_flops_legacy_lapack_org2r.exe: main_flops_legacy_lapack_org2r.o flops_legacy_lapack_org2r.o flops_legacy_lapack_org2r_check.o flops_legacy_lapack_larf.o flops_lapack_larfb.o
+	$(LOADER) -o $@  main_flops_legacy_lapack_org2r.o flops_legacy_lapack_org2r.o flops_legacy_lapack_org2r_check.o flops_legacy_lapack_larf.o flops_lapack_larfb.o
 
-xmain_flops_legacy_lapack_geqr2.exe: main_flops_legacy_lapack_geqr2.o flops_legacy_lapack_geqr2.o flops_legacy_lapack_geqr2_check.o flops_legacy_lapack_larf.o flops_lapack_larfg.o
-	$(LOADER) -o $@  main_flops_legacy_lapack_geqr2.o flops_legacy_lapack_geqr2.o flops_legacy_lapack_geqr2_check.o flops_legacy_lapack_larf.o flops_lapack_larfg.o
+xmain_flops_legacy_lapack_geqr2.exe: main_flops_legacy_lapack_geqr2.o flops_legacy_lapack_geqr2.o flops_legacy_lapack_geqr2_check.o flops_legacy_lapack_larf.o flops_legacy_lapack_larfg.o flops_lapack_larfb.o
+	$(LOADER) -o $@  main_flops_legacy_lapack_geqr2.o flops_legacy_lapack_geqr2.o flops_legacy_lapack_geqr2_check.o flops_legacy_lapack_larf.o flops_legacy_lapack_larfg.o flops_lapack_larfb.o
 
 our_dorgqr_fortran.o: our_dorgqr_fortran.f
 	gfortran -c our_dorgqr_fortran.f 

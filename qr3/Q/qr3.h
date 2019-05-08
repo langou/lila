@@ -89,6 +89,9 @@ extern long int flops_legacy_lapack_larf( int m, int n );
 extern long int flops_legacy_lapack_geqr2_check( int m, int n );
 extern long int flops_legacy_lapack_geqr2( int m, int n );
 
+extern long int flops_legacy_lapack_larfg( int int_m );
+
+
 
 
 

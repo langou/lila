@@ -18,7 +18,7 @@ int main(int argc, char ** argv) {
 		}
 	}
 
-	printf("%5d %5d %15ld %15ld ( %3ld )\n", m, n,
+	printf("%5d %5d %15ld %15ld %3ld\n", m, n,
 			flops_legacy_lapack_geqr2( m, n ),
 			flops_legacy_lapack_geqr2_check( m, n ), 
 			flops_legacy_lapack_geqr2( m, n )-flops_legacy_lapack_geqr2_check( m, n )) ;

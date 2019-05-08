@@ -2,49 +2,50 @@
 
 long int flops_legacy_lapack_org2r_check( int m, int n, int k ){
 
+	int ml, nl;
 	long int flops;
-
-	int m1, n1;
-	int i;
 
 	flops = (( long int ) 0 );
 	
-	m1 = m-k+1;
-	n1 = n-k+1;
+	ml = m-k+1;
+	nl = n-k+1;
 
 ////////////////
 
-//	flops += flops_legacy_lapack_org2r( m1, n1, 1 );
+//	flops += flops_legacy_lapack_org2r( ml, nl, 1 );
 
-	flops += flops_legacy_lapack_larf( m1, n1-1 );
-	flops += m1-1 ;
-	flops ++ ;
-
-//	flops += 4 * m1 * (n1-1) + (n1-1);
-//	flops += m1-1 ;
+//	flops += flops_legacy_lapack_larf( ml, nl-1 );
+//	flops += ml-1 ;
 //	flops ++ ;
 
-////////////////
-
-	for( i = 0; i < k-1; i++ ){
-
-		m1 ++;		
-		n1 ++;
+	flops += 4 * ml * (nl-1) + (nl-1);
+	flops += ml ;
 
 ////////////////
 
-		flops += flops_legacy_lapack_larf( m1, (n1-1) );
+	while( ml < m  ){
 
-//		flops += 4 * m1 * (n1-1) + (n1-1) ;
+
+		ml ++;		
+		nl ++;
+
+////////////////
+
+//		flops += flops_lapack_larfb( ml, nl-1, 1 );
+//		flops += 2*(nl-1) ;
+
+//		flops += flops_legacy_lapack_larf( ml, (nl-1) );
+//		flops += 2*(nl-1) ;
+
+		flops += 4 * ml * (nl-1) + (nl-1) ;
 
 ////////////////
 
 ////////////////
 
-//		flops += flops_legacy_lapack_org2r( m1, 1, 1 );
+//		flops += flops_legacy_lapack_org2r( ml, 1, 1 );
 
-		flops += m1-1 ;
-		flops ++ ;
+		flops += ml ;
 
 ////////////////
 

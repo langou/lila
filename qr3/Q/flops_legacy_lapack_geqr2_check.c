@@ -12,22 +12,42 @@ long int flops_legacy_lapack_geqr2_check( int m, int n ){
 
 	while( 1 < nl  ){
 
-//		GEQR2
-		flops += flops_lapack_larfg( ml );
+////////////////
+
+//		flops += flops_legacy_lapack_larfg( ml );
+
 //		flops += flops_legacy_lapack_geqr2( ml, 1 );
 
-//		LARF
-		flops += flops_legacy_lapack_larf( ml, nl-1 );
+		flops += 4 * ml + 5;
+
+////////////////
+
+////////////////
+
+//		flops += flops_lapack_larfb( ml, nl-1, 1 );
+//		flops += (nl-1);
+
+//		flops += flops_legacy_lapack_larf( ml, nl-1 );
+//		flops += (nl-1);
+
+		flops += 4 * ml * (nl-1) ;
+
+////////////////
 
 		ml --;		
 		nl --;		
 
 	}	
 
-//	GEQR2 cleanup
+////////////////
 
-	flops += flops_lapack_larfg( ml );
+//	flops += flops_legacy_lapack_larfg( ml );
+
 //	flops += flops_legacy_lapack_geqr2( ml, 1 );
+
+	flops += 4 * ml + 5;
+
+////////////////
 
 	return flops;
 
