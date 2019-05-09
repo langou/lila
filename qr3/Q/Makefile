@@ -7,11 +7,11 @@ include ../make.inc
 
 all: xmain_A2QR_lapack.exe xmain_A2QR_NminusKblock.exe
 
-xmain_A2QR_lapack.exe: main_A2QR_lapack.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o flops_lapack_org2r.o 
-	$(LOADER) -o $@ main_A2QR_lapack.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o flops_lapack_org2r.o $(LIB)
+xmain_A2QR_lapack.exe: main_A2QR_lapack.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o flops_lapack_org2r.o flops_lapack_geqr2.o
+	$(LOADER) -o $@ main_A2QR_lapack.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o flops_lapack_org2r.o flops_lapack_geqr2.o $(LIB)
 
-xmain_A2QR_NminusKblock.exe: main_A2QR_NminusKblock.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o our_dorgqr.o dV2Q.o dV2N.o dN2T.o dVT2Q.o ULTinU.o mLUinA.o ApUBTinA.o our_dlarfb_lnfc.o our_dgeqrf.o dorgqr_after.o flops_lapack_org2r.o dgeqr3.o  dgeqr3_left.o
-	$(LOADER) -o $@ main_A2QR_NminusKblock.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o our_dorgqr.o dV2Q.o dV2N.o dN2T.o dVT2Q.o ULTinU.o mLUinA.o ApUBTinA.o our_dlarfb_lnfc.o our_dgeqrf.o dorgqr_after.o flops_lapack_org2r.o dgeqr3.o dgeqr3_left.o $(LIB)
+xmain_A2QR_NminusKblock.exe: main_A2QR_NminusKblock.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o our_dorgqr.o dV2Q.o dV2N.o dN2T.o dVT2Q.o ULTinU.o mLUinA.o ApUBTinA.o our_dlarfb_lnfc.o our_dgeqrf.o dorgqr_after.o flops_lapack_org2r.o  flops_lapack_geqr2.o dgeqr3.o  dgeqr3_left.o
+	$(LOADER) -o $@ main_A2QR_NminusKblock.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o our_dorgqr.o dV2Q.o dV2N.o dN2T.o dVT2Q.o ULTinU.o mLUinA.o ApUBTinA.o our_dlarfb_lnfc.o our_dgeqrf.o dorgqr_after.o flops_lapack_org2r.o  flops_lapack_geqr2.o dgeqr3.o dgeqr3_left.o $(LIB)
 
 
 

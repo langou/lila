@@ -122,7 +122,7 @@ int main(int argc, char ** argv) {
 	free( tau );
 	free( work );
 
-	perform_ref = ((double) flops_lapack_org2r( m, n, k )) / elapsed_ref / 1.0e+9 ;
+	perform_ref = ((double) flops_lapack_org2r( m, n, k ) + (double) flops_lapack_geqr2( m, k ) ) / elapsed_ref / 1.0e+9 ;
 
 	if ( verbose ){ 
 
