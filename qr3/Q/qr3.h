@@ -74,9 +74,9 @@ extern long int flops_lapack_org2r( int int_m, int int_n, int int_k );
 
 
 
-extern int dgeqr3( int m, int n, double *A, int lda, double *T, int ldt, double *R, int ldr );
-extern int dgeqr3_right( int m, int n, double *A, int lda, double *T, int ldt );
-extern int dgeqr3_left( int m, int n, double *A, int lda, double *T, int ldt );
+extern int dgeqr3R( int m, int n, double *A, int lda, double *T, int ldt, double *R, int ldr );
+extern int dgeqr3_ISW( int m, int n, double *A, int lda, double *T, int ldt );
+extern int dgeqr3( int m, int n, double *A, int lda, double *T, int ldt );
 
 extern int qr3_larft( int m, int n, double *A, int lda, double *T, int ldt, double *tau ); 
 extern int qr3_dorgqr( int m, int n, double *A, int lda, double *T, int ldt, double *tau );

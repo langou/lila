@@ -101,7 +101,8 @@ int main(int argc, char ** argv) {
 
 //	LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, k, Q, ldq, tau, work, lwork ); 
 
-	dgeqr3_left( m, k, Q, ldq, T, ldt );
+	//dgeqr3_ISW( m, k, Q, ldq, T, ldt );
+	dgeqr3( m, k, Q, ldq, T, ldt );
 
 	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', k, k, Q, ldq, R, ldr );
 	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', k, k, T, ldt, Q, ldq );

@@ -1,6 +1,6 @@
 #include "qr3.h"
 
-int dgeqr3_right( int m, int n, double *A, int lda, double *T, int ldt ){
+int dgeqr3_ISW( int m, int n, double *A, int lda, double *T, int ldt ){
 
 	/* Only the upper part of T is referenced */
 
@@ -15,7 +15,7 @@ int dgeqr3_right( int m, int n, double *A, int lda, double *T, int ldt ){
 	n1 = n/2;
 	n2 = n-n1;
 
-	dgeqr3_left( m, n1, &(A[0]), lda, T, ldt );
+	dgeqr3( m, n1, &(A[0]), lda, T, ldt );
 
 		/* ------------------------------------------------------------------------------------- */
 		/*     routine  | computation                     | number of floating-point operations  */
@@ -47,7 +47,7 @@ int dgeqr3_right( int m, int n, double *A, int lda, double *T, int ldt ){
 		for (j=0;j<n2;j++) for (i=0;i<n1;i++) A[(j+n1)*lda+i] -= W[j*ldw+i];
 		//free(W);
 
-	dgeqr3_right( m-n1, n2, &(A[n1*lda+n1]), lda, &(T[n1+n1*ldt]), ldt );
+	dgeqr3_ISW( m-n1, n2, &(A[n1*lda+n1]), lda, &(T[n1+n1*ldt]), ldt );
 
 
 	}

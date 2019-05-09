@@ -84,9 +84,6 @@ int main(int argc, char ** argv) {
 	for(i = 0; i < ldr * k; i++)
 		*(R + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
 
-	//for(i = 0; i < ldt * k; i++)
-	//	*(T + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
-
 	tau = (double *) malloc( k * sizeof(double));
 
 	work = (double *) malloc( 1 * sizeof(double));
@@ -101,25 +98,32 @@ int main(int argc, char ** argv) {
 
 	gettimeofday(&tp, NULL);
 	elapsed_ref=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+
 //	LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, k, Q, ldq, tau, work, lwork ); 
 //	our_dgeqrf( m, k, nb, Q, ldq, tau, work, lwork );
-	dgeqr3( m, k, Q, ldq, T, ldt, R, ldr );
-	for(i=0;i<k;i++){tau[i] = T[i+i*ldt];}
-//	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', m, k, Q, ldq, R, ldr );
+//	dgeqr3R( m, k, Q, ldq, T, ldt, R, ldr );
+//	for(i=0;i<k;i++){tau[i] = T[i+i*ldt];}
+	dgeqr3R( m, k, Q, ldq, Q, ldq, R, ldr );
+	for(i=0;i<k;i++){tau[i] = Q[i+i*ldq];}
+//	dgeqr3R( m, k, Q, ldq, T, ldt, Q, ldq );
+//	for(i=0;i<k;i++){tau[i] = T[i+i*ldt];}
+//	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', k, k, Q, ldq, R, ldr );
+
+	//qr3_larft( m, k, Q, ldq, T, ldt, tau );
+//	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', k, k, Q, ldq, R, ldr );
 //	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'L', m-1, k, A+1, lda, Q+1, ldq );
 //	LAPACKE_dlaset( LAPACK_COL_MAJOR, 'U', k, k, (3.0e+00), (2.0e+00), Q, ldq);
+
 //	LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, m, n, k, Q, ldq, tau, work, lwork );
 //	int info; our_dorgqr_fortran_( &m, &n, &k, Q, &ldq, tau, work, &lwork, &info );
 	//our_dorgqr( m, n, k, nb, Q, ldq, tau, work, lwork );
-
-	qr3_dorgqr( m, k, Q, ldq, T, ldt, tau );
-
-	//qr3_dorgqr_level1( m, n, k, nb, Q, ldq, tau, work, lwork );
+//	qr3_dorgqr( m, k, Q, ldq, T, ldt, tau );
+//	qr3_dorgqr( m, k, Q, ldq, Q, ldq, tau );
+	qr3_dorgqr_level1( m, n, k, nb, Q, ldq, tau, work, lwork );
 //	qr3_dorgqr_level1_UT( m, n, k, nb, Q, ldq, tau, work, lwork );
 
 	gettimeofday(&tp, NULL);
 	elapsed_ref+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
-
 
 //	dV2Q( m, n, n, nb, nb, 0, Q, ldq, tau, work, lwork, info );
 
@@ -135,7 +139,7 @@ int main(int argc, char ** argv) {
 		printf("m = %4d, ",         m);
 		printf("n = %4d, ",         n);
 		printf("k = %4d, ",         k);
-		printf("nb = %4d, ",     nb);
+		printf("nb = %4d, ",       nb);
 		printf(" \n");
 		printf(" time = %f    GFlop/sec = %f ", elapsed_ref, perform_ref);	
 		printf(" \n ");
