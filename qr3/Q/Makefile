@@ -5,7 +5,7 @@ include ../make.inc
 
 #all: xmain_flops_lapack_orgqr.exe xmain_flops_lapack_org2r.exe xmain_flops_legacy_lapack_org2r.exe xmain_flops_legacy_lapack_geqr2.exe
 
-all: xmain_A2QR_lapack.exe xmain_A2QR_NminusKblock.exe xmain_A2QR_ourlapack.exe
+all: xmain_A2QR_lapack.exe xmain_A2QR_NminusKblock.exe xmain_A2QR_ourlapack.exe xmain_study_of_larft.exe
 
 xmain_A2QR_lapack.exe: main_A2QR_lapack.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o flops_lapack_org2r.o flops_lapack_geqr2.o
 	$(LOADER) -o $@ main_A2QR_lapack.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o flops_lapack_org2r.o flops_lapack_geqr2.o $(LIB)
@@ -13,8 +13,11 @@ xmain_A2QR_lapack.exe: main_A2QR_lapack.o qr3_test_qq_orth_1.o qr3_test_qr_repre
 xmain_A2QR_NminusKblock.exe: main_A2QR_NminusKblock.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o our_dorgqr.o dV2Q.o dV2N.o dN2T.o dVT2Q.o ULTinU.o mLUinA.o ApUBTinA.o our_dlarfb_lnfc.o our_dgeqrf.o dorgqr_after.o flops_lapack_org2r.o  flops_lapack_geqr2.o dgeqr3.o  dgeqr3_left.o
 	$(LOADER) -o $@ main_A2QR_NminusKblock.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o our_dorgqr.o dV2Q.o dV2N.o dN2T.o dVT2Q.o ULTinU.o mLUinA.o ApUBTinA.o our_dlarfb_lnfc.o our_dgeqrf.o dorgqr_after.o flops_lapack_org2r.o  flops_lapack_geqr2.o dgeqr3.o dgeqr3_left.o $(LIB)
 
-xmain_A2QR_ourlapack.exe: main_A2QR_ourlapack.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o our_dorgqr.o dV2Q.o dV2N.o dN2T.o dVT2Q.o ULTinU.o mLUinA.o ApUBTinA.o flops_gemm.o flops_trmm.o flops_syrk.o flops_V2N.o flops_larft.o flops_N2T.o flops_VT2Q.o our_dlarfb_lnfc.o our_dgeqrf.o dorgqr_after.o flops_lapack_org2r.o qr3_dorgqr_level1.o dgeqr3.o qr3_dorgqr_level1_UT.o dVS2Q.o UinvLTinU.o UinvLTinU_cheat.o qr3_dorgqr.o
-	$(LOADER) -o $@ main_A2QR_ourlapack.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o our_dorgqr.o dV2Q.o dV2N.o dN2T.o dVT2Q.o ULTinU.o mLUinA.o ApUBTinA.o flops_gemm.o flops_trmm.o flops_syrk.o flops_V2N.o flops_larft.o flops_N2T.o flops_VT2Q.o our_dlarfb_lnfc.o our_dgeqrf.o dorgqr_after.o flops_lapack_org2r.o qr3_dorgqr_level1.o dgeqr3.o qr3_dorgqr_level1_UT.o dVS2Q.o UinvLTinU.o UinvLTinU_cheat.o qr3_dorgqr.o $(LIB)
+xmain_A2QR_ourlapack.exe: main_A2QR_ourlapack.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o our_dorgqr.o dV2Q.o dV2N.o dN2T.o dVT2Q.o ULTinU.o mLUinA.o ApUBTinA.o flops_gemm.o flops_trmm.o flops_syrk.o flops_V2N.o flops_larft.o flops_N2T.o flops_VT2Q.o our_dlarfb_lnfc.o our_dgeqrf.o dorgqr_after.o flops_lapack_org2r.o qr3_dorgqr_level1.o dgeqr3.o qr3_dorgqr_level1_UT.o dVS2Q.o UinvLTinU.o UinvLTinU_cheat.o qr3_dorgqr.o flops_lapack_geqr2.o
+	$(LOADER) -o $@ main_A2QR_ourlapack.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o our_dorgqr.o dV2Q.o dV2N.o dN2T.o dVT2Q.o ULTinU.o mLUinA.o ApUBTinA.o flops_gemm.o flops_trmm.o flops_syrk.o flops_V2N.o flops_larft.o flops_N2T.o flops_VT2Q.o our_dlarfb_lnfc.o our_dgeqrf.o dorgqr_after.o flops_lapack_org2r.o qr3_dorgqr_level1.o dgeqr3.o qr3_dorgqr_level1_UT.o dVS2Q.o UinvLTinU.o UinvLTinU_cheat.o qr3_dorgqr.o flops_lapack_geqr2.o $(LIB)
+
+xmain_study_of_larft.exe: main_study_of_larft.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o our_dorgqr.o dV2Q.o dV2N.o dN2T.o dVT2Q.o ULTinU.o mLUinA.o ApUBTinA.o flops_gemm.o flops_trmm.o flops_syrk.o flops_V2N.o flops_larft.o flops_N2T.o flops_VT2Q.o our_dlarfb_lnfc.o our_dgeqrf.o dorgqr_after.o flops_lapack_org2r.o qr3_dorgqr_level1.o dgeqr3.o qr3_dorgqr_level1_UT.o dVS2Q.o UinvLTinU.o UinvLTinU_cheat.o qr3_dorgqr.o qr3_larft.o
+	$(LOADER) -o $@ main_study_of_larft.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o our_dorgqr.o dV2Q.o dV2N.o dN2T.o dVT2Q.o ULTinU.o mLUinA.o ApUBTinA.o flops_gemm.o flops_trmm.o flops_syrk.o flops_V2N.o flops_larft.o flops_N2T.o flops_VT2Q.o our_dlarfb_lnfc.o our_dgeqrf.o dorgqr_after.o flops_lapack_org2r.o qr3_dorgqr_level1.o dgeqr3.o qr3_dorgqr_level1_UT.o dVS2Q.o UinvLTinU.o UinvLTinU_cheat.o qr3_dorgqr.o qr3_larft.o $(LIB)
 
 
 
