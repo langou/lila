@@ -2,7 +2,7 @@
 
 int main(int argc, char ** argv) {
 
-	int i, lda, ldq, ldr, m, n, k, nb, verbose, testing;
+	int i, lda, ldq, ldr, m, n, k, verbose, testing;
 	int lwork;
 	double *A, *Q, *R, *tau, *work;
 	double orth, repres;
@@ -17,7 +17,6 @@ int main(int argc, char ** argv) {
 	lda       = -1;
 	ldq       = -1;
 	ldr       = -1;
-	nb        = 10;
 	verbose   = 0;
 	testing   = 1;
 
@@ -32,10 +31,6 @@ int main(int argc, char ** argv) {
 		}
 		if( strcmp( *(argv + i), "-ldr") == 0) {
 			ldr = atoi( *(argv + i + 1) );
-			i++;
-		}
-		if( strcmp( *(argv + i), "-nb") == 0) {
-			nb = atoi( *(argv + i + 1) );
 			i++;
 		}
 		if( strcmp( *(argv + i), "-verbose") == 0) {
@@ -104,7 +99,7 @@ int main(int argc, char ** argv) {
 	free( tau );
 	free( work );
 
-	perform_ref = ((double) flops_org2r( m, n, k )) / elapsed_ref / 1.0e+9 ;
+	perform_ref = ((double) flops_lapack_org2r( m, n, k )) / elapsed_ref / 1.0e+9 ;
 
 	if ( verbose ){ 
 
@@ -112,14 +107,13 @@ int main(int argc, char ** argv) {
 		printf("m = %4d, ",         m);
 		printf("n = %4d, ",         n);
 		printf("k = %4d, ",         k);
-		printf("nb = %4d, ",     nb);
 		printf(" \n");
 		printf(" time = %f    GFlop/sec = %f ", elapsed_ref, perform_ref);	
 		printf(" \n ");
 
 	} else {
 
-		printf("%6d %6d %6d %6d %16.8f %10.3f ", m, n, k, nb, elapsed_ref, perform_ref);
+		printf("%6d %6d %6d %16.8f %10.3f ", m, n, k, elapsed_ref, perform_ref);
 
 	} 
 

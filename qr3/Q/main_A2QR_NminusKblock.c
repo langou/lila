@@ -99,17 +99,22 @@ int main(int argc, char ** argv) {
 
 	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, k, A, lda, Q, ldq );
 
-	LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, k, Q, ldq, tau, work, lwork ); 
+//	LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, k, Q, ldq, tau, work, lwork ); 
+
+	dgeqr3_left( m, k, Q, ldq, T, ldt );
 
 	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', k, k, Q, ldq, R, ldr );
+	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', k, k, T, ldt, Q, ldq );
 
 //	LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, m, n, k, Q, ldq, tau, work, lwork );
 
-	LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', m, k, Q, ldq, tau, T, ldt );
+//	LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', m, k, Q, ldq, tau, T, ldt );
 
-	dorgqr_after( m, n, k, Q, ldq, T, ldt, Q+k*ldq, ldq );
+	dorgqr_after( m, n, k, Q, ldq, Q, ldq, Q+k*ldq, ldq );
 
-	LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, m, k, k, Q, ldq, tau, work, lwork );
+//	LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, m, k, k, Q, ldq, tau, work, lwork );
+
+	dVT2Q( m, k, Q, ldq );
 
 	gettimeofday(&tp, NULL);
 	elapsed_ref+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -117,7 +122,7 @@ int main(int argc, char ** argv) {
 	free( tau );
 	free( work );
 
-	perform_ref = ((double) flops_org2r( m, n, k )) / elapsed_ref / 1.0e+9 ;
+	perform_ref = ((double) flops_lapack_org2r( m, n, k )) / elapsed_ref / 1.0e+9 ;
 
 	if ( verbose ){ 
 
