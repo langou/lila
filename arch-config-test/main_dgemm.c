@@ -1,4 +1,20 @@
-#include "lila.h"
+#include <stdlib.h>
+#include <math.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/time.h>
+
+#if !( defined(_USE_MKL) || defined(_USE_BLIS) )
+#include "cblas.h"
+#endif
+
+#if defined(_USE_MKL)
+#include "mkl.h"
+#endif
+
+#if defined(_USE_BLIS)
+#include "blis.h"
+#endif
 
 int main(int argc, char ** argv) {
 

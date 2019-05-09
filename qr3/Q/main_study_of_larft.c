@@ -110,14 +110,14 @@ int main(int argc, char ** argv) {
 	gettimeofday(&tp, NULL);
 	elapsed_ref=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-//	LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', m, k, Q, ldq, tau, T, ldt );
+	LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', m, k, Q, ldq, tau, T, ldt );
 
 //	qr3_larft( m, k, Q, ldq, T, ldt, tau );
 
-	{ int i,j; for(i=0;i<k;i++){ for(j=0;j<i;j++){ T[j+i*ldt] = Q[i+j*ldq];}} }
-	dV2N( k, T, ldt );
-	cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, k, m-k, (+1.0e+00), Q+k, ldq, (+1.0e+00), T, ldt );
-	dN2T( k, tau, T, ldt );
+//	{ int i,j; for(i=0;i<k;i++){ for(j=0;j<i;j++){ T[j+i*ldt] = Q[i+j*ldq];}} }
+//	dV2N( k, T, ldt );
+//	cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, k, m-k, (+1.0e+00), Q+k, ldq, (+1.0e+00), T, ldt );
+//	dN2T( k, tau, T, ldt );
 
 	gettimeofday(&tp, NULL);
 	elapsed_ref+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
