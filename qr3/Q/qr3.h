@@ -100,5 +100,9 @@ extern int UinvLTinU( int n, double *L, int ldl, double *U, int ldu );
 extern int UinvLTinU_cheat( int n, double *L, int ldl, double *U, int ldu );
 extern int dVS2Q( int m, int n, double *Q, int ldq  );
 
+extern long int flops_lapack_orgqr_bef_check( int m, int n, int k, int nb );
+extern long int flops_lapack_orgqr_bef( int m, int n, int k, int nb );
+
+
 
 
