@@ -112,8 +112,10 @@ int main(int argc, char ** argv) {
 //	int info; our_dorgqr_fortran_( &m, &n, &k, Q, &ldq, tau, work, &lwork, &info );
 	//our_dorgqr( m, n, k, nb, Q, ldq, tau, work, lwork );
 
+	qr3_dorgqr( m, k, Q, ldq, T, ldt, tau );
+
 	//qr3_dorgqr_level1( m, n, k, nb, Q, ldq, tau, work, lwork );
-	qr3_dorgqr_level1_UT( m, n, k, nb, Q, ldq, tau, work, lwork );
+//	qr3_dorgqr_level1_UT( m, n, k, nb, Q, ldq, tau, work, lwork );
 
 	gettimeofday(&tp, NULL);
 	elapsed_ref+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
