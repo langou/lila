@@ -2,9 +2,9 @@
 
 int main(int argc, char ** argv) {
 
-	int i, lda, ldq, ldr, ldt, m, n, k, verbose, testing;
+	int i, lda, ldq, ldr, m, n, k, nb, verbose, testing;
 	int lwork;
-	double *A, *Q, *R, *T, *tau, *work;
+	double *A, *Q, *R, *tau, *work;
 	double orth, repres;
 	double elapsed_ref, perform_ref;
 	struct timeval tp;
@@ -17,7 +17,7 @@ int main(int argc, char ** argv) {
 	lda       = -1;
 	ldq       = -1;
 	ldr       = -1;
-	ldt       = -1;
+	nb        = 10;
 	verbose   = 0;
 	testing   = 1;
 
@@ -34,8 +34,8 @@ int main(int argc, char ** argv) {
 			ldr = atoi( *(argv + i + 1) );
 			i++;
 		}
-		if( strcmp( *(argv + i), "-ldt") == 0) {
-			ldt = atoi( *(argv + i + 1) );
+		if( strcmp( *(argv + i), "-nb") == 0) {
+			nb = atoi( *(argv + i + 1) );
 			i++;
 		}
 		if( strcmp( *(argv + i), "-verbose") == 0) {
@@ -60,19 +60,15 @@ int main(int argc, char ** argv) {
 		}
 	}
 
-	k = n;
-
 	if (( m < n )||( n < k )) { printf("\n\n We need k <= n <= m\n\n"); return 0; }
 
 	if( lda < 0 ) lda = m;
 	if( ldq < 0 ) ldq = m;
 	if( ldr < 0 ) ldr = k;
-	if( ldt < 0 ) ldt = k;
 
 	A = (double *) malloc( lda * k * sizeof(double));
 	Q = (double *) malloc( ldq * n * sizeof(double));
  	R = (double *) malloc( ldr * k * sizeof(double));
- 	T = (double *) malloc( ldt * k * sizeof(double));
 
  	for(i = 0; i < lda * k; i++)
 		*(A + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
@@ -81,9 +77,6 @@ int main(int argc, char ** argv) {
 		*(Q + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
 
 	for(i = 0; i < ldr * k; i++)
-		*(R + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
-
-	for(i = 0; i < ldt * k; i++)
 		*(R + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
 
 	tau = (double *) malloc( k * sizeof(double));
@@ -96,49 +89,25 @@ int main(int argc, char ** argv) {
 	free( work );
 	work = (double *) malloc( lwork * sizeof(double));
 
-	gettimeofday(&tp, NULL);
-	elapsed_ref=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
-
-	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, k, A, lda, Q, ldq ); //do we want to time this copy?
-
+	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, k, A, lda, Q, ldq );
 	LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, k, Q, ldq, tau, work, lwork ); 
-//	dgeqr3_right( m, k, Q, ldq, T, ldt );
-//	dgeqr3_left( m, k, Q, ldq, T, ldt );
-
 	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', k, k, Q, ldq, R, ldr );
 
 	gettimeofday(&tp, NULL);
 	elapsed_ref=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-//	LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', m, k, Q, ldq, tau, T, ldt );
-
-//	qr3_larft( m, k, Q, ldq, T, ldt, tau );
-
-//	{ int i,j; for(i=0;i<k;i++){ for(j=0;j<i;j++){ T[j+i*ldt] = Q[i+j*ldq];}} }
-//	dV2N( k, T, ldt );
-//	cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, k, m-k, (+1.0e+00), Q+k, ldq, (+1.0e+00), T, ldt );
-//	dN2T( k, tau, T, ldt );
-
-	{ int i,j; for(i=0;i<k;i++){ for(j=0;j<i;j++){ T[j+i*ldt] = Q[i+j*ldq];}} }
-	dV2N( k, T, ldt );
-	cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, k, m-k, (+1.0e+00), Q+k, ldq, (+1.0e+00), T, ldt );
-	{ int i; for(i=0;i<k;i++){ T[i+i*ldt] = (+1.0e+00) / tau[i];}} 
-	LAPACKE_dtrtri( LAPACK_COL_MAJOR, 'U', 'N', k, T, ldt );
+	qr3_dorgqr_level1( m, n, k, nb, Q, ldq, tau, work, lwork );
+//	qr3_dorgqr_level1_UT( m, n, k, nb, Q, ldq, tau, work, lwork );
 
 	gettimeofday(&tp, NULL);
 	elapsed_ref+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-	for(i=0;i<k;i++){tau[i] = T[i+i*ldt];}
-	qr3_dorgqr( m, k, Q, ldq, T, ldt, tau );
-
-//	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', k, k, T, ldt, Q, ldq );
-//	dVT2Q( m, k, Q, ldq );
-
-
 	free( tau );
 	free( work );
 
-	perform_ref = ((double) flops_larft( m, n )) / elapsed_ref / 1.0e+9 ;
+	//perform_ref = ((double) flops_lapack_org2r( m, n, k ) + (double) flops_lapack_geqr2( m, k ) ) / elapsed_ref / 1.0e+9 ;
+	perform_ref = ((double) flops_lapack_org2r( m, n, k )) / elapsed_ref / 1.0e+9 ;
+
 
 	if ( verbose ){ 
 
@@ -146,13 +115,14 @@ int main(int argc, char ** argv) {
 		printf("m = %4d, ",         m);
 		printf("n = %4d, ",         n);
 		printf("k = %4d, ",         k);
+		printf("nb = %4d, ",       nb);
 		printf(" \n");
 		printf(" time = %f    GFlop/sec = %f ", elapsed_ref, perform_ref);	
 		printf(" \n ");
 
 	} else {
 
-		printf("%6d %6d %6d %16.8f %10.3f ", m, n, k, elapsed_ref, perform_ref);
+		printf("%6d %6d %6d %6d %16.8f %10.3f ", m, n, k, nb, elapsed_ref, perform_ref);
 
 	} 
 
@@ -170,7 +140,6 @@ int main(int argc, char ** argv) {
 
 	free( A );
 	free( Q );
-	free( T );
 	free( R );
 
 	return 0;

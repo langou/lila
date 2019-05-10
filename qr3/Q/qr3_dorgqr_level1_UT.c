@@ -17,6 +17,7 @@ int qr3_dorgqr_level1_UT( int m, int n, int k, int nb, double *A, int lda, doubl
 	tau1 = tau+k0;
 
 	dorg2r_( &m1, &n1, &ib, A11, &lda, tau1, work, &lwork );
+//	dVS2Q( m1, ib, A11, lda  );
 
 //	{ int i,j; for( i = 0; i < k0; i++){ for( j = 0; j < n1; j++ ){ A01[i+j*lda] = (+0.0e00); } } }
 
@@ -42,6 +43,14 @@ int qr3_dorgqr_level1_UT( int m, int n, int k, int nb, double *A, int lda, doubl
 		dV2N( ib, A11, lda );
 		cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, ib, m1-ib, (+1.0e+00), A11+ib, lda, (+1.0e+00), A11, lda );
 		{ int i; for(i=0;i<ib;i++){ A11[i+i*lda] = 1/tau1[i]; } }
+
+
+//		{ int i,j; for(i=0;i<ib;i++){ for(j=0;j<i;j++){ A11[j+i*lda] = A11[i+j*lda];}} }
+//		dV2N( ib, A11, lda );
+//		cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, ib, m1-ib, (+1.0e+00), A11+ib, lda, (+1.0e+00), A11, lda );
+//		{ int i; for(i=0;i<ib;i++){ A11[i+i*lda] = (+1.0e+00) / tau1[i];}} 
+//		LAPACKE_dtrtri( LAPACK_COL_MAJOR, 'U', 'N', ib, A11, lda );
+
 
 ////////////////
 
