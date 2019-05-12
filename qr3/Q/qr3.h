@@ -103,6 +103,19 @@ extern int dVS2Q( int m, int n, double *Q, int ldq  );
 extern long int flops_lapack_orgqr_bef_check( int m, int n, int k, int nb );
 extern long int flops_lapack_orgqr_bef( int m, int n, int k, int nb );
 
+extern long int flops_lapack_org2r_Q1_check( int m, int n, int k );
+extern long int flops_lapack_org2r_Q1( int m, int n, int k );
+extern long int flops_lapack_org2r_Q2_check( int m, int n, int k );
+extern long int flops_lapack_org2r_Q2( int m, int n, int k );
 
+extern long int flops_lapack_geqrf_bef( int m, int n, int nb );
+extern long int flops_lapack_geqrf_bef_check( int m, int n, int nb );
+
+extern long int flops_geqr3_check( int m, int n );
+extern long int flops_geqr3_wob_check( int m, int n );
+extern long int flops_geqr3_bef_constructT_check( int m, int n );
+extern long int flops_geqr3_bef_useT_check( int m, int n );
+extern long int flops_geqr3_bef_constructT( int m, int n );
+extern long int flops_geqr3_bef_useT( int m, int n );
 
 

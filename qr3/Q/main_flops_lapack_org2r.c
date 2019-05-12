@@ -29,6 +29,16 @@ int main(int argc, char ** argv) {
 		flops_lapack_org2r( m, n, k )-flops_lapack_org2r_check( m, n, k )
 	);
 
+	printf("%5d %5d %5d %15ld %15ld %15ld\n", m, n, k,
+		flops_lapack_org2r_Q1_check( m, n, k ),
+		flops_lapack_org2r_Q1( m, n, k ),
+		flops_lapack_org2r_Q1_check( m, n, k ) - flops_lapack_org2r_Q1( m, n, k ) );
+
+	printf("%5d %5d %5d %15ld %15ld %15ld\n", m, n, k,
+		flops_lapack_org2r_Q2_check( m, n, k ),
+		flops_lapack_org2r_Q2( m, n, k ),
+		flops_lapack_org2r_Q2_check( m, n, k ) - flops_lapack_org2r_Q2( m, n, k ) );
+
 	return 0;
 
 }

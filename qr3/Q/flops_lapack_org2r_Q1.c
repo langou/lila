@@ -1,6 +1,6 @@
 #include "qr3.h"
 
-long int flops_lapack_org2r( int int_m, int int_n, int int_k ){
+long int flops_lapack_org2r_Q1( int int_m, int int_n, int int_k ){
 
 // this returns the number of FLOPS for ORG2R as per our computation
 // (4)mnk - (2)(m+n)(k^2) + (4/3)(k^3) - (mk) + (nk) - (1/3)(k)
@@ -69,7 +69,7 @@ long int flops_lapack_org2r( int int_m, int int_n, int int_k ){
 		/ (( long int )  3 );
 
 //      this is the cost for creating Q2
-	flops +=  ( 4 * m - 2 * k + 1 ) * k * ( n - k ) ;
+//	flops +=  ( 4 * m - 2 * k + 1 ) * k * ( n - k ) ;
 
 
 	return flops;

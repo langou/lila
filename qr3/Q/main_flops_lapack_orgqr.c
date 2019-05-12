@@ -35,12 +35,15 @@ int main(int argc, char ** argv) {
 		flops_lapack_org2r_check( m, n, k ) + flops_lapack_orgqr_bef_check( m, n, k, nb ),
 		flops_lapack_orgqr_check( m, n, k, nb )-flops_lapack_org2r_check( m, n, k )-flops_lapack_orgqr_bef_check( m, n, k, nb )) ;
 
+/*
 	printf("%5d %5d %5d %5d %15ld %15ld %15ld %15ld %15ld\n", m, n, k, nb,
 		flops_lapack_orgqr_check( m, n, k, nb ),
+		flops_lapack_org2r( m, n, k ),
 		flops_lapack_org2r( m, n, k ),
 		flops_lapack_orgqr_bef( m, n, k, nb ),
 		flops_lapack_org2r( m, n, k ) + flops_lapack_orgqr_bef( m, n, k, nb ),
 		flops_lapack_orgqr_check( m, n, k, nb )-flops_lapack_org2r( m, n, k )-flops_lapack_orgqr_bef( m, n, k, nb )) ;
+*/
 
 	return 0;
 
