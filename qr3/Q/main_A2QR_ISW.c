@@ -1,5 +1,7 @@
 #include "qr3.h"
 
+// CHECK PERFORM_REF --- USING LAPACK TO COMPUTE FLOPS (NEED FLOPS FOR ISW)
+
 int main(int argc, char ** argv) {
 
 	int i, lda, ldq, ldr, ldt, m, n, verbose, testing;
@@ -91,8 +93,12 @@ int main(int argc, char ** argv) {
 	free( tau );
 
 	// "cheating" for k == n.
-	perform_ref = ((double) flops_lapack_org2r( m, n, n ) + (double) flops_lapack_geqr2( m, n ) ) / elapsed_ref / 1.0e+9 ;
-
+//	perform_ref = ((double) flops_lapack_org2r( m, n, n ) + (double) flops_lapack_geqr2( m, n ) ) / elapsed_ref / 1.0e+9 ;
+	long int flops_lapack_geqr2;
+	long int flops_lapack_org2r;
+	flops_lapack_org2r = (( 6*(m-n)*n + 4*n*n - 3*(m-n) - 1 )*n / 3 ) + ( 4*m - 2*n + 1 )*n*( n - n );
+	flops_lapack_geqr2 = (( 6*m*n*n - 2*n*n*n + 3*m*n + 17*n ) / 3 );
+	perform_ref = ( ((double) flops_lapack_org2r ) + ((double) flops_lapack_geqr2 ) ) / elapsed_ref / 1.0e+9 ;
 
 	if ( verbose ){ 
 

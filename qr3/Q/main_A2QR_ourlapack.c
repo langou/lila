@@ -2,6 +2,9 @@
 
 extern void our_dorgqr_fortran_( int *m, int *n, int *k, double *a, int *lda, double *tau, double *work, int *lwork, int *info );
 
+
+//// CHECK PERFORM_REF --- FLOP COUNT IS IN ACCORDANCE TO LAPACK
+
 int main(int argc, char ** argv) {
 
 	int i, lda, ldq, ldr, ldt, m, n, k, nb, verbose, testing;
@@ -130,7 +133,12 @@ int main(int argc, char ** argv) {
 	free( tau );
 	free( work );
 
-	perform_ref = ((double) flops_lapack_org2r( m, n, k ) + (double) flops_lapack_geqr2( m, k ) ) / elapsed_ref / 1.0e+9 ;
+//	perform_ref = ((double) flops_lapack_org2r( m, n, k ) + (double) flops_lapack_geqr2( m, k ) ) / elapsed_ref / 1.0e+9 ;
+	long int flops_lapack_geqr2;
+	long int flops_lapack_org2r;
+	flops_lapack_org2r = (( 6*(m-k)*k + 4*k*k - 3*(m-k) - 1 )*k / 3 ) + ( 4*m - 2*k + 1 )*k*( n - k );
+	flops_lapack_geqr2 = (( 6*m*k*k - 2*k*k*k + 3*m*k + 17*k ) / 3 );
+	perform_ref = ( ((double) flops_lapack_org2r ) + ((double) flops_lapack_geqr2 ) ) / elapsed_ref / 1.0e+9 ;
 
 
 	if ( verbose ){ 

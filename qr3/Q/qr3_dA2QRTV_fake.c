@@ -7,7 +7,7 @@ int qr3_dA2QRTV_fake( int m, int n, double *A, int lda, double *Q, int ldq, doub
 
 	tau = (double *) malloc( n * sizeof(double));
 
-	dgeqr3_left( m, n, A, lda, T, ldt );
+	dgeqr3( m, n, A, lda, T, ldt );
 
 	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'L', m, n, A, lda, Q, ldq );
 	for(i=0;i<n;i++){tau[i] = T[i+i*ldt];}

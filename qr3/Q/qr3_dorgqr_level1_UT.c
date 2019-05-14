@@ -45,12 +45,6 @@ int qr3_dorgqr_level1_UT( int m, int n, int k, int nb, double *A, int lda, doubl
 		{ int i; for(i=0;i<ib;i++){ A11[i+i*lda] = 1/tau1[i]; } }
 
 
-//		{ int i,j; for(i=0;i<ib;i++){ for(j=0;j<i;j++){ A11[j+i*lda] = A11[i+j*lda];}} }
-//		dV2N( ib, A11, lda );
-//		cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, ib, m1-ib, (+1.0e+00), A11+ib, lda, (+1.0e+00), A11, lda );
-//		{ int i; for(i=0;i<ib;i++){ A11[i+i*lda] = (+1.0e+00) / tau1[i];}} 
-//		LAPACKE_dtrtri( LAPACK_COL_MAJOR, 'U', 'N', ib, A11, lda );
-
 
 ////////////////
 

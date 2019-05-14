@@ -138,7 +138,11 @@ int main(int argc, char ** argv) {
 	free( tau );
 	free( work );
 
-	perform_ref = ((double) flops_larft( m, n )) / elapsed_ref / 1.0e+9 ;
+//	perform_ref = ((double) flops_larft( m, n )) / elapsed_ref / 1.0e+9 ;
+	long int flops_larft;
+	flops_larft = (( n*( n - 1 )*( 6*m - ( 2*n - 1 ) )  ) /  6);
+	perform_ref = ((double) flops_larft) / elapsed_ref / 1.0e+9 ;
+	
 
 	if ( verbose ){ 
 

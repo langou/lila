@@ -105,8 +105,14 @@ int main(int argc, char ** argv) {
 	free( tau );
 	free( work );
 
-	//perform_ref = ((double) flops_lapack_org2r( m, n, k ) + (double) flops_lapack_geqr2( m, k ) ) / elapsed_ref / 1.0e+9 ;
-	perform_ref = ((double) flops_lapack_org2r( m, n, k )) / elapsed_ref / 1.0e+9 ;
+//	perform_ref = ((double) flops_lapack_org2r( m, n, k ) + (double) flops_lapack_geqr2( m, k ) ) / elapsed_ref / 1.0e+9 ;
+//	perform_ref = ((double) flops_lapack_org2r( m, n, k )) / elapsed_ref / 1.0e+9 ;
+//	long int flops_lapack_geqr2;
+//	flops_lapack_geqr2 = (( 6*m*k*k - 2*k*k*k + 3*m*k + 17*k ) / 3 );
+	long int flops_lapack_org2r;
+	flops_lapack_org2r = (( 6*(m-k)*k + 4*k*k - 3*(m-k) - 1 )*k / 3 ) + ( 4*m - 2*k + 1 )*k*( n - k );
+	perform_ref = ( ((double) flops_lapack_org2r ) ) / elapsed_ref / 1.0e+9 ;
+
 
 
 	if ( verbose ){ 
