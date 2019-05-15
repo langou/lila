@@ -52,5 +52,6 @@ extern int UinvLTinU( int n, double *L, int ldl, double *U, int ldu );
 extern int UinvLTinU_cheat( int n, double *L, int ldl, double *U, int ldu );
 extern int dVS2Q( int m, int n, double *Q, int ldq  );
 
-
+extern int our_dorgqr_Q2( int m, int n, int k, int nb, double *A, int lda, double *tau, double *work, int lwork );
+extern int our_dorg2r_Q2( int m, int n, int k, double *A, int lda, double *tau, double *work, int lwork );
 
