@@ -3,7 +3,7 @@
 int qr3_null_dorgqr( int m, int n, int k, int nb, double *A, int lda, double *Q, int ldq, double *tau, double *work, int lwork ){
 
 	double *A11, *Q1, *tau1;
-	int k0, m1, n1, n2, ib, i, j, ldwork;
+	int k0, m1, n1, n2, ib, ldwork;
 	
 	ldwork = n;
 
@@ -22,7 +22,7 @@ int qr3_null_dorgqr( int m, int n, int k, int nb, double *A, int lda, double *Q,
 	LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', m1, ib, A11, lda, tau1, work, ib);
 	dorgqr_after( m1, n1, ib, A11, lda, work, ib, Q1, ldq );
 
-//	for( i = 0; i < k0; i++){ for( j = 0; j < n2; j++ ){ Q[i+j*ldq] = (+0.0e00); } }
+//	{ int i, j; for( i = 0; i < k0; i++){ for( j = 0; j < n2; j++ ){ Q[i+j*ldq] = (+0.0e00); } } }
 
 	while( k0 > 0 ){
 
