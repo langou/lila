@@ -18,8 +18,10 @@ int our_dorgqr_Q2( int m, int n, int k, int nb, double *A, int lda, double *tau,
 	A11 = A+k0*(1+lda);
 	tau1 = tau+k0;
 
-	our_dorg2r_Q2( m1, n1, ib, A11, lda, tau1, work, lwork );
-//	dorg2r_( &m1, &n1, &ib, A11, &lda, tau1, work, &lwork );
+	dorg2r_( &m1, &n1, &ib, A11, &lda, tau1, work, &lwork );
+
+//	our_dorg2r_Q2( m1, n1, ib, A11, lda, tau1, work, lwork );
+//	dorg2r_( &m1, &ib, &ib, A11, &lda, tau1, work, &lwork );
 
 	for( i = 0; i < k0; i++){ for( j = 0; j < n1; j++ ){ A01[i+j*lda] = (+0.0e00); } }
 
