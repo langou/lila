@@ -59,6 +59,7 @@ extern long int flops_lapack_org2r_Q2( int m, int n, int k );
 extern long int flops_lapack_geqrf_bef( int m, int n, int nb );
 extern long int flops_lapack_geqrf_bef_check( int m, int n, int nb );
 
+extern long int flops_geqr3( int m, int n );
 extern long int flops_geqr3_check( int m, int n );
 extern long int flops_geqr3_wob_check( int m, int n );
 extern long int flops_geqr3_bef_constructT_check( int m, int n );

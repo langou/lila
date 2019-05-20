@@ -7,8 +7,8 @@ all: xmain_flops_geqr3.exe
 
 all: xmain_flops_geqr3_ISW.exe
 
-xmain_flops_geqr3_ISW.exe: main_flops_geqr3_ISW.o flops_geqr3_ISW_check.o flops_gemm.o flops_trmm.o flops_geqr3_check.o flops_lapack_larfg.o flops_geqr3_ISW.o flops_geqr3_ISW_save.o
-	$(LOADER) -o $@ main_flops_geqr3_ISW.o flops_geqr3_ISW_check.o flops_gemm.o flops_trmm.o flops_geqr3_check.o flops_lapack_larfg.o flops_geqr3_ISW.o flops_geqr3_ISW_save.o
+xmain_flops_geqr3_ISW.exe: main_flops_geqr3_ISW.o flops_geqr3_ISW_check.o flops_gemm.o flops_trmm.o flops_geqr3_check.o flops_lapack_larfg.o flops_geqr3_ISW.o flops_geqr3_ISW_save.o flops_geqr3.o
+	$(LOADER) -o $@ main_flops_geqr3_ISW.o flops_geqr3_ISW_check.o flops_gemm.o flops_trmm.o flops_geqr3_check.o flops_lapack_larfg.o flops_geqr3_ISW.o flops_geqr3_ISW_save.o flops_geqr3.o
 
 xmain_flops_geqr3.exe: main_flops_geqr3.o flops_geqr3_check.o flops_lapack_larfg.o flops_lapack_geqr2.o flops_geqr3_wob_check.o flops_geqr3_bef_constructT_check.o flops_geqr3_bef_useT_check.o  flops_geqr3_bef_constructT.o flops_geqr3_bef_useT.o flops_larft.o
 	$(LOADER) -o $@ main_flops_geqr3.o flops_geqr3_check.o flops_lapack_larfg.o flops_lapack_geqr2.o flops_geqr3_wob_check.o flops_geqr3_bef_constructT_check.o  flops_geqr3_bef_useT_check.o  flops_geqr3_bef_constructT.o  flops_geqr3_bef_useT.o  flops_larft.o

@@ -15,7 +15,12 @@ long int flops_geqr3_ISW_save( int m, int n ){
 		n1 = n/2;
 		n2 = n-n1;
 
-		flops += flops_geqr3_ISW_save( m, n1 );
+//		This is done with --- flops_geqr3_ISW
+//		flops += flops_geqr3_ISW_save( m, n1 );
+		
+		// No save on flops applying update in ISW framework
+	
+		flops += flops_geqr3_ISW_save( m-n1, n2 );
 
 //		flops += n1 * n2 * n2 ;            // 1: TRMM
 //		flops += n1 * n2 * (m-n) ;         // 2: GEMM
@@ -25,8 +30,6 @@ long int flops_geqr3_ISW_save( int m, int n ){
 		flops += n1 * n2 * n2;
 		flops += n1 * n2 * m;
 		
-		flops += flops_geqr3_ISW_save( m-n1, n2 );
-
 	}
 
 	return flops;
