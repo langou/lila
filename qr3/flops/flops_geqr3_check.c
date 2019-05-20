@@ -20,12 +20,12 @@ long int flops_geqr3_check( int m, int n ){
 		flops += flops_geqr3_check( m, n1 );
 
 		flops += n1 * n1 * n2 ;                            // 1: TRMM
-		flops += (( long int ) 2 ) * n1 * n2 * ( m-n1 );   // 2: GEMM
-	//	flops += 2 * n1 * n2 * ( m-n1 );                   // 2: GEMM
+	//	flops += (( long int ) 2 ) * n1 * n2 * ( m-n1 );   // 2: GEMM
+		flops += 2 * n1 * n2 * ( m-n1 );                   // 2: GEMM
 		flops += (n1-1) * n1 * n2 ;                        // 3: TRMM (extra from a bunch of LARF)
 		flops += n1 * n2 ;                                 // 3: TRMM
-		flops += (( long int ) 2 ) * n1 * n2 * ( m-n1 );   // 4: GEMM
-	//	flops += 2 * n1 * n2 * ( m-n1 );                   // 4: GEMM
+	//	flops += (( long int ) 2 ) * n1 * n2 * ( m-n1 );   // 4: GEMM
+		flops += 2 * n1 * n2 * ( m-n1 );                   // 4: GEMM
 		flops += n1 * n1 * n2;                             // 5: TRMM
 
 		flops += flops_geqr3_check( m-n1, n2 );

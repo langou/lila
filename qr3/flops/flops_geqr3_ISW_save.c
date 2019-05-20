@@ -22,11 +22,13 @@ long int flops_geqr3_ISW_save( int m, int n ){
 	
 		flops += flops_geqr3_ISW_save( m-n1, n2 );
 
+		// Connect
 //		flops += n1 * n2 * n2 ;            // 1: TRMM
 //		flops += n1 * n2 * (m-n) ;         // 2: GEMM
 //		flops += n1 * n1 * n2 ;            // 3: TRMM
 //		flops += n1 * n2 * n2 ;            // 4: TRMM
 
+		// This is the reduced formula
 		flops += n1 * n2 * n2;
 		flops += n1 * n2 * m;
 		
