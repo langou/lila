@@ -10,7 +10,7 @@ long int flops_geqr3_bef_useT( int m, int n ){
 
 	if ( n == 1){
 
-//		flops += flops_lapack_larfg( m );
+		flops += flops_lapack_larfg( m );
 
 	}
 	else {
@@ -36,6 +36,11 @@ long int flops_geqr3_bef_useT( int m, int n ){
 
 	}
 
+
+
+	//flops += ( n * n * n - (( long int ) 3 ) * n * n + (( long int ) 2 ) * n ) / (( long int ) 6 );
+	//flops += n * n * n / (( long int ) 6 );
+	
 	return flops;
 
 }

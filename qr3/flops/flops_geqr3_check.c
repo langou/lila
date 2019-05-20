@@ -12,8 +12,7 @@ long int flops_geqr3_check( int m, int n ){
 
 		flops += flops_lapack_larfg( m );
 
-	}
-	else {
+	} else {
 
 		n1 = n/2;
 		n2 = n-n1;
