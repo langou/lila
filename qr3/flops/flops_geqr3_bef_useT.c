@@ -1,45 +1,19 @@
 #include "flops.h"
 
-long int flops_geqr3_bef_useT( int m, int n ){
+long int flops_geqr3_bef_useT( int int_n ){
 
-	long int flops;
+//	this formula is only exact for n being a power of two
+//	this formula is a good approximation otherwise
 
-	int n1, n2;
+	long int flops, n;
 
 	flops = (( long int ) 0 );
 
-	if ( n == 1){
+	n = (( long int ) int_n );
 
-		flops += flops_lapack_larfg( m );
+//	flops +=  ( n * ( n - 1 ) * ( n - 2 ) ) / 6;
 
-	}
-	else {
-
-		n1 = n/2;
-		n2 = n-n1;
-
-		flops += flops_geqr3_bef_useT_check( m, n1 );
-
-//		flops += n1 * n1 * n2 ;            // 1: TRMM
-//		flops += 2 * n1 * n2 * ( m-n1 );   // 2: GEMM
-		flops += (n1-1) * n1 * n2 ;        // 3: TRMM (extra from a bunch of LARF)
-//		flops += n1 * n2 ;                 // 3: TRMM
-//		flops += 2 * n1 * n2 * ( m-n1 );   // 4: GEMM
-//		flops += n1 * n1 * n2;             // 5: TRMM
-
-		flops += flops_geqr3_bef_useT_check( m-n1, n2 );
-
-//		flops += n1 * n2 * n2 ;            // 1: TRMM
-//		flops += 2 * n1 * n2 * (m-n) ;     // 2: GEMM
-//		flops += n1 * n1 * n2 ;            // 3: TRMM
-//		flops += n1 * n2 * n2 ;            // 4: TRMM
-
-	}
-
-
-
-	//flops += ( n * n * n - (( long int ) 3 ) * n * n + (( long int ) 2 ) * n ) / (( long int ) 6 );
-	//flops += n * n * n / (( long int ) 6 );
+	flops += ( n * n * n - 3 * n * n + 2 * n ) / 6;
 	
 	return flops;
 

@@ -1,13 +1,13 @@
 #include "flops.h"
 
-long int flops_larft( int int_m, int int_k ){
+long int flops_larft( int int_m, int int_n ){
 
-	long int m, k, flops;
+	long int m, n, flops;
 
 	m = ( long int ) int_m;
-	k = ( long int ) int_k;
+	n = ( long int ) int_n;
 
-	flops = ( k * ( k - (( long int ) 1) ) * ( (( long int ) 6) * m - ( (( long int ) 2) * k - (( long int ) 1) ) )  ) / (( long int ) 6);
+	flops = ( n * ( n - 1 ) * ( 6 * m - ( 2 * n - 1 ) )  ) / 6;
 
 	return flops;
 

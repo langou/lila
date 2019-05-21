@@ -18,25 +18,32 @@ int main(int argc, char ** argv) {
 		}
 	}
 
-//	printf("%5d %5d %15ld %15ld %15ld\n", m, n,
-//		flops_geqr3_check( m, n ),
-//		flops_geqr3_wob_check( m, n ) + flops_geqr3_bef_constructT_check( m, n ) + flops_geqr3_bef_useT_check( m, n ),
-//		flops_geqr3_check( m, n ) - ( flops_geqr3_wob_check( m, n ) + flops_geqr3_bef_constructT_check( m, n ) + flops_geqr3_bef_useT_check( m, n ) ));
+	printf("%5d %5d %15ld %15ld %15ld\n", m, n,
+		flops_geqr3_check( m, n ),
+		flops_geqr3_wob_check( m, n ) + flops_geqr3_bef_constructT_check( m, n ) + flops_geqr3_bef_useT_check( n ),
+		flops_geqr3_check( m, n ) - ( flops_geqr3_wob_check( m, n ) + flops_geqr3_bef_constructT_check( m, n ) + flops_geqr3_bef_useT_check( n ) ));
 
-//	printf("%5d %5d %15ld %15ld %15ld\n", m, n,
-//		flops_geqr3_wob_check( m, n ),
-//		flops_lapack_geqr2( m, n ),
-//		flops_geqr3_wob_check( m, n ) - flops_lapack_geqr2( m, n) ) ;
+	printf("%5d %5d %15ld %15ld %15ld\n", m, n,
+		flops_geqr3_wob_check( m, n ),
+		flops_lapack_geqr2( m, n ),
+		flops_geqr3_wob_check( m, n ) - flops_lapack_geqr2( m, n) ) ;
 
 	printf("%5d %5d %15ld %15ld %15ld\n", m, n,
 		flops_geqr3_bef_constructT_check( m, n ),
 		flops_larft( m, n ),
 		flops_geqr3_bef_constructT_check( m, n ) - flops_larft( m, n) ) ;
 
-//	printf("%5d %5d %15ld %15ld %15ld\n", m, n,
-//		flops_geqr3_bef_useT_check( m, n ),
-//		flops_geqr3_bef_useT( m, n ),
-//		flops_geqr3_bef_useT_check( m, n ) - flops_geqr3_bef_useT( m, n) ) ;
+	printf("      %5d %15ld %15ld %15ld\n", n,
+		flops_geqr3_bef_useT_check( n ),
+		flops_geqr3_bef_useT( n ),
+		flops_geqr3_bef_useT_check( n ) - flops_geqr3_bef_useT( n ) ) ;
+
+	printf("%5d %5d %15ld %15ld %15ld\n", m, n,
+		flops_geqr3_check( m, n ),
+		flops_geqr3( m, n ),
+		flops_geqr3_check( m, n ) - flops_geqr3( m, n ) );
+
+
 
 //	printf("%5d %5d %15ld\n", m, n,
 //		flops_geqr3_bef_useT_check( m, n ) );

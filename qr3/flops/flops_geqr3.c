@@ -1,35 +1,67 @@
 #include "flops.h"
 
-long int flops_geqr3( int m, int n ){
+long int flops_geqr3( int int_m, int int_n ){
 
-	long int flops;
+	long int m, n, flops;
 
-	flops = (( long int ) 0 );
-	
-	// The extra flops to use the T matrix
-	//flops = (  (n*n*n) - ((( long int ) 3 )*n*n) + ((( long int ) 2 )*n)  ) / (( long int ) 6 );
-	// (1/6)*n*(n-1)*(n-2) ----- I'm finding this representation more stable. The above will result in negative values
-	flops +=  ( n * ( n-(( long int ) 1 ) ) * ( n-(( long int ) 2 ) ) ) / (( long int ) 6 );
+//	flops = (( long int ) 0 );
+//	flops += flops_lapack_geqr2( int_m, int_n );
+//	flops += flops_larft( int_m, int_n );
+//	flops += flops_geqr3_bef_useT( int_n );
 
+	m = ( long int ) int_m;
+	n = ( long int ) int_n;
 
-//	According to Elmroth and Gustavson:
-//		flop_RGEQR3 = dlarfg + dlarft + ( the cost of doing the (k-1) update computations (Q^T * C) )
+//	flops = (
+//
+//	         12 * m * n * n    // from GEQR2 
+//	       -  4 * n * n * n    // from GEQR2
+//	       +  6 * m * n        // from GEQR2
+//	       + 34 * n            // from GEQR2
+//
+//	       +  6 * m * n * n    // from LARFT
+//	       -  2 * n * n * n    // from LARFT
+//	       -  6 * m * n        // from LARFT
+//	       +  3 * n * n        // from LARFT
+//	       -  1 * n            // from LARFT
+//
+//	       +  1 * n * n * n    // from useT
+//	       -  3 * n * n        // from useT
+//	       +  2 * n            // from useT
+//
+//	) / 6;
 
+//	flops = (
+//
+//	         12 * m * n * n    // from GEQR2 
+//	       +  6 * m * n * n    // from LARFT
+//
+//	       -  4 * n * n * n    // from GEQR2
+//	       -  2 * n * n * n    // from LARFT
+//	       +  1 * n * n * n    // from useT
+//
+//	       +  6 * m * n        // from GEQR2
+//	       -  6 * m * n        // from LARFT
+//
+//	       +  3 * n * n         // from LARFT
+//	       -  3 * n * n         // from useT
+//
+//	       + 34 * n            // from GEQR2
+//	       - 1 * n             // from LARFT
+//	       + 2 * n             // from useT
+//
+//	) / 6;
 
-	flops += ( n * ( n-(( long int ) 1) ) * ( (( long int ) 6) * m // larft
-	-( (( long int ) 2) * n 
-	-(( long int ) 1) ) )  ) 
-	/(( long int ) 6);
+	flops = (
 
-//	flops += (( long int ) 4) * m * n - n;   // larf
-//	flops += (( long int ) 3) * m + 5;	 // larfg
+	         18 * m * n * n
 
-	// lapack_dgeqr2
-	flops += ( (( long int ) 6) * m * n * n 
-	- (( long int ) 2) * n * n * n 
-	+ (( long int ) 3) * m * n 
-	+ (( long int ) 17) * n )
-	/ (( long int ) 3);
+	       -  5 * n * n * n
+
+	       + 35 * n
+
+	) / 6;
+
 
 
 	return flops;

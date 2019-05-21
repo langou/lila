@@ -1,10 +1,14 @@
 #include "flops.h"
 
-long int flops_geqr3_bef_constructT_check( int m, int n ){
+long int flops_geqr3_bef_constructT_check( int int_m, int int_n ){
 
 	long int flops;
+	long int n1, n2;
+	long int m, n;
 
-	int n1, n2;
+	m = ( long int ) int_m;
+
+	n = ( long int ) int_n;
 
 	flops = (( long int ) 0 );
 
@@ -12,8 +16,7 @@ long int flops_geqr3_bef_constructT_check( int m, int n ){
 
 //		flops += flops_lapack_larfg( m );
 
-	}
-	else {
+	} else {
 
 		n1 = n/2;
 		n2 = n-n1;
