@@ -1,8 +1,10 @@
 
 include ../make.inc
 
-FLOPS = flops_geqr3.o      \
-	flops_geqr3_ISW.o  \
+FLOPS = flops_geqr3.o         \
+	flops_lapack_geqr2.o  \
+	flops_lapack_org2r.o  \
+	flops_larft.o         \
 
 CC = gcc
 OPTS = -Wall
