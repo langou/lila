@@ -1,6 +1,6 @@
 #include "qr3.h"
 
-int our_dorg2r_Q2( int m, int n, int k, double *A, int lda, double *tau, double *work, int lwork ){
+int our_dorg2r( int m, int n, int k, double *A, int lda, double *tau, double *work, int lwork ){
 
 	double *A11, *A01, *tau1;
 	int m1, n1, i, j;
@@ -43,12 +43,4 @@ int our_dorg2r_Q2( int m, int n, int k, double *A, int lda, double *tau, double 
 
 	return 0;
 
-}
-
-int wrapper_dlarf( char side, int m, int n, double *V, int incv, double tau, double *C, int ldc, double *work){
-
-	dlarf_( &side, &m, &n, V, &incv, &tau, C, &ldc, work);
-
-
-	return 0;
 }
