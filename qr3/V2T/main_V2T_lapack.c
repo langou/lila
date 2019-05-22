@@ -1,5 +1,6 @@
 #include "../src/qr2.h"
 #include "../check/check.h"
+#include "../flops/flops.h"
 
 int main(int argc, char ** argv) {
 
@@ -81,10 +82,9 @@ int main(int argc, char ** argv) {
 	gettimeofday(&tp, NULL);
 	elapsed_ref+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-	long int flops_larft, int_m, int_n;
-	int_m = m; int_n = n;
-	flops_larft = ( (( long int ) 6 ) * int_m * int_n * ( int_n-1 ) - int_n * ( int_n-1 ) * ( (( long int ) 2 ) * int_n-1 ) ) / (( long int ) 6 );
-	perform_ref = ( ((double) flops_larft ) ) / elapsed_ref / 1.0e+9 ;
+	long int flops;
+	flops = flops_larft( m, n );
+	perform_ref = ( ((double) flops ) ) / elapsed_ref / 1.0e+9 ;
 
 	if ( verbose ){ 
 

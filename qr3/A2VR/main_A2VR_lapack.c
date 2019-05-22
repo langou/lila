@@ -83,10 +83,9 @@ int main(int argc, char ** argv) {
 
 	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', n, n, A, lda, R, ldr );
 
-	long int flops_geqrf, int_m, int_n;
-	int_m = m; int_n = n;
-	flops_geqrf =  ( (( long int ) 6 ) * int_m * int_n * int_n - (( long int ) 2 ) * int_n * int_n * int_n + (( long int ) 3 ) * int_m * int_n + (( long int ) 3 ) * int_n * int_n + (( long int ) 42 ) * int_n ) / (( long int ) 3 );
-	perform_ref = ( ((double) flops_geqrf ) ) / elapsed_ref / 1.0e+9 ;
+	long int flops;
+	flops = flops_lapack_geqr2( m, n );
+	perform_ref = ( ((double) flops ) ) / elapsed_ref / 1.0e+9 ;
 
 	if ( verbose ){ 
 

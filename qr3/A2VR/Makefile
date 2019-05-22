@@ -37,7 +37,7 @@ xmain_A2VR_qr3_UT_ISW.exe: main_A2VR_qr3_UT_ISW.o ../src/libqr2.a ../check/libch
 	make -C ../check/
 
 ../flops/libflops.a: ../flops/flops_geqr3.o      \
-	../flops/flops_geqr3_ISW.o  
+	../flops/flops_lapack_geqr2.o            
 	make -C ../flops/
 
 .c.o:

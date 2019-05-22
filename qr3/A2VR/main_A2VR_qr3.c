@@ -82,7 +82,7 @@ int main(int argc, char ** argv) {
 	elapsed_ref+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
 	long int flops;
-	flops = flops_geqr3( m, n );
+	flops = flops_lapack_geqr2( m, n );
 	perform_ref = ( ((double) flops ) ) / elapsed_ref / 1.0e+9 ;
 
 	if ( verbose ){ 

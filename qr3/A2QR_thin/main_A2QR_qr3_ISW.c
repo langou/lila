@@ -1,5 +1,6 @@
 #include "../src/qr2.h"
 #include "../check/check.h"
+#include "../flops/flops.h"
 
 int main(int argc, char ** argv) {
 
@@ -91,17 +92,14 @@ int main(int argc, char ** argv) {
 	gettimeofday(&tp, NULL);
 	elapsed_ref+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-	long int flops_geqrf, flops_orgqr, int_m, int_n;
-	int_m = m; int_n = n;
-	flops_geqrf =  ( (( long int ) 6 ) * int_m * int_n * int_n - (( long int ) 2 ) * int_n * int_n * int_n + (( long int ) 3 ) * int_m * int_n 
-	+ (( long int ) 3 ) * int_n * int_n + (( long int ) 42 ) * int_n ) / (( long int ) 3 );
-	flops_orgqr = ( (( long int ) 12 ) * int_m * int_n * int_n - (( long int ) 6 ) * ( int_m + int_n ) * int_n * int_n + (( long int ) 4 ) * int_n * int_n * int_n 
-	+ (( long int ) 9 ) * int_n * int_n - (( long int ) 3 ) * int_m * int_n - (( long int ) 3 ) * int_n * int_n - (( long int ) 4 ) * int_n ) / (( long int ) 3 );
-	perform_ref = ( ((double) flops_geqrf ) + ((double) flops_orgqr ) ) / elapsed_ref / 1.0e+9 ;
+	long int flops1, flops2;
+	flops1 = flops_lapack_geqr2( m, n );
+	flops2 = flops_lapack_org2r( m, n, n );
+	perform_ref = ( ((double) flops1 ) + ((double) flops2 ) ) / elapsed_ref / 1.0e+9 ;
 
 	if ( verbose ){ 
 
-		printf("LAPACK GEQRF ORGQR");
+		printf("QR3 ISW GEQRF ORGQR");
 		printf("m = %4d, ", m);
 		printf("n = %4d, ", n);
 		printf(" \n");

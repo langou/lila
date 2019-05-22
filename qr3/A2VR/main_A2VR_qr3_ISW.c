@@ -81,11 +81,9 @@ int main(int argc, char ** argv) {
 	gettimeofday(&tp, NULL);
 	elapsed_ref+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-	long int flops_geqr3_ISW, int_m, int_n;
-	int_m = m; int_n = n;
-	flops_geqr3_ISW = ( (( long int ) 70 ) * int_m * int_n * int_n - (( long int ) 25 ) * int_n * int_n * int_n ) / (( long int ) 42 );
-
-	perform_ref = ( ((double) flops_geqr3_ISW ) ) / elapsed_ref / 1.0e+9 ;
+	long int flops;
+	flops = flops_lapack_geqr2( m, n );
+	perform_ref = ( ((double) flops ) ) / elapsed_ref / 1.0e+9 ;
 
 	if ( verbose ){ 
 
