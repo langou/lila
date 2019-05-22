@@ -1,5 +1,6 @@
 #include "../src/qr2.h"
 #include "../check/check.h"
+#include "../flops/flops.h"
 
 int main(int argc, char ** argv) {
 

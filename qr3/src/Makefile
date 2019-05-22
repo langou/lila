@@ -8,6 +8,7 @@ SRC = qr2_dgeqr3R.o            \
 	qr2_dorgqr.o           \
 	qr2_dorgqr_UT.o        \
 	qr2_dorgqr_VT2Q.o      \
+	qr2_dorgqr_VS2Q.o      \
 	qr2_dV2tau.o           \
 	qr2_larft.o            \
 	qr2_larft_ISW.o        \

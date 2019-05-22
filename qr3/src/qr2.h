@@ -18,9 +18,10 @@ extern int qr2_dgeqr3R_UT    ( int m, int n, double *A, int lda, double *T, int 
 extern int qr2_dgeqr3R_ISW   ( int m, int n, double *A, int lda, double *T, int ldt, double *R, int ldr );
 extern int qr2_dgeqr3R_UT_ISW( int m, int n, double *A, int lda, double *T, int ldt, double *R, int ldr );
 
-extern int qr2_dorgqr   ( int m, int n, double *Q, int ldq, double *T, int ldt, double *tau );
-extern int qr2_dorgqr_UT( int m, int n, double *Q, int ldq, double *T, int ldt, double *tau );
+extern int qr2_dorgqr     ( int m, int n, double *Q, int ldq, double *T, int ldt, double *tau );
+extern int qr2_dorgqr_UT  ( int m, int n, double *Q, int ldq, double *T, int ldt, double *tau );
 extern int qr2_dorgqr_VT2Q( int m, int n, double *Q, int ldq, double *T, int ldt, double *tau );
+extern int qr2_dorgqr_VS2Q( int m, int n, double *Q, int ldq, double *T, int ldt, double *tau );
 
 extern int qr2_dV2tau( int m, int n, double *A, int lda, double *tau );
 

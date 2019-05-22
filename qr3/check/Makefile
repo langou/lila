@@ -1,13 +1,13 @@
 
 include ../make.inc
 
-SRC = check_qq_orth.o        \
+CHECK = check_qq_orth.o      \
 	check_qr_repres.o    \
 
 CC = gcc
 OPTS = -Wall
 
-all: $(SRC)
+all: $(CHECK)
 	ar -cr libcheck.a $^
 	ranlib libcheck.a
 

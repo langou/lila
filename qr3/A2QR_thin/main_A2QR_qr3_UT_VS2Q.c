@@ -1,11 +1,11 @@
 #include "../src/qr2.h"
 #include "../check/check.h"
-#include "../flops/flops.h"
+//#include "../flops/flops.h"
 
 int main(int argc, char ** argv) {
 
-	int i, lda, ldr, m, n, lwork, verbose, testing;
-	double *A, *As, *R, *tau, *work;
+	int i, lda, ldq, ldr, m, n, lwork, verbose, testing;
+	double *A, *Q, *R, *tau, *work;
 	double orth, repres;
 	double elapsed_ref, perform_ref;
 	struct timeval tp;
@@ -15,6 +15,7 @@ int main(int argc, char ** argv) {
     	m         = 27;
     	n         = 20;
 	lda       = -1;
+	ldq       = -1;
 	ldr       = -1;
 	verbose   = 0;
 	testing   = 1;
@@ -22,6 +23,10 @@ int main(int argc, char ** argv) {
 	for(i = 1; i < argc; i++){
 		if( strcmp( *(argv + i), "-lda") == 0) {
 			lda = atoi( *(argv + i + 1) );
+			i++;
+		}
+		if( strcmp( *(argv + i), "-ldq") == 0) {
+			ldq = atoi( *(argv + i + 1) );
 			i++;
 		}
 		if( strcmp( *(argv + i), "-ldr") == 0) {
@@ -49,14 +54,18 @@ int main(int argc, char ** argv) {
 	if (( m < n )) { printf("\n\n We need n <= m\n\n"); return 0; }
 
 	if( lda < 0 ) lda = m;
+	if( ldq < 0 ) ldq = m;
 	if( ldr < 0 ) ldr = n;
 
 	A  = (double *) malloc( lda * n * sizeof(double));
-	As = (double *) malloc( lda * n * sizeof(double));
+	Q  = (double *) malloc( ldq * n * sizeof(double));
  	R  = (double *) malloc( ldr * n * sizeof(double));
 
  	for(i = 0; i < lda * n; i++)
 		*(A + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
+
+ 	for(i = 0; i < ldq * n; i++)
+		*(Q + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
 
 	for(i = 0; i < ldr * n; i++)
 		*(R + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
@@ -71,23 +80,28 @@ int main(int argc, char ** argv) {
 	free( work );
 	work = (double *) malloc( lwork * sizeof(double));
 
-	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n, A, lda, As, lda );
+	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n, A, lda,  Q, ldq );
 
 	gettimeofday(&tp, NULL);
 	elapsed_ref=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-	qr2_dgeqr3R( m, n, A, lda, A, lda, R, ldr );
+	qr2_dgeqr3R_UT( m, n, Q, ldq, Q, ldq, R, ldr );
+	qr2_dVS2Q( m, n, Q, ldq  );
 
 	gettimeofday(&tp, NULL);
 	elapsed_ref+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-	long int flops;
-	flops = flops_geqr3( m, n );
-	perform_ref = ( ((double) flops ) ) / elapsed_ref / 1.0e+9 ;
+	long int flops_geqrf, flops_orgqr, int_m, int_n;
+	int_m = m; int_n = n;
+	flops_geqrf =  ( (( long int ) 6 ) * int_m * int_n * int_n - (( long int ) 2 ) * int_n * int_n * int_n + (( long int ) 3 ) * int_m * int_n 
+	+ (( long int ) 3 ) * int_n * int_n + (( long int ) 42 ) * int_n ) / (( long int ) 3 );
+	flops_orgqr = ( (( long int ) 12 ) * int_m * int_n * int_n - (( long int ) 6 ) * ( int_m + int_n ) * int_n * int_n + (( long int ) 4 ) * int_n * int_n * int_n 
+	+ (( long int ) 9 ) * int_n * int_n - (( long int ) 3 ) * int_m * int_n - (( long int ) 3 ) * int_n * int_n - (( long int ) 4 ) * int_n ) / (( long int ) 3 );
+	perform_ref = ( ((double) flops_geqrf ) + ((double) flops_orgqr ) ) / elapsed_ref / 1.0e+9 ;
 
 	if ( verbose ){ 
 
-		printf("GEQR3");
+		printf("LAPACK GEQRF ORGQR");
 		printf("m = %4d, ", m);
 		printf("n = %4d, ", n);
 		printf(" \n");
@@ -102,32 +116,18 @@ int main(int argc, char ** argv) {
 
 	if ( testing ){
 
-		double *Q, *T;
-		Q  = (double *) malloc( m * n * sizeof(double));
-		T  = (double *) malloc( n * n * sizeof(double));
-		LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'L', m, n, A, lda, Q, m );
-		//LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', n, n, A, lda, T, n );
-		//for(i=0;i<n;i++) tau[i] = T[i+i*n];
-		qr2_dV2tau( m, n, A, lda, tau );
-		LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', m, n, A, lda, tau, T, n );
-
-		qr2_dorgqr( m, n, Q, m, T, n, tau );
-
-		check_qq_orth( &orth, m, n, Q, m );
+		check_qq_orth( &orth, m, n, Q, ldq );
 		if ( verbose ) printf("qq_orth  = %5.1e  \n ",orth); else printf(" %5.1e  ",orth); 
 
-		check_qr_repres( &repres, m, n, As, lda, Q, m, R, ldr );
+		check_qr_repres( &repres, m, n, A, lda, Q, ldq, R, ldr );
 		if ( verbose ) printf("qr_repres = %5.1e  \n ",repres); else printf(" %5.1e  ",repres); 
-
-		free( Q );
-		free( T );
 
 	}
 
 	if ( !verbose ) printf("\n");		
 
 	free( A  );
-	free( As );
+	free( Q  );
 	free( R  );
 	free( work );
 	free( tau );
