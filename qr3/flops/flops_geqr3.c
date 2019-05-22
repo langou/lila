@@ -62,8 +62,6 @@ long int flops_geqr3( int int_m, int int_n ){
 
 	) / 6;
 
-
-
 	return flops;
 
 }

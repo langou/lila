@@ -70,4 +70,8 @@ extern long int flops_geqr3_bef_useT( int n );
 extern long int flops_geqr3_ISW( int m, int n );
 extern long int flops_geqr3_ISW_check( int m, int n );
 extern long int flops_geqr3_ISW_save( int m, int n );
+long int flops_geqr3_ISW_constructT_check( int m, int n );
+long int flops_geqr3_ISW_constructT( int int_m, int int_n );
+
+
 

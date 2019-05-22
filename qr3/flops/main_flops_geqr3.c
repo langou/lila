@@ -43,11 +43,6 @@ int main(int argc, char ** argv) {
 		flops_geqr3( m, n ),
 		flops_geqr3_check( m, n ) - flops_geqr3( m, n ) );
 
-
-
-//	printf("%5d %5d %15ld\n", m, n,
-//		flops_geqr3_bef_useT_check( m, n ) );
-
 	return 0;
 
 }

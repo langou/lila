@@ -26,7 +26,6 @@ long int flops_geqr3_ISW( int m, int n ){
 		flops += (( long int ) 2 ) * n1 * n2 * ( m-n1 ); // gemm
 		flops += n1 * n1 * n2;                           // trmm
 
-//		flops += flops_geqr3_check( m-n1, n2 );
 		flops += flops_geqr3_ISW( m-n1, n2 );
 
 	}
