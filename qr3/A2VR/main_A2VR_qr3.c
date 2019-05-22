@@ -1,4 +1,5 @@
 #include "A2VR.h"
+#include "../src/qr2.h"
 
 int main(int argc, char ** argv) {
 
@@ -74,7 +75,7 @@ int main(int argc, char ** argv) {
 	gettimeofday(&tp, NULL);
 	elapsed_ref=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-	dgeqr3R( m, n, A, lda, A, lda, R, ldr );
+	qr2_dgeqr3R( m, n, A, lda, A, lda, R, ldr );
 
 	gettimeofday(&tp, NULL);
 	elapsed_ref+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
