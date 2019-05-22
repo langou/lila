@@ -1,6 +1,6 @@
-#include "V2T.h"
+#include "qr2.h"
 
-int mLUinA( int n, double *A, int lda ){
+int qr2_mLUinA( int n, double *A, int lda ){
 
 	int info, n1, n2;
 	double *A11, *A12, *A21, *A22;
@@ -19,7 +19,7 @@ int mLUinA( int n, double *A, int lda ){
 		A22 = A + n1 + n1*lda; 
 
 //		A22 = - L22 * U22
-		info = mLUinA( n2, A22, lda );
+		info = qr2_mLUinA( n2, A22, lda );
 
 //		A22 = A22 - L21 * U12 
 		cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans, n2, n2, n1, (-1.0e+00), A21, lda, A12, lda, (+1.0e+00), A22, lda );
@@ -31,7 +31,7 @@ int mLUinA( int n, double *A, int lda ){
 		cblas_dtrmm( CblasColMajor, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, n2, n1, (-1.0e+00), A11, lda, A21, lda );
 
 //		A11 = - L11 * U11
-		info = mLUinA( n1, A11, lda );
+		info = qr2_mLUinA( n1, A11, lda );
 
 	}
 

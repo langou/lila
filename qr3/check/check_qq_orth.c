@@ -1,6 +1,6 @@
-#include "V2T.h"
+#include "check.h"
 
-int V2T_test_qq_orth_1( double *norm_orth_1, int m, int n, double *Q, int ldq  ){
+int check_qq_orth( double *norm_orth_1, int m, int n, double *Q, int ldq  ){
 
 	double *work;
 

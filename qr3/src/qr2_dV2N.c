@@ -1,6 +1,6 @@
-#include "V2T.h"
+#include "qr2.h"
 
-int dV2N( int n, double *T, int ldt ){
+int qr2_dV2N( int n, double *T, int ldt ){
 
 	int n1, n2;
 	double *T11, *T12, *T22;
@@ -18,10 +18,10 @@ int dV2N( int n, double *T, int ldt ){
 		T12 = T+n1*ldt;
 		T22 = T+n1+n1*ldt;
 
-		dV2N( n1, T11, ldt );
+		qr2_dV2N( n1, T11, ldt );
 		cblas_dsyrk( CblasColMajor, CblasUpper, CblasNoTrans, n1, n2, (+1.0e+00), T12, ldt, (+1.0e+00), T11, ldt );
 		cblas_dtrmm( CblasColMajor, CblasRight, CblasUpper, CblasTrans, CblasUnit,  n1, n2, (+1.0e+00), T22, ldt, T12, ldt );
-		dV2N( n2, T22, ldt );
+		qr2_dV2N( n2, T22, ldt );
 
 	}
 

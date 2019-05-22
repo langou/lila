@@ -1,6 +1,6 @@
-#include "A2VR.h"
+#include "qr2.h"
 
-int dV2tau( int m, int n, double *A, int lda, double *tau ){
+int qr2_dV2tau( int m, int n, double *A, int lda, double *tau ){
 
 	double *Akk, normv2; 
 	int k;

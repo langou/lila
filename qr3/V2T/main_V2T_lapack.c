@@ -1,4 +1,5 @@
-#include "V2T.h"
+#include "../src/qr2.h"
+#include "../check/check.h"
 
 int main(int argc, char ** argv) {
 
@@ -105,12 +106,12 @@ int main(int argc, char ** argv) {
 		double *Q;
 		Q  = (double *) malloc( m * n * sizeof(double));
 		LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'L', m, n, A, lda, Q, m );
-		qr3_dorgqr( m, n, Q, m, T, ldt, tau );
+		qr2_dorgqr( m, n, Q, m, T, ldt, tau );
 
-		V2T_test_qq_orth_1( &orth, m, n, Q, m );
+		check_qq_orth( &orth, m, n, Q, m );
 		if ( verbose ) printf("qq_orth  = %5.1e  \n ",orth); else printf(" %5.1e  ",orth); 
 
-		V2T_test_qr_repres_1( &repres, m, n, As, lda, Q, m, A, lda );
+		check_qr_repres( &repres, m, n, As, lda, Q, m, A, lda );
 		if ( verbose ) printf("qr_repres = %5.1e  \n ",repres); else printf(" %5.1e  ",repres); 
 
 		free( Q );

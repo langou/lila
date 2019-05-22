@@ -1,6 +1,6 @@
-#include "A2VR.h"
+#include "qr2.h"
 
-int dgeqr3R_UT_ISW( int m, int n, double *A, int lda, double *T, int ldt, double *R, int ldr ){
+int qr2_dgeqr3R_UT( int m, int n, double *A, int lda, double *T, int ldt, double *R, int ldr ){
 
 	int n1, n2, i, j, info;
 	double *A11, *A12, *A21, *A22;
@@ -32,7 +32,7 @@ int dgeqr3R_UT_ISW( int m, int n, double *A, int lda, double *T, int ldt, double
 		R12 = R+n1*ldr;
 		R22 = R+n1*(1+ldr);
 
-	dgeqr3R_UT( m, n1, A11, lda, T11, ldt, R11, ldr );
+	qr2_dgeqr3R_UT( m, n1, A11, lda, T11, ldt, R11, ldr );
 
 		// Using T12 as a workspace
 		if( A11 == R11 ){
@@ -58,8 +58,11 @@ int dgeqr3R_UT_ISW( int m, int n, double *A, int lda, double *T, int ldt, double
 
 		}
 
-	dgeqr3R_UT_ISW( m-n1, n2, A22, lda, T22, ldt, R22, ldr );
+	qr2_dgeqr3R_UT( m-n1, n2, A22, lda, T22, ldt, R22, ldr );
 
+		for (i=0;i<n1;i++) for (j=0;j<n2;j++) T12[i+j*ldt] = A21[j+i*lda];
+		cblas_dtrmm ( CblasColMajor, CblasRight, CblasLower, CblasNoTrans, CblasUnit, n1, n2, 1.0e+00, A22, lda, T12, ldt); 
+		cblas_dgemm( CblasColMajor, CblasTrans, CblasNoTrans, n1, n2, m-n, +1.0e+00, A21+n2, lda, A22+n2,lda, +1.0e+00, T12, ldt);
 
 	}
 
