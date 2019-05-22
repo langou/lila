@@ -1,6 +1,6 @@
-#include "A2VR.h"
+#include "qr2.h"
 
-int qr3_dorgqr( int m, int n, double *Q, int ldq, double *T, int ldt, double *tau ){
+int qr2_dorgqr( int m, int n, double *Q, int ldq, double *T, int ldt, double *tau ){
 
 
 	double *Q11, *Q21;
@@ -37,7 +37,7 @@ int qr3_dorgqr( int m, int n, double *Q, int ldq, double *T, int ldt, double *ta
 		tau1 = tau;
 		tau2 = tau+n1;
 
-		qr3_dorgqr( m-n1, n2, Q22, ldq, T22, ldt, tau2 );
+		qr2_dorgqr( m-n1, n2, Q22, ldq, T22, ldt, tau2 );
 
 		cblas_dgemm( CblasColMajor, CblasTrans, CblasNoTrans, n1, n2, m-n1, (+1.0e+00), Q21, ldq, Q22, ldq, (+0.0e+00), Q12, ldq );
 		cblas_dtrmm( CblasColMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, n1, n2, (+1.0e+00), T11, ldt, Q12, ldq );
@@ -46,7 +46,7 @@ int qr3_dorgqr( int m, int n, double *Q, int ldq, double *T, int ldt, double *ta
 
 //		LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', n1, n1, T11, ldt, Q11, ldq );
 //		dVT2Q( m, n1, Q11, ldq );
-		qr3_dorgqr( m, n1, Q11, ldq, T11, ldt, tau1 );
+		qr2_dorgqr( m, n1, Q11, ldq, T11, ldt, tau1 );
 
 	}
 

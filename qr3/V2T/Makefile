@@ -1,49 +1,69 @@
 
 include ../make.inc
 
-all: xmain_V2T_lapack.exe 
-all: xmain_V2T_qr3.exe 
-all: xmain_V2T_qr3_ISW.exe 
-all: xmain_V2T_qr3_UT.exe 
-all: xmain_V2T_qr3_UT_ISW.exe 
-all: xmain_V2T_V2N.exe 
-all: xmain_V2T_V2N_N2T.exe 
-all: xmain_V2T_V2N_TRI.exe 
-all: xmain_V2T_qr3_V2T.exe 
-all: xmain_V2T_qr3_V2T_UT.exe 
+#all: xmain_V2T_lapack.exe 
+#all: xmain_V2T_qr3.exe 
+#all: xmain_V2T_qr3_ISW.exe 
+#all: xmain_V2T_qr3_UT.exe 
+#all: xmain_V2T_qr3_UT_ISW.exe 
+#all: xmain_V2T_V2N.exe 
+#all: xmain_V2T_V2N_N2T.exe 
+#all: xmain_V2T_V2N_TRI.exe 
+#all: xmain_V2T_qr3_V2T.exe 
+#all: xmain_V2T_qr3_V2T_UT.exe 
 
-xmain_V2T_lapack.exe: main_V2T_lapack.o qr3_dorgqr.o V2T_test_qq_orth_1.o V2T_test_qr_repres_1.o
-	$(LOADER) -o $@ main_V2T_lapack.o qr3_dorgqr.o V2T_test_qq_orth_1.o V2T_test_qr_repres_1.o $(LIB)
+all: xmain_V2T_lapack.exe xmain_V2T_qr3.exe xmain_V2T_qr3_ISW.exe xmain_V2T_qr3_UT.exe xmain_V2T_qr3_UT_ISW.exe xmain_V2T_V2N.exe xmain_V2T_V2N_N2T.exe xmain_V2T_V2N_TRI.exe xmain_V2T_qr3_V2T.exe xmain_V2T_qr3_V2T_UT.exe 
 
-xmain_V2T_qr3.exe: main_V2T_qr3.o qr3_dorgqr.o V2T_test_qq_orth_1.o V2T_test_qr_repres_1.o qr3_larft.o
-	$(LOADER) -o $@ main_V2T_qr3.o qr3_dorgqr.o V2T_test_qq_orth_1.o V2T_test_qr_repres_1.o qr3_larft.o $(LIB)
+xmain_V2T_lapack.exe: main_V2T_lapack.o ../src/libqr2.a ../check/libcheck.a
+	$(LOADER) -o $@ main_V2T_lapack.o ../src/libqr2.a ../check/libcheck.a $(LIB)
 
-xmain_V2T_qr3_ISW.exe: main_V2T_qr3_ISW.o qr3_dorgqr.o V2T_test_qq_orth_1.o V2T_test_qr_repres_1.o qr3_larft.o qr3_larft_ISW.o
-	$(LOADER) -o $@ main_V2T_qr3_ISW.o qr3_dorgqr.o V2T_test_qq_orth_1.o V2T_test_qr_repres_1.o qr3_larft.o qr3_larft_ISW.o $(LIB)
+xmain_V2T_qr3.exe: main_V2T_qr3.o ../src/libqr2.a ../check/libcheck.a 
+	$(LOADER) -o $@ main_V2T_qr3.o ../src/libqr2.a ../check/libcheck.a $(LIB)
 
-xmain_V2T_qr3_UT.exe: main_V2T_qr3_UT.o V2T_test_qq_orth_1.o V2T_test_qr_repres_1.o qr3_larft_UT.o qr3_dorgqr_UT.o
-	$(LOADER) -o $@ main_V2T_qr3_UT.o V2T_test_qq_orth_1.o V2T_test_qr_repres_1.o qr3_larft_UT.o qr3_dorgqr_UT.o $(LIB)
+xmain_V2T_qr3_ISW.exe: main_V2T_qr3_ISW.o ../src/libqr2.a ../check/libcheck.a 
+	$(LOADER) -o $@ main_V2T_qr3_ISW.o ../src/libqr2.a ../check/libcheck.a $(LIB)
 
-xmain_V2T_qr3_UT_ISW.exe: main_V2T_qr3_UT_ISW.o V2T_test_qq_orth_1.o V2T_test_qr_repres_1.o qr3_larft_UT.o qr3_larft_UT_ISW.o qr3_dorgqr_UT.o
-	$(LOADER) -o $@ main_V2T_qr3_UT_ISW.o V2T_test_qq_orth_1.o V2T_test_qr_repres_1.o qr3_larft_UT.o qr3_larft_UT_ISW.o qr3_dorgqr_UT.o $(LIB)
+xmain_V2T_qr3_UT.exe: main_V2T_qr3_UT.o ../src/libqr2.a ../check/libcheck.a 
+	$(LOADER) -o $@ main_V2T_qr3_UT.o ../src/libqr2.a ../check/libcheck.a $(LIB)
 
-xmain_V2T_V2N.exe: main_V2T_V2N.o qr3_dorgqr_UT.o V2T_test_qq_orth_1.o V2T_test_qr_repres_1.o dV2N.o dVS2Q.o UinvLTinU.o mLUinA.o
-	$(LOADER) -o $@ main_V2T_V2N.o qr3_dorgqr_UT.o V2T_test_qq_orth_1.o V2T_test_qr_repres_1.o dV2N.o dVS2Q.o UinvLTinU.o mLUinA.o $(LIB)
+xmain_V2T_qr3_UT_ISW.exe: main_V2T_qr3_UT_ISW.o ../src/libqr2.a ../check/libcheck.a  
+	$(LOADER) -o $@ main_V2T_qr3_UT_ISW.o ../src/libqr2.a ../check/libcheck.a $(LIB)
 
-xmain_V2T_V2N_N2T.exe: main_V2T_V2N_N2T.o qr3_dorgqr.o V2T_test_qq_orth_1.o V2T_test_qr_repres_1.o dN2T.o dV2N.o
-	$(LOADER) -o $@ main_V2T_V2N_N2T.o qr3_dorgqr.o V2T_test_qq_orth_1.o V2T_test_qr_repres_1.o dN2T.o dV2N.o $(LIB)
+xmain_V2T_V2N.exe: main_V2T_V2N.o ../src/libqr2.a ../check/libcheck.a 
+	$(LOADER) -o $@ main_V2T_V2N.o ../src/libqr2.a ../check/libcheck.a $(LIB)
 
-xmain_V2T_V2N_TRI.exe: main_V2T_V2N_TRI.o qr3_dorgqr.o V2T_test_qq_orth_1.o V2T_test_qr_repres_1.o dV2N.o
-	$(LOADER) -o $@ main_V2T_V2N_TRI.o qr3_dorgqr.o V2T_test_qq_orth_1.o V2T_test_qr_repres_1.o dV2N.o $(LIB)
+xmain_V2T_V2N_N2T.exe: main_V2T_V2N_N2T.o ../src/libqr2.a ../check/libcheck.a
+	$(LOADER) -o $@ main_V2T_V2N_N2T.o ../src/libqr2.a ../check/libcheck.a $(LIB)
 
-xmain_V2T_qr3_V2T.exe: main_V2T_qr3_V2T.o V2T_test_qq_orth_1.o V2T_test_qr_repres_1.o qr3_dorgqr.o qr3_larft_ISW_V2T.o dN2T.o dV2N.o 
-	$(LOADER) -o $@ main_V2T_qr3_V2T.o V2T_test_qq_orth_1.o V2T_test_qr_repres_1.o qr3_dorgqr.o qr3_larft_ISW_V2T.o dN2T.o dV2N.o $(LIB)
+xmain_V2T_V2N_TRI.exe: main_V2T_V2N_TRI.o ../src/libqr2.a ../check/libcheck.a 
+	$(LOADER) -o $@ main_V2T_V2N_TRI.o ../src/libqr2.a ../check/libcheck.a $(LIB)
 
-xmain_V2T_qr3_V2T_UT.exe: main_V2T_qr3_V2T_UT.o V2T_test_qq_orth_1.o V2T_test_qr_repres_1.o qr3_dorgqr_UT.o qr3_larft_ISW_V2T_UT.o dN2T.o dV2N.o 
-	$(LOADER) -o $@ main_V2T_qr3_V2T_UT.o V2T_test_qq_orth_1.o V2T_test_qr_repres_1.o qr3_dorgqr_UT.o qr3_larft_ISW_V2T_UT.o dN2T.o dV2N.o $(LIB)
+xmain_V2T_qr3_V2T.exe: main_V2T_qr3_V2T.o ../src/libqr2.a ../check/libcheck.a 
+	$(LOADER) -o $@ main_V2T_qr3_V2T.o ../src/libqr2.a ../check/libcheck.a $(LIB)
+
+xmain_V2T_qr3_V2T_UT.exe: main_V2T_qr3_V2T_UT.o ../src/libqr2.a ../check/libcheck.a 
+	$(LOADER) -o $@ main_V2T_qr3_V2T_UT.o ../src/libqr2.a ../check/libcheck.a $(LIB)
+
+../src/libqr2.a: ../src/qr2_dorgqr.o  \
+	../src/qr2_dorgqr_UT.o        \
+	../src/qr2_UinvLTinU.o        \
+	../src/qr2_dVS2Q.o            \
+	../src/qr2_dV2N.o             \
+	../src/qr2_dN2T.o             \
+	../src/qr2_larft.o            \
+	../src/qr2_larft_UT.o         \
+	../src/qr2_larft_ISW.o        \
+	../src/qr2_larft_ISW_V2T.o    \
+	../src/qr2_larft_ISW_V2T_UT.o \
+	../src/qr2_larft_UT_ISW.o   
+	make -C ../src/
+
+../check/libcheck.a: ../check/check_qr_repres.o \
+	../check/check_qq_orth.o
+	make -C ../check/
 
 .c.o:
 	$(CC) $(OPTS) -I$(INCLUDE) -c -o $@ $<
 
 clean:
-	rm -f *o *exe
+	rm -f *o *exe ../src/*a ../src/*o ../check/*a ../check/*o

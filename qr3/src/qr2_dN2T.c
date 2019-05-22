@@ -1,6 +1,6 @@
-#include "V2T.h"
+#include "qr2.h"
 
-int dN2T( int n, double *tau, double *T, int ldt ){
+int qr2_dN2T( int n, double *tau, double *T, int ldt ){
 
 	int n1, n2; 
 	double *T11, *T12, *T22;
@@ -27,8 +27,8 @@ int dN2T( int n, double *tau, double *T, int ldt ){
 		tau1 = tau;
 		tau2 = tau+n1;
 
-		dN2T( n1, tau1, T11, ldt );
-		dN2T( n2, tau2, T22, ldt );
+		qr2_dN2T( n1, tau1, T11, ldt );
+		qr2_dN2T( n2, tau2, T22, ldt );
 
 		cblas_dtrmm( CblasColMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit,  n1, n2, (-1.0e+00), T11, ldt, T12, ldt );
 		cblas_dtrmm( CblasColMajor, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, n1, n2, (+1.0e+00), T22, ldt, T12, ldt );

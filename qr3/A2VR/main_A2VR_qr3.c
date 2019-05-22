@@ -1,5 +1,5 @@
-#include "A2VR.h"
 #include "../src/qr2.h"
+#include "../check/check.h"
 
 int main(int argc, char ** argv) {
 
@@ -108,15 +108,15 @@ int main(int argc, char ** argv) {
 		LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'L', m, n, A, lda, Q, m );
 		//LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', n, n, A, lda, T, n );
 		//for(i=0;i<n;i++) tau[i] = T[i+i*n];
-		dV2tau( m, n, A, lda, tau );
+		qr2_dV2tau( m, n, A, lda, tau );
 		LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', m, n, A, lda, tau, T, n );
 
-		qr3_dorgqr( m, n, Q, m, T, n, tau );
+		qr2_dorgqr( m, n, Q, m, T, n, tau );
 
-		A2VR_test_qq_orth_1( &orth, m, n, Q, m );
+		check_qq_orth( &orth, m, n, Q, m );
 		if ( verbose ) printf("qq_orth  = %5.1e  \n ",orth); else printf(" %5.1e  ",orth); 
 
-		A2VR_test_qr_repres_1( &repres, m, n, As, lda, Q, m, R, ldr );
+		check_qr_repres( &repres, m, n, As, lda, Q, m, R, ldr );
 		if ( verbose ) printf("qr_repres = %5.1e  \n ",repres); else printf(" %5.1e  ",repres); 
 
 		free( Q );

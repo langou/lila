@@ -1,6 +1,6 @@
-#include "A2VR.h"
+#include "check.h"
 
-int A2VR_test_qr_repres_1( double *norm_repres, int m, int n, double *A, int lda, double *Q, int ldq, double *R, int ldr ){
+int check_qr_repres( double *norm_repres, int m, int n, double *A, int lda, double *Q, int ldq, double *R, int ldr ){
 
 	double normA, *work;
 	int ii, jj;
