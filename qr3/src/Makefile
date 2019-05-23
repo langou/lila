@@ -25,9 +25,6 @@ SRC = qr2_dgeqr3R.o            \
 	qr2_ApUBTinA.o         \
 	qr2_UinvLTinU.o        \
 
-CC = gcc
-OPTS = -Wall
-
 all: $(SRC)
 	ar -cr libqr2.a $^
 	ranlib libqr2.a
