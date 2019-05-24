@@ -4,9 +4,6 @@ include ../make.inc
 CHECK = check_qq_orth.o      \
 	check_qr_repres.o    \
 
-CC = gcc
-OPTS = -Wall
-
 all: $(CHECK)
 	ar -cr libcheck.a $^
 	ranlib libcheck.a
