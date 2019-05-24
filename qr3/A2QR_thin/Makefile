@@ -14,57 +14,65 @@ include ../make.inc
 
 all: xmain_A2QR_lapack.exe xmain_A2QR_qr3.exe xmain_A2QR_qr3_ISW.exe xmain_A2QR_qr3_VT2Q.exe xmain_A2QR_qr3_VT2Q_ISW.exe xmain_A2QR_qr3_UT.exe xmain_A2QR_qr3_ISW_VT2Q_ISW.exe xmain_A2QR_qr3_UT_ISW.exe xmain_A2QR_qr3_UT_VS2Q.exe xmain_A2QR_qr3_UT_VS2Q_ISW.exe  
 
-xmain_A2QR_lapack.exe: main_A2QR_lapack.o ../src/libqr2.a ../check/libcheck.a ../flops/libflops.a
+xmain_A2QR_lapack.exe: main_A2QR_lapack.o
+	make -C ../src/
+	make -C ../flops/
+	make -C ../check/
 	$(LOADER) -o $@ main_A2QR_lapack.o ../src/libqr2.a ../check/libcheck.a ../flops/libflops.a $(LIB)
 
-xmain_A2QR_qr3.exe: main_A2QR_qr3.o ../src/libqr2.a ../check/libcheck.a ../flops/libflops.a
+xmain_A2QR_qr3.exe: main_A2QR_qr3.o
+	make -C ../src/
+	make -C ../flops/
+	make -C ../check/
 	$(LOADER) -o $@ main_A2QR_qr3.o ../src/libqr2.a ../check/libcheck.a ../flops/libflops.a $(LIB)
 
-xmain_A2QR_qr3_ISW.exe: main_A2QR_qr3_ISW.o ../src/libqr2.a ../check/libcheck.a ../flops/libflops.a
+xmain_A2QR_qr3_ISW.exe: main_A2QR_qr3_ISW.o
+	make -C ../src/
+	make -C ../flops/
+	make -C ../check/
 	$(LOADER) -o $@ main_A2QR_qr3_ISW.o ../src/libqr2.a ../check/libcheck.a ../flops/libflops.a $(LIB)
 
-xmain_A2QR_qr3_UT.exe: main_A2QR_qr3_UT.o ../src/libqr2.a ../check/libcheck.a ../flops/libflops.a
+xmain_A2QR_qr3_UT.exe: main_A2QR_qr3_UT.o
+	make -C ../src/
+	make -C ../flops/
+	make -C ../check/
 	$(LOADER) -o $@ main_A2QR_qr3_UT.o ../src/libqr2.a ../check/libcheck.a ../flops/libflops.a $(LIB)
 
-xmain_A2QR_qr3_UT_ISW.exe: main_A2QR_qr3_UT_ISW.o ../src/libqr2.a ../check/libcheck.a ../flops/libflops.a
+xmain_A2QR_qr3_UT_ISW.exe: main_A2QR_qr3_UT_ISW.o
+	make -C ../src/
+	make -C ../flops/
+	make -C ../check/
 	$(LOADER) -o $@ main_A2QR_qr3_UT_ISW.o ../src/libqr2.a ../check/libcheck.a ../flops/libflops.a $(LIB)
 
-xmain_A2QR_qr3_VT2Q.exe: main_A2QR_qr3_VT2Q.o ../src/libqr2.a ../check/libcheck.a ../flops/libflops.a
+xmain_A2QR_qr3_VT2Q.exe: main_A2QR_qr3_VT2Q.o
+	make -C ../src/
+	make -C ../flops/
+	make -C ../check/
 	$(LOADER) -o $@ main_A2QR_qr3_VT2Q.o ../src/libqr2.a ../check/libcheck.a ../flops/libflops.a $(LIB)
 
-xmain_A2QR_qr3_ISW_VT2Q_ISW.exe: main_A2QR_qr3_ISW_VT2Q_ISW.o ../src/libqr2.a ../check/libcheck.a ../flops/libflops.a
+xmain_A2QR_qr3_ISW_VT2Q_ISW.exe: main_A2QR_qr3_ISW_VT2Q_ISW.o
+	make -C ../src/
+	make -C ../flops/
+	make -C ../check/
 	$(LOADER) -o $@ main_A2QR_qr3_ISW_VT2Q_ISW.o ../src/libqr2.a ../check/libcheck.a ../flops/libflops.a $(LIB)
 
-xmain_A2QR_qr3_VT2Q_ISW.exe: main_A2QR_qr3_VT2Q_ISW.o ../src/libqr2.a ../check/libcheck.a ../flops/libflops.a
+xmain_A2QR_qr3_VT2Q_ISW.exe: main_A2QR_qr3_VT2Q_ISW.o
+	make -C ../src/
+	make -C ../flops/
+	make -C ../check/
 	$(LOADER) -o $@ main_A2QR_qr3_VT2Q_ISW.o ../src/libqr2.a ../check/libcheck.a ../flops/libflops.a $(LIB)
 
-xmain_A2QR_qr3_UT_VS2Q.exe: main_A2QR_qr3_UT_VS2Q.o ../src/libqr2.a ../check/libcheck.a ../flops/libflops.a
+xmain_A2QR_qr3_UT_VS2Q.exe: main_A2QR_qr3_UT_VS2Q.o
+	make -C ../src/
+	make -C ../flops/
+	make -C ../check/
 	$(LOADER) -o $@ main_A2QR_qr3_UT_VS2Q.o ../src/libqr2.a ../check/libcheck.a ../flops/libflops.a $(LIB)
 
-xmain_A2QR_qr3_UT_VS2Q_ISW.exe: main_A2QR_qr3_UT_VS2Q_ISW.o ../src/libqr2.a ../check/libcheck.a ../flops/libflops.a
-	$(LOADER) -o $@ main_A2QR_qr3_UT_VS2Q_ISW.o ../src/libqr2.a ../check/libcheck.a ../flops/libflops.a $(LIB)
-
-../src/libqr2.a: ../src/qr2_dorgqr_VT2Q.o    \
-	../src/qr2_dorgqr_VS2Q.o             \
-	../src/qr2_dgeqr3R.o                 \
-	../src/qr2_dgeqr3R_UT.o              \
-	../src/qr2_dgeqr3R_ISW.o             \
-	../src/qr2_dgeqr3R_UT_ISW.o          \
-	../src/qr2_dorgqr.o                  \
-	../src/qr2_dorgqr_UT.o               \
-	../src/qr2_dVT2Q.o                   \
-	../src/qr2_dVS2Q.o                   \
-	../src/qr2_ULTinU.o                  \
-	../src/qr2_mLUinA.o              
+xmain_A2QR_qr3_UT_VS2Q_ISW.exe: main_A2QR_qr3_UT_VS2Q_ISW.o
 	make -C ../src/
-
-../check/libcheck.a: ../check/check_qq_orth.o \
-	../check/check_qr_repres.o
-	make -C ../check/
-
-../flops/libflops.a: ../flops/flops_lapack_geqr2.o  \
-	../flops/flops_lapack_org2r.o      
 	make -C ../flops/
+	make -C ../check/
+	$(LOADER) -o $@ main_A2QR_qr3_UT_VS2Q_ISW.o ../src/libqr2.a ../check/libcheck.a ../flops/libflops.a $(LIB)
 
 .c.o:
 	$(CC) $(OPTS) -I$(INCLUDE) -c -o $@ $<
