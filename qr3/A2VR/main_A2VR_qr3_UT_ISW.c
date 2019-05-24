@@ -83,7 +83,7 @@ int main(int argc, char ** argv) {
 
 	perform_rel = ( ((double) flops_lapack_geqr2( m, n ) ) ) / elapsed / 1.0e+9 ;
 
-//	perform_abs = ( ((double) flops_geqr3_UT_ISW( m, n ) ) ) / elapsed / 1.0e+9 ;  ///// ----- File does not exist yet
+	perform_abs = ( ((double) flops_geqr3_ISW_UT( m, n ) ) ) / elapsed / 1.0e+9 ;  ///// ----- File does not exist yet
 
 	if ( verbose ){ 
 

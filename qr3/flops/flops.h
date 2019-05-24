@@ -79,6 +79,8 @@ extern long int flops_geqr3_UT( int int_m, int int_n );
 
 extern long int flops_geqr3_ISW_UT_check( int int_m, int int_n );
 extern long int flops_geqr3_ISW_UT( int int_m, int int_n );
+extern long int flops_qr2_dorgqr_check( int m, int n );
+
 
 
 

@@ -100,15 +100,16 @@ int main(int argc, char ** argv) {
 	gettimeofday(&tp, NULL);
 	elapsed_ref=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-//	our_dorgqr_Q2( m, n, k, nb, Q, ldq, tau, work, lwork );
+	//our_dorg2r( m, n, k, Q, ldq, tau, work, lwork );
+	our_dorg2r_BZ( m, n, k, Q, ldq, tau, work, lwork );
 
-	qr3_null_dorgqr( m, n, k, nb, Q, ldq, Q+k*ldq, ldq, tau, work, lwork );
+//	qr3_null_dorgqr( m, n, k, nb, Q, ldq, Q+k*ldq, ldq, tau, work, lwork );
 //	dorgqr_after( m, n, k, Q, ldq, Q, ldq, Q+k*ldq, ldq );
 
 	gettimeofday(&tp, NULL);
 	elapsed_ref+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-	qr3_dorgqr( m, k, Q, ldq, T, ldt, tau );
+//	qr3_dorgqr( m, k, Q, ldq, T, ldt, tau );
 
 	free( tau );
 	free( work );

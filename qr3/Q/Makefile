@@ -38,8 +38,8 @@ xmain_A2QR_ISW_UT.exe: main_A2QR_ISW_UT.o qr3_test_qq_orth_1.o qr3_test_qr_repre
 xmain_A2QRTV.exe: main_A2QRTV.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o qr3_dA2QRTV_fake.o dgeqr3.o dgeqr3_ISW.o qr3_dorgqr.o qr3_dA2QRTV.o our_dlarfb_lnfc.o qr3_larft.o
 	$(LOADER) -o $@ main_A2QRTV.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o qr3_dA2QRTV_fake.o dgeqr3.o dgeqr3_ISW.o qr3_dorgqr.o qr3_dA2QRTV.o our_dlarfb_lnfc.o qr3_larft.o $(LIB)
 
-xmain_A2Q1Q2R.exe: main_A2Q1Q2R.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o dgeqr3.o dgeqr3R.o dgeqr3_ISW.o qr3_dorgqr.o qr3_null_dorgqr.o dN2T.o dV2N.o dVT2Q.o ULTinU.o mLUinA.o ApUBTinA.o our_dlarfb_lnfc.o dorgqr_after.o our_dorg2r_Q2.o our_dorgqr_Q2.o wrapper_dlarf.o our_dorg2r.o
-	$(LOADER) -o $@ main_A2Q1Q2R.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o dgeqr3.o dgeqr3R.o dgeqr3_ISW.o qr3_dorgqr.o qr3_null_dorgqr.o dN2T.o dV2N.o dVT2Q.o ULTinU.o mLUinA.o ApUBTinA.o our_dlarfb_lnfc.o dorgqr_after.o our_dorg2r_Q2.o our_dorgqr_Q2.o wrapper_dlarf.o our_dorg2r.o $(LIB)
+xmain_A2Q1Q2R.exe: main_A2Q1Q2R.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o dgeqr3.o dgeqr3R.o dgeqr3_ISW.o qr3_dorgqr.o qr3_null_dorgqr.o dN2T.o dV2N.o dVT2Q.o ULTinU.o mLUinA.o ApUBTinA.o our_dlarfb_lnfc.o dorgqr_after.o our_dorg2r_Q2.o our_dorgqr_Q2.o wrapper_dlarf.o our_dorg2r.o our_dorg2r_BZ.o
+	$(LOADER) -o $@ main_A2Q1Q2R.o qr3_test_qq_orth_1.o qr3_test_qr_repres_1.o dgeqr3.o dgeqr3R.o dgeqr3_ISW.o qr3_dorgqr.o qr3_null_dorgqr.o dN2T.o dV2N.o dVT2Q.o ULTinU.o mLUinA.o ApUBTinA.o our_dlarfb_lnfc.o dorgqr_after.o our_dorg2r_Q2.o our_dorgqr_Q2.o wrapper_dlarf.o our_dorg2r.o our_dorg2r_BZ.o $(LIB)
 
 our_dorgqr_fortran.o: our_dorgqr_fortran.f
 	gfortran -c our_dorgqr_fortran.f 
