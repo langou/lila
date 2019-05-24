@@ -7,22 +7,10 @@ long int flops_geqr3_ISW_UT( int int_m, int int_n ){
 	m = (( long int ) int_m );
 	n = (( long int ) int_n );
 
-	flops = (( long int ) 0 );
+//	flops = ( 98 * m * n * n + 28 * m - 27*n*n*n + 231 * n + 6 )/42  ;
 
-	// flops of geqr3_ISW
-	flops = (
-	          98 * m * n * n 
-	       -  25 * n * n * n 
-	       +  28* m 
-	       + 217 * n 
-	       + 18 
-	) / 42
-
-	// This is the full recursion saving term by using UT in the qr3 framework
-	// But for ISW we only save some of these flops -- during the connect when we call to the right
-	- (n*n*n-n)/6;
-	
-	// How to find the recursion relation
+	flops = flops_geqr3_ISW( int_m, int_n );
+	flops -= ( n*n*n - 7 * n + 6 ) /21;
 
 	return flops;
 

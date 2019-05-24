@@ -7,8 +7,6 @@ long int flops_geqr3_ISW( int int_m, int int_n ){
 	m = (( long int ) int_m );
 	n = (( long int ) int_n );
 
-	flops = (( long int ) 0 );
-
 	flops = (
 	          98 * m * n * n 
 	       -  25 * n * n * n 

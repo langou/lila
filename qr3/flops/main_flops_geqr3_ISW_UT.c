@@ -18,14 +18,10 @@ int main(int argc, char ** argv) {
 		}
 	}
 
-//	printf("%5d %5d %15ld\n", m, n,flops_geqr3_ISW_UT_check( m, n ));
-
 	printf("%5d %5d %15ld %15ld %15ld\n", m, n,
 		flops_geqr3_ISW_UT_check( m, n ),
 		flops_geqr3_ISW_UT( m, n ),
 		flops_geqr3_ISW_UT_check( m, n )- flops_geqr3_ISW_UT( m, n ));
-
-
 
 	return 0;
 
