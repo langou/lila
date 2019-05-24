@@ -7,15 +7,13 @@
 #if !defined(USE_MKL)
 #include "cblas.h"
 #include "lapacke.h"
+extern void dlarf_( char *side, int *m, int *n, double *v, int *incv, double *tau, double *c, int *ldc, double *work);
+extern void dorg2r_( int *m, int *n, int *k, double *a, int *lda, double *tau, double *work, int *info );
 #endif
 
 #if defined(USE_MKL)
 #include "mkl.h"
 #endif
-
-extern void dlarf_( char *side, int *m, int *n, double *v, int *incv, double *tau, double *c, int *ldc, double *work);
-extern void dorg2r_( int *m, int *n, int *k, double *a, int *lda, double *tau, double *work, int *info );
-
 
 extern int qr2_dgeqr3R       ( int m, int n, double *A, int lda, double *T, int ldt, double *R, int ldr );
 extern int qr2_dgeqr3R_UT    ( int m, int n, double *A, int lda, double *T, int ldt, double *R, int ldr );
