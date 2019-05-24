@@ -7,7 +7,7 @@ int main(int argc, char ** argv) {
 	int i, lda, ldq, ldr, m, n, lwork, verbose, testing;
 	double *A, *Q, *R, *tau, *work;
 	double orth, repres;
-	double elapsed_ref, perform_ref;
+	double elapsed, perform_rel, perform_abs;
 	struct timeval tp;
 	
 	srand(0);
@@ -83,19 +83,18 @@ int main(int argc, char ** argv) {
 	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n, A, lda,  Q, ldq );
 
 	gettimeofday(&tp, NULL);
-	elapsed_ref=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+	elapsed=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
 	LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, n, Q, ldq, tau, work, lwork ); 
 	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', n, n, Q, ldq, R, ldr );
 	LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, m, n, n, Q, ldq, tau, work, lwork );
 
 	gettimeofday(&tp, NULL);
-	elapsed_ref+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+	elapsed+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-	long int flops1, flops2;
-	flops1 = flops_lapack_geqr2( m, n );
-	flops2 = flops_lapack_org2r( m, n, n );
-	perform_ref = ( ((double) flops1 ) + ((double) flops2 ) ) / elapsed_ref / 1.0e+9 ;
+	perform_rel = ( ((double) flops_lapack_geqr2( m, n ) ) + ((double) flops_lapack_org2r( m, n, n ) ) ) / elapsed / 1.0e+9 ;
+
+	perform_abs = ( ((double) flops_lapack_geqr2( m, n ) ) + ((double) flops_lapack_org2r( m, n, n ) ) ) / elapsed / 1.0e+9 ;
 
 	if ( verbose ){ 
 
@@ -103,12 +102,12 @@ int main(int argc, char ** argv) {
 		printf("m = %4d, ", m);
 		printf("n = %4d, ", n);
 		printf(" \n");
-		printf(" time = %f    GFlop/sec = %f ", elapsed_ref, perform_ref);	
+		printf(" time = %f    GFlop/sec (rel) = %f GFlop/sec (abs) = %f ", elapsed, perform_rel, perform_abs);	
 		printf(" \n ");
 
 	} else {
 
-		printf("%6d %6d %16.8f %10.3f ", m, n, elapsed_ref, perform_ref);
+		printf("%6d %6d %16.8f %10.3f %10.3f ", m, n, elapsed, perform_rel, perform_abs);
 
 	} 
 
