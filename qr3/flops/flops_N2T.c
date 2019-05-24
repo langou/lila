@@ -6,7 +6,7 @@ long int flops_N2T( int int_n ){
 
 	n = ( long int ) int_n;
 
-	flops = ( n * n * n - n ) / (( long int ) 3 );
+	flops = ( n * n * n - n ) / 3;
 
 	return flops;
 

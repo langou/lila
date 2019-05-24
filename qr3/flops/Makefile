@@ -11,10 +11,10 @@ FLOPS_RESEARCH = \
 	flops_geqr3.o                      \
 	flops_geqr3_check.o                \
 	flops_geqr3_wob_check.o            \
-	flops_geqr3_bef_constructT_check.o \
-	flops_geqr3_bef_useT_check.o       \
 	flops_geqr3_bef_constructT.o       \
+	flops_geqr3_bef_constructT_check.o \
 	flops_geqr3_bef_useT.o             \
+	flops_geqr3_bef_useT_check.o       \
 	flops_geqr3_ISW_constructT.o       \
 	flops_geqr3_ISW_constructT_check.o \
 	flops_lapack_larfg.o               \
@@ -58,9 +58,16 @@ FLOPS_RESEARCH = \
 	flops_ApUBTinA.o                   \
 	flops_ApUBTinA_check.o             \
 	flops_ULTinU.o                     \
-	flops_ULTinU_check.o               
+	flops_ULTinU_check.o               \
+	flops_geqr3_UT_check.o             \
+	flops_geqr3_UT_save_check.o        \
+	flops_geqr3_UT.o                   \
+	flops_geqr3_ISW_check.o            \
+	flops_geqr3_ISW_UT.o               \
+	flops_geqr3_ISW_UT_check.o         \
+	flops_geqr3_ISW.o
 
-all: xmain_flops_lapack_orgqr.exe xmain_flops_lapack_org2r.exe xmain_flops_lapack_geqr2.exe xmain_flops_lapack_geqrf.exe xmain_flops_geqr3.exe xmain_flops_geqr3_ISW.exe xmain_flops_N2T.exe xmain_flops_V2N.exe xmain_flops_VT2Q.exe xmain_flops_mLUinA.exe xmain_flops_ApUBTinA.exe xmain_flops_ULTinU.exe xmain_flops_lapack_larfb.exe xmain_flops_lapack_geqrf.exe xmain_flops_lapack_geqr2.exe xmain_flops_lapack_orgqr.exe xmain_flops_lapack_org2r.exe xmain_flops_legacy_lapack_org2r.exe xmain_flops_legacy_lapack_geqr2.exe
+all: xmain_flops_lapack_orgqr.exe xmain_flops_lapack_org2r.exe xmain_flops_lapack_geqr2.exe xmain_flops_lapack_geqrf.exe xmain_flops_geqr3.exe xmain_flops_geqr3_ISW.exe xmain_flops_N2T.exe xmain_flops_V2N.exe xmain_flops_VT2Q.exe xmain_flops_mLUinA.exe xmain_flops_ApUBTinA.exe xmain_flops_ULTinU.exe xmain_flops_lapack_larfb.exe xmain_flops_lapack_geqrf.exe xmain_flops_lapack_geqr2.exe xmain_flops_lapack_orgqr.exe xmain_flops_lapack_org2r.exe xmain_flops_legacy_lapack_org2r.exe xmain_flops_legacy_lapack_geqr2.exe xmain_flops_geqr3_UT.exe xmain_flops_geqr3_ISW_UT.exe
 
 #all: xmain_flops_geqr3.exe 
 #all: xmain_flops_geqr3_ISW.exe
@@ -68,6 +75,12 @@ all: xmain_flops_lapack_orgqr.exe xmain_flops_lapack_org2r.exe xmain_flops_lapac
 libflops.a: $(FLOPS) $(FLOPS_RESEARCH)
 	ar -cr libflops.a $^
 	ranlib libflops.a
+
+xmain_flops_geqr3_ISW_UT.exe: main_flops_geqr3_ISW_UT.o libflops.a
+	$(LOADER) -o $@ main_flops_geqr3_ISW_UT.o libflops.a
+
+xmain_flops_geqr3_UT.exe: main_flops_geqr3_UT.o libflops.a
+	$(LOADER) -o $@ main_flops_geqr3_UT.o libflops.a
 
 xmain_flops_geqr3_ISW.exe: main_flops_geqr3_ISW.o libflops.a
 	$(LOADER) -o $@ main_flops_geqr3_ISW.o libflops.a

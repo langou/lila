@@ -70,8 +70,17 @@ extern long int flops_geqr3_bef_useT( int n );
 extern long int flops_geqr3_ISW( int m, int n );
 extern long int flops_geqr3_ISW_check( int m, int n );
 extern long int flops_geqr3_ISW_save( int m, int n );
-long int flops_geqr3_ISW_constructT_check( int m, int n );
-long int flops_geqr3_ISW_constructT( int int_m, int int_n );
+extern long int flops_geqr3_ISW_constructT_check( int m, int n );
+extern long int flops_geqr3_ISW_constructT( int int_m, int int_n );
+
+extern long int flops_geqr3_UT_check( int int_m, int int_n );
+extern long int flops_geqr3_UT_save_check( int int_m, int int_n );
+extern long int flops_geqr3_UT( int int_m, int int_n );
+
+extern long int flops_geqr3_ISW_UT_check( int int_m, int int_n );
+extern long int flops_geqr3_ISW_UT( int int_m, int int_n );
+
+
 
 
 

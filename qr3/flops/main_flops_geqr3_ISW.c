@@ -18,16 +18,20 @@ int main(int argc, char ** argv) {
 		}
 	}
 
+	printf("%5d %5d %15ld %15ld %15ld\n", m, n,
+		flops_geqr3_ISW_check( m, n ),
+		flops_geqr3_ISW( m, n ),
+		flops_geqr3_ISW_check( m, n )- flops_geqr3_ISW( m, n ));
 
-//	printf("%5d %5d %15ld %15ld %15ld\n", m, n,
-//		flops_geqr3_ISW_check( m, n ),
-//		flops_geqr3_wob_check( m, n ) + flops_geqr3_ISW_constructT_check( m, n ) + flops_geqr3_bef_useT_check( n ),
-//		flops_geqr3_ISW_check( m, n ) - ( flops_geqr3_wob_check( m, n ) + flops_geqr3_ISW_constructT_check( m, n ) + flops_geqr3_bef_useT_check( n ) ));
+	printf("%5d %5d %15ld %15ld %15ld\n", m, n,
+		flops_geqr3_ISW_check( m, n ),
+		flops_geqr3_wob_check( m, n ) + flops_geqr3_ISW_constructT_check( m, n ) + flops_geqr3_bef_useT_check( n ),
+		flops_geqr3_ISW_check( m, n ) - ( flops_geqr3_wob_check( m, n ) + flops_geqr3_ISW_constructT_check( m, n ) + flops_geqr3_bef_useT_check( n ) ));
 
 	printf("%5d %5d %15ld %15ld %15ld\n", m, n,
 		flops_geqr3_ISW_constructT_check( m, n ),
 		flops_geqr3_ISW_constructT( m, n ),
-		flops_geqr3_ISW_constructT_check( m, n ) - flops_geqr3_ISW_constructT_check( m, n ) );
+		flops_geqr3_ISW_constructT_check( m, n ) - flops_geqr3_ISW_constructT( m, n ) );
 
 	return 0;
 
