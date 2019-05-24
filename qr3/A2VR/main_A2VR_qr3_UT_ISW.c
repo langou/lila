@@ -7,7 +7,7 @@ int main(int argc, char ** argv) {
 	int i, lda, ldr, m, n, lwork, verbose, testing;
 	double *A, *As, *R, *tau, *work;
 	double orth, repres;
-	double elapsed_ref, perform_ref;
+	double elapsed, perform_rel, perform_abs;
 	struct timeval tp;
 	
 	srand(0);
@@ -74,16 +74,16 @@ int main(int argc, char ** argv) {
 	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n, A, lda, As, lda );
 
 	gettimeofday(&tp, NULL);
-	elapsed_ref=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+	elapsed=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
 	qr2_dgeqr3R_UT_ISW( m, n, A, lda, A, lda, R, ldr );
 
 	gettimeofday(&tp, NULL);
-	elapsed_ref+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+	elapsed+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-	long int flops;
-	flops = flops_lapack_geqr2( m, n );
-	perform_ref = ( ((double) flops ) ) / elapsed_ref / 1.0e+9 ;
+	perform_rel = ( ((double) flops_lapack_geqr2( m, n ) ) ) / elapsed / 1.0e+9 ;
+
+//	perform_abs = ( ((double) flops_geqr3_UT_ISW( m, n ) ) ) / elapsed / 1.0e+9 ;  ///// ----- File does not exist yet
 
 	if ( verbose ){ 
 
@@ -91,12 +91,12 @@ int main(int argc, char ** argv) {
 		printf("m = %4d, ", m);
 		printf("n = %4d, ", n);
 		printf(" \n");
-		printf(" time = %f    GFlop/sec = %f ", elapsed_ref, perform_ref);	
+		printf(" time = %f    GFlop/sec (rel) = %f  GFlop/sec (abs) = %f ", elapsed, perform_rel, perform_abs);	
 		printf(" \n ");
 
 	} else {
 
-		printf("%6d %6d %16.8f %10.3f ", m, n, elapsed_ref, perform_ref);
+		printf("%6d %6d %16.8f %10.3f %10.3f ", m, n, elapsed, perform_rel, perform_abs);
 
 	} 
 
