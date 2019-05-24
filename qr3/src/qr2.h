@@ -41,6 +41,13 @@ extern int qr2_ULTinU     ( int n, double *L, int ldl, double *U, int ldu );
 extern int qr2_ApUBTinA   ( int m, int n, double *A, int lda, double *U, int ldu, double *B, int ldb );
 extern int qr2_UinvLTinU  ( int n, double *L, int ldl, double *U, int ldu );
 
+extern int level1_lapack_dorgqr_Q2( int m, int n, int k, int nb, double *A, int lda, double *tau, double *work, int lwork );
+
+extern int our_dlarfb_lnfc( int m, int n, int k, double *V, int ldv, double *T, int ldt, double *C, int ldc, double *W );
+extern int our_dorg2r_Q2( int m, int n, int k, double *A, int lda, double *tau, double *work, int lwork );
+extern int wrapper_dlarf( char side, int m, int n, double *V, int incv, double tau, double *C, int ldc, double *work);
+
+
 
 
 
