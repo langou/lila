@@ -23,16 +23,16 @@ int main(int argc, char ** argv) {
 		flops_geqr3_UT( m, n ),
 		flops_geqr3_UT_check( m, n ) - flops_geqr3_UT( m, n ) );
 
-	printf("%5d %5d %15ld %15ld %15ld\n", m, n,
-		flops_geqr3_UT_check( m, n ) ,
-		flops_geqr3_check( m, n ) - flops_geqr3_UT_save_check( m, n ) , 
-		flops_geqr3_UT_check( m, n ) - ( flops_geqr3_check( m, n )- flops_geqr3_UT_save_check( m, n ))
-	);
+//	printf("%5d %5d %15ld %15ld %15ld\n", m, n,
+//		flops_geqr3_UT_check( m, n ) ,
+//		flops_geqr3_check( m, n ) - flops_geqr3_UT_save_check( m, n ) , 
+//		flops_geqr3_UT_check( m, n ) - ( flops_geqr3_check( m, n )- flops_geqr3_UT_save_check( m, n ))
+//	);
 
-	printf("%5d %5d %15ld %15ld %15ld\n", m, n,
-		flops_geqr3_UT_save_check( m, n ),
-		( ((long int) n) * ((long int) n) * ((long int) n) - ((long int) n) ) / ((long int) 3),
-		flops_geqr3_UT_save_check( m, n ) - ( ((long int) n) * ((long int) n) * ((long int) n) - ((long int) n) ) / ((long int) 3) );
+//	printf("%5d %5d %15ld %15ld %15ld\n", m, n,
+//		flops_geqr3_UT_save_check( m, n ),
+//		( ((long int) n) * ((long int) n) * ((long int) n) - ((long int) n) ) / ((long int) 3),
+//		flops_geqr3_UT_save_check( m, n ) - ( ((long int) n) * ((long int) n) * ((long int) n) - ((long int) n) ) / ((long int) 3) );
 
 	
 //	printf("%5d %5d %15ld %15ld %15ld\n", m, n,

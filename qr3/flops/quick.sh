@@ -1,8 +1,8 @@
 #!/bin/bash
 
-for (( n=1; n<=1000; n++ ))
+for (( n=1; n<=10000; n+=100 ))
 do
-./xmain_flops_geqr3_UT.exe -m 1000 -n $n 
+./xmain_flops_geqr3_UT.exe -m 10000 -n $n 
 done
 
 #./xmain_flops_geqr3.exe -m 4 -n 4 
