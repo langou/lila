@@ -33,8 +33,10 @@ int our_dorg2r_BZ( int m, int n, int k, double *A, int lda, double *tau, double 
 //			wrapper_dlarf( 'L', m1, n1-1, A11, 1, (*tau1), A11+lda, lda, work );
 //		}
 
-		cblas_dgemv( CblasColMajor, 'T', m1, n1-1, (*tau1), A11, lda, A11+lda, lda, (+1.0e00), work, lda);
-		cblas_dger ( CblasColMajor, m1, n1-1, (+1.0e00), A11, lda, A11, lda, A11, lda);
+		
+		//(*A11) = (+1.00);
+		cblas_dgemv( CblasColMajor, CblasTrans, m1, n1-1, (*tau1), A11, lda, A11+lda, lda, (+1.0e00), work, lda);
+		cblas_dger ( CblasColMajor, m1, n1-1, (+1.0e00), A11, lda, work, lda, A11, lda);
 
 
 
