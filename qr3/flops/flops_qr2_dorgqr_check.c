@@ -15,8 +15,6 @@ long int flops_qr2_dorgqr_check( int int_m, int int_n ){
 	if( n <= 1 ){
 
 		flops += m;
-//		flops += flops_lapack_org2r_check( m, 1, 1);
-
 
 	} else {
 
@@ -25,9 +23,9 @@ long int flops_qr2_dorgqr_check( int int_m, int int_n ){
 
 		flops += flops_qr2_dorgqr_check( m-n1, n2 );
 
-		flops += n1 * n1 * n2; // we do not do these flops because we are doing a BZ
+//		flops += n1 * n1 * n2; // we do not do these flops because we are doing a BZ
 		flops += 2 * n1 * n2 * (m-n1);
-//		flops += (n1-1) * n1 * n2 ; // we do these flops but we want to make sure we have the good formula
+		flops += (n1-1) * n1 * n2 ; // we do these flops but we want to make sure we have the good formula
 		flops += n1*n2;
 		flops += 2 * n1 * n2 * (m-n1);
 		flops += n1 * n1 * n2;

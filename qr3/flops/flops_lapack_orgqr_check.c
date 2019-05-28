@@ -31,6 +31,13 @@ long int flops_lapack_orgqr_check( int m, int n, int k, int nb ){
 
 		flops += flops_lapack_larfb( m1, n2, ib );
 
+//		flops += ib * ib * n2 ;             // 1: TRMM (these flops are saved during a BZ)
+//		flops += 2 * ib * n2 * ( m1-ib );   // 2: GEMM
+//		flops += (ib-1) * ib * n2 ;         // 3: TRMM (extra from a bunch of LARF)
+//		flops += ib * n2 ;                  // 3: TRMM
+//		flops += 2 * ib * n2 * ( m1-ib );   // 4: GEMM
+//		flops += ib * ib * n2;              // 5: TRMM
+
 //		flops += flops_lapack_org2r_check( m1, ib, ib );
 		flops += flops_lapack_org2r( m1, ib, ib );
 

@@ -20,8 +20,17 @@ int main(int argc, char ** argv) {
 
 	printf("%5d %5d %15ld %15ld %15ld\n", m, n,
 		flops_qr2_dorgqr_check( m, n ),
-		flops_lapack_org2r_check( m, n, n ),
-		flops_qr2_dorgqr_check( m, n )-flops_lapack_org2r_check( m, n, n ));
+		flops_lapack_org2r_check( m, n, n )-(n*n-n)/2,
+		flops_qr2_dorgqr_check( m, n )-flops_lapack_org2r_check( m, n, n )+(n*n-n)/2);
+
+//	the cost of org3r is 
+//		org2r 
+//		+ useT
+//		- saveBZ
+//	but since [ useT + n(n-1)/2  = saveBZ ]
+//	we have that
+//	the cost of org3r is 
+//		org2r - n(n-1)/2
 
 	return 0;
 
