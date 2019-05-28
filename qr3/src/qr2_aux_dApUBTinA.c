@@ -43,7 +43,7 @@
 //		A21 = A21 + U22 * B12^T (myself)
 //		A22 = A22 + U22 * B22^T (myself)
 
-int qr2_ApUBTinA( int m, int n, double *A, int lda, double *U, int ldu, double *B, int ldb ){
+int qr2_aux_dApUBTinA( int m, int n, double *A, int lda, double *U, int ldu, double *B, int ldb ){
 
 	int m1, m2, n1, n2;
 	double *A11, *A12, *A21, *A22;
@@ -77,17 +77,17 @@ int qr2_ApUBTinA( int m, int n, double *A, int lda, double *U, int ldu, double *
 		U12 = U + m1*ldu;
 		U22 = U + m1 + m1*ldu;
 
-		if(( m1 > 0 )&&( n1 > 0 )) qr2_ApUBTinA( m1, n1, A11, lda, U11, ldu, B11, ldb );
+		if(( m1 > 0 )&&( n1 > 0 )) qr2_aux_dApUBTinA( m1, n1, A11, lda, U11, ldu, B11, ldb );
 
 		if(( m1 > 0 )&&( n1 > 0 )&&( m2 > 0 )) cblas_dgemm( CblasColMajor, CblasNoTrans, CblasTrans, m1, n1, m2, (+1.0e+00), U12, ldu, B12, ldb, (+1.0e+00), A11, lda );
 
-		if(( m1 > 0 )&&( n2 > 0 )) qr2_ApUBTinA( m1, n2, A12, lda, U11, ldu, B21, ldb );
+		if(( m1 > 0 )&&( n2 > 0 )) qr2_aux_dApUBTinA( m1, n2, A12, lda, U11, ldu, B21, ldb );
 
 		if(( m1 > 0 )&&( n2 > 0 )&&( m2 > 0 )) cblas_dgemm( CblasColMajor, CblasNoTrans, CblasTrans, m1, n2, m2, (+1.0e+00), U12, ldu, B22, ldb, (+1.0e+00), A12, lda );
 
-		if(( m2 > 0 )&&( n1 > 0 )) qr2_ApUBTinA( m2, n1, A21, lda, U22, ldu, B12, ldb );
+		if(( m2 > 0 )&&( n1 > 0 )) qr2_aux_dApUBTinA( m2, n1, A21, lda, U22, ldu, B12, ldb );
 
-		if(( m2 > 0 )&&( n2 > 0 )) qr2_ApUBTinA( m2, n2, A22, lda, U22, ldu, B22, ldb );
+		if(( m2 > 0 )&&( n2 > 0 )) qr2_aux_dApUBTinA( m2, n2, A22, lda, U22, ldu, B22, ldb );
 
 	}
 

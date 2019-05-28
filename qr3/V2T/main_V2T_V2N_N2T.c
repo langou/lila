@@ -78,9 +78,9 @@ int main(int argc, char ** argv) {
 	elapsed=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
 	{ int i,j; for(i=0;i<n;i++){ for(j=0;j<i;j++){ T[j+i*ldt] = A[i+j*lda];}} }
-	qr2_dV2N( n, T, ldt );
+	qr2_aux_dV2N( n, T, ldt );
 	cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, n, m-n, (+1.0e+00), A+n, lda, (+1.0e+00), T, ldt );
-	qr2_dN2T( n, tau, T, ldt );
+	qr2_aux_dN2T( n, tau, T, ldt );
 
 	gettimeofday(&tp, NULL);
 	elapsed+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);

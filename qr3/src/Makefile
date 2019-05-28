@@ -9,21 +9,21 @@ SRC = qr2_dgeqr3_R.o                \
 	qr2_dorgqr3_UT.o            \
 	qr2_dorgqr3_VT2Q.o          \
 	qr2_dorgqr3_VS2Q.o          \
-	qr2_dV2tau.o                \
-	qr2_larft3.o                \
-	qr2_larft3_ISW.o            \
-	qr2_larft3_ISW_V2T.o        \
-	qr2_larft3_ISW_V2T_UT.o     \
-	qr2_larft3_UT.o             \
-	qr2_larft3_UT_ISW.o         \
-	qr2_dV2N.o                  \
-	qr2_dN2T.o                  \
-	qr2_dVS2Q.o                 \
-	qr2_dVT2Q.o                 \
-	qr2_mLUinA.o                \
-	qr2_ULTinU.o                \
-	qr2_ApUBTinA.o              \
-	qr2_UinvLTinU.o             \
+	qr2_dlarft3.o               \
+	qr2_dlarft3_ISW.o           \
+	qr2_dlarft3_ISW_V2T.o       \
+	qr2_dlarft3_ISW_V2T_UT.o    \
+	qr2_dlarft3_UT.o            \
+	qr2_dlarft3_UT_ISW.o        \
+	qr2_aux_dV2N.o              \
+	qr2_aux_dV2tau.o            \
+	qr2_aux_dN2T.o              \
+	qr2_aux_dVS2Q.o             \
+	qr2_aux_dVT2Q.o             \
+	qr2_aux_dmLUinA.o           \
+	qr2_aux_dULTinU.o           \
+	qr2_aux_dApUBTinA.o         \
+	qr2_aux_dUinvLTinU.o        \
 	lapack_ref_dgeqrf.o         \
 	lapack_ref_dorg2r.o         \
 	lapack_ref_dorgqr.o         \
@@ -31,7 +31,7 @@ SRC = qr2_dgeqr3_R.o                \
 	lapack_our_dorg2r_Q2.o      \
 	lapack_our_dorg2r_bz.o      \
 	lapack_ref_dlarfb_lnfc.o    \
-	wrapper_dlarf.o
+	qr2_aux_dlarf_wrapper.o
 
 all: $(SRC)
 	ar -cr libqr2.a $^

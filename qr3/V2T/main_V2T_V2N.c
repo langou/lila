@@ -78,7 +78,7 @@ int main(int argc, char ** argv) {
 	elapsed=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
 	{ int i,j; for(i=0;i<n;i++){ for(j=0;j<i;j++){ T[j+i*ldt] = A[i+j*lda];}} }
-	qr2_dV2N( n, T, ldt );
+	qr2_aux_dV2N( n, T, ldt );
 	cblas_dsyrk( CblasColMajor, CblasUpper, CblasTrans, n, m-n, (+1.0e+00), A+n, lda, (+1.0e+00), T, ldt );
 	{ int i; for(i=0;i<n;i++){ T[i+i*ldt] = 1 / tau[i]; } }
 
@@ -111,7 +111,7 @@ int main(int argc, char ** argv) {
 		Q  = (double *) malloc( m * n * sizeof(double));
 		LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'L', m, n, A, lda, Q, m );
 		LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', n, n, T, ldt, Q, m );
-		qr2_dVS2Q( m, n, Q, m );		
+		qr2_aux_dVS2Q( m, n, Q, m );		
 
 		check_qq_orth( &orth, m, n, Q, m );
 		if ( verbose ) printf("qq_orth  = %5.1e  \n ",orth); else printf(" %5.1e  ",orth); 

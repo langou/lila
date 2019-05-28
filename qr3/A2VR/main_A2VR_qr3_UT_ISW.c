@@ -108,7 +108,7 @@ int main(int argc, char ** argv) {
 		LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'L', m, n, A, lda, Q, m );
 		//LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', n, n, A, lda, T, n );
 		//for(i=0;i<n;i++) tau[i] = T[i+i*n];
-		qr2_dV2tau( m, n, A, lda, tau );
+		qr2_aux_dV2tau( m, n, A, lda, tau );
 		LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', m, n, A, lda, tau, T, n );
 
 		qr2_dorgqr3( m, n, Q, m, T, n, tau );

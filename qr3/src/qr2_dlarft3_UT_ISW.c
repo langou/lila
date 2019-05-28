@@ -1,6 +1,6 @@
 #include "qr2.h"
 
-int qr2_larft3_ISW( int m, int n, double *A, int lda, double *T, int ldt, double *tau ){
+int qr2_dlarft3_UT_ISW( int m, int n, double *A, int lda, double *T, int ldt, double *tau ){
 
 	int n1, n2;
 	double *A11, *A21, *A22, *A32, *A31;
@@ -29,8 +29,8 @@ int qr2_larft3_ISW( int m, int n, double *A, int lda, double *T, int ldt, double
 	tau1 = tau;
 	tau2 = tau+n1;
 
-	qr2_larft3( m, n1, A11, lda, T11, ldt, tau1 );
-	qr2_larft3_ISW( m-n1, n2, A22, lda, T22, ldt, tau2 );
+	qr2_dlarft3_UT    ( m, n1, A11, lda, T11, ldt, tau1 );
+	qr2_dlarft3_UT_ISW( m-n1, n2, A22, lda, T22, ldt, tau2 );
 
 	}	
 

@@ -45,7 +45,7 @@ int qr2_dorgqr3_VS2Q( int m, int n, double *Q, int ldq, double *T, int ldt, doub
 		cblas_dtrmm( CblasColMajor, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, n1, n2, (-1.0e+00), Q11, ldq, Q12, ldq );
 
 		if (T11 != Q11 ) LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', n1, n1, T11, ldt, Q11, ldq );
-		qr2_dVS2Q( m, n1, Q11, ldq );
+		qr2_aux_dVS2Q( m, n1, Q11, ldq );
 
 	}
 

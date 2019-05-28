@@ -77,7 +77,7 @@ int main(int argc, char ** argv) {
 	gettimeofday(&tp, NULL);
 	elapsed=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-	qr2_larft3_ISW_V2T( m, n, A, lda, T, ldt, tau );
+	qr2_dlarft3_ISW_V2T( m, n, A, lda, T, ldt, tau );
 
 	gettimeofday(&tp, NULL);
 	elapsed+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);

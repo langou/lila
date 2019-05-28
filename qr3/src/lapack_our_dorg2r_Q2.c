@@ -29,7 +29,7 @@ int lapack_our_dorg2r_Q2( int m, int n, int k, double *A, int lda, double *tau, 
 	
 		tmp = (*A11);
 		(*A11) = (+1.00);
-		wrapper_dlarf( 'L', m1, nx, A11, 1, (*tau1), Axx, lda, work );
+		qr2_aux_dlarf_wrapper( 'L', m1, nx, A11, 1, (*tau1), Axx, lda, work );
 		(*A11) = tmp;
 
 	}

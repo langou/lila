@@ -1,6 +1,6 @@
 #include "qr2.h"
 
-int qr2_ULTinU( int n, double *L, int ldl, double *U, int ldu ){
+int qr2_aux_dULTinU( int n, double *L, int ldl, double *U, int ldu ){
 
 	int n1, n2; 
 	double *U11, *U12, *U22, *L11, *L21, *L22;
@@ -26,10 +26,10 @@ int qr2_ULTinU( int n, double *L, int ldl, double *U, int ldu ){
 		cblas_dtrmm( CblasColMajor, CblasRight, CblasLower, CblasTrans, CblasUnit, n1, n2, (+1.0e+00), L22, ldl, U12, ldu );
 
 //		U12 = U12 + U11*L21^T
-		qr2_ApUBTinA ( n1, n2, U12, ldu, U11, ldu, L21, ldl );
+		qr2_aux_dApUBTinA( n1, n2, U12, ldu, U11, ldu, L21, ldl );
 
-		qr2_ULTinU( n1, L11, ldl, U11, ldu );
-		qr2_ULTinU( n2, L22, ldl, U22, ldu );
+		qr2_aux_dULTinU( n1, L11, ldl, U11, ldu );
+		qr2_aux_dULTinU( n2, L22, ldl, U22, ldu );
 		
 	}
 

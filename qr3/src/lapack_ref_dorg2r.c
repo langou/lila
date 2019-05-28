@@ -30,7 +30,7 @@ int lapack_ref_dorg2r( int m, int n, int k, double *A, int lda, double *tau, dou
 	
 		if( 1 < n1 ) {
 			(*A11) = (+1.00);
-			wrapper_dlarf( 'L', m1, n1-1, A11, 1, (*tau1), A11+lda, lda, work );
+			qr2_aux_dlarf_wrapper( 'L', m1, n1-1, A11, 1, (*tau1), A11+lda, lda, work );
 		}
 
 
