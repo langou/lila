@@ -7,7 +7,7 @@
 #if !defined(USE_MKL)
 #include "cblas.h"
 #include "lapacke.h"
-extern void dlarf_( char *side, int *m, int *n, double *v, int *incv, double *tau, double *c, int *ldc, double *work);
+//extern void dlarf_( char *side, int *m, int *n, double *v, int *incv, double *tau, double *c, int *ldc, double *work);
 extern void dorg2r_( int *m, int *n, int *k, double *a, int *lda, double *tau, double *work, int *info );
 #endif
 
@@ -54,11 +54,8 @@ extern int lapack_ref_dgeqrf     ( int m, int n, int nb, double *A, int lda, dou
 extern int lapack_ref_dlarfb_lnfc( int m, int n, int k, double *V, int ldv, double *T, int ldt, double *C, int ldc, double *W );
 
 
-
-
-
-
-
-
+extern int lapack_mod_dorgqr( int m, int n, int k, int nb, double *A, int lda, double *tau, double *work, int lwork );
+extern int lapack_mod_dlarfb_lnfc_bz( int m, int n, int k, double *V, int ldv, double *T, int ldt, double *C, int ldc );
+extern int lapack_mod_dorg2r( int m, int n, int k, double *A, int lda, double *tau );
 
 

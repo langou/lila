@@ -27,10 +27,13 @@ SRC = qr2_dgeqr3_R.o                \
 	lapack_ref_dgeqrf.o         \
 	lapack_ref_dorg2r.o         \
 	lapack_ref_dorgqr.o         \
+	lapack_mod_dorgqr.o         \
 	lapack_our_dorgqr_Q2.o      \
 	lapack_our_dorg2r_Q2.o      \
 	lapack_our_dorg2r_bz.o      \
 	lapack_ref_dlarfb_lnfc.o    \
+	lapack_mod_dlarfb_lnfc_bz.o \
+	lapack_mod_dorg2r.o         \
 	qr2_aux_dlarf_wrapper.o
 
 all: $(SRC)
