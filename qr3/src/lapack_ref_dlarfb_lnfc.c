@@ -1,6 +1,6 @@
 #include "qr2.h"
 
-int our_dlarfb_lnfc( int m, int n, int k, double *V, int ldv, double *T, int ldt, double *C, int ldc, double *W ){
+int lapack_ref_dlarfb_lnfc( int m, int n, int k, double *V, int ldv, double *T, int ldt, double *C, int ldc, double *W ){
 
 	int i, j;
 	double *C1, *C2;

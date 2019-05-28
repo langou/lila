@@ -24,9 +24,13 @@ SRC = qr2_dgeqr3_R.o                \
 	qr2_ULTinU.o                \
 	qr2_ApUBTinA.o              \
 	qr2_UinvLTinU.o             \
-	level1_lapack_dorgqr_Q2.o   \
-	our_dorg2r_Q2.o             \
-	our_dlarfb_lnfc.o           \
+	lapack_ref_dgeqrf.o         \
+	lapack_ref_dorg2r.o         \
+	lapack_ref_dorgqr.o         \
+	lapack_our_dorgqr_Q2.o      \
+	lapack_our_dorg2r_Q2.o      \
+	lapack_our_dorg2r_bz.o      \
+	lapack_ref_dlarfb_lnfc.o    \
 	wrapper_dlarf.o
 
 all: $(SRC)
