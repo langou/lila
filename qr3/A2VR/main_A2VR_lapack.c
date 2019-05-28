@@ -109,7 +109,7 @@ int main(int argc, char ** argv) {
 		T  = (double *) malloc( n * n * sizeof(double));
 		LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'L', m, n, A, lda, Q, m );
 		LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', m, n, A, lda, tau, T, n );
-		qr2_dorgqr( m, n, Q, m, T, n, tau );
+		qr2_dorgqr3( m, n, Q, m, T, n, tau );
 
 		check_qq_orth( &orth, m, n, Q, m );
 		if ( verbose ) printf("qq_orth  = %5.1e  \n ",orth); else printf(" %5.1e  ",orth); 

@@ -1,6 +1,6 @@
 #include "qr2.h"
 
-int qr2_larft_UT( int m, int n, double *A, int lda, double *T, int ldt, double *tau ){
+int qr2_larft3_UT( int m, int n, double *A, int lda, double *T, int ldt, double *tau ){
 
 	int n1, n2, i, j;
 	double *A11, *A21, *A22, *A32, *A31;
@@ -29,8 +29,8 @@ int qr2_larft_UT( int m, int n, double *A, int lda, double *T, int ldt, double *
 	tau1 = tau;
 	tau2 = tau+n1;
 
-	qr2_larft_UT( m, n1, A11, lda, T11, ldt, tau1 );
-	qr2_larft_UT( m-n1, n2, A22, lda, T22, ldt, tau2 );
+	qr2_larft3_UT( m, n1, A11, lda, T11, ldt, tau1 );
+	qr2_larft3_UT( m-n1, n2, A22, lda, T22, ldt, tau2 );
 
 	for (i=0;i<n1;i++) for (j=0;j<n2;j++) T12[i+j*ldt] = A21[j+i*lda];
 	cblas_dtrmm ( CblasColMajor, CblasRight, CblasLower, CblasNoTrans, CblasUnit, n1, n2, 1.0e+00, A22, lda, T12, ldt); 

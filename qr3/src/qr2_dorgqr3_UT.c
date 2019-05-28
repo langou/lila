@@ -1,6 +1,6 @@
 #include "qr2.h"
 
-int qr2_dorgqr_VT2Q( int m, int n, double *Q, int ldq, double *T, int ldt, double *tau ){
+int qr2_dorgqr3_UT( int m, int n, double *Q, int ldq, double *T, int ldt, double *tau ){
 
 
 	double *Q11, *Q21;
@@ -37,15 +37,14 @@ int qr2_dorgqr_VT2Q( int m, int n, double *Q, int ldq, double *T, int ldt, doubl
 		tau1 = tau;
 		tau2 = tau+n1;
 
-		qr2_dorgqr_VT2Q( m-n1, n2, Q22, ldq, T22, ldt, tau2 );
+		qr2_dorgqr3_UT( m-n1, n2, Q22, ldq, T22, ldt, tau2 );
 
 		cblas_dgemm( CblasColMajor, CblasTrans, CblasNoTrans, n1, n2, m-n1, (+1.0e+00), Q21, ldq, Q22, ldq, (+0.0e+00), Q12, ldq );
-		cblas_dtrmm( CblasColMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, n1, n2, (+1.0e+00), T11, ldt, Q12, ldq );
+		cblas_dtrsm( CblasColMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, n1, n2, (+1.0e+00), T11, ldt, Q12, ldq );
 		cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans, m-n1, n2, n1, (-1.0e+00), Q21, ldq, Q12, ldq, (+1.0e+00), Q22, ldq );
 		cblas_dtrmm( CblasColMajor, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, n1, n2, (-1.0e+00), Q11, ldq, Q12, ldq );
 
-		if (T11 != Q11 ) LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', n1, n1, T11, ldt, Q11, ldq );
-		qr2_dVT2Q( m, n1, Q11, ldq );
+		qr2_dorgqr3_UT( m, n1, Q11, ldq, T11, ldt, tau1 );
 
 	}
 

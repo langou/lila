@@ -88,7 +88,7 @@ int main(int argc, char ** argv) {
 	tau  = (double *) malloc( k * sizeof(double));
 	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, k, A, lda, Q, ldq );
 
-	qr2_dgeqr3R( m, k, Q, ldq, T, ldt, Q, ldq );
+	qr2_dgeqr3_R( m, k, Q, ldq, T, ldt, Q, ldq );
 
 	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', k, k, Q, ldq, R, ldr );
 	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', k, k, T, ldt, Q, ldq );
@@ -106,7 +106,7 @@ int main(int argc, char ** argv) {
 	gettimeofday(&tp, NULL);
 	elapsed_ref+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-	qr2_dorgqr( m, k, Q, ldq, T, ldt, tau );
+	qr2_dorgqr3( m, k, Q, ldq, T, ldt, tau );
 
 	free( tau );
 	free( work );

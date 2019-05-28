@@ -85,9 +85,9 @@ int main(int argc, char ** argv) {
 	gettimeofday(&tp, NULL);
 	elapsed=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-	qr2_dgeqr3R_ISW( m, n, Q, ldq, Q, ldq, R, ldr );
+	qr2_dgeqr3_R_ISW( m, n, Q, ldq, Q, ldq, R, ldr );
 	for(i=0;i<n;i++) tau[i] = Q[i+i*ldq];
-	qr2_dorgqr_VT2Q( m, n, Q, ldq, Q, ldq, tau );
+	qr2_dorgqr3_VT2Q( m, n, Q, ldq, Q, ldq, tau );
 
 	gettimeofday(&tp, NULL);
 	elapsed+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);

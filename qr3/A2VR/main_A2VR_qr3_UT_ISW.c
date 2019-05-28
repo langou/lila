@@ -76,7 +76,7 @@ int main(int argc, char ** argv) {
 	gettimeofday(&tp, NULL);
 	elapsed=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-	qr2_dgeqr3R_UT_ISW( m, n, A, lda, A, lda, R, ldr );
+	qr2_dgeqr3_R_UT_ISW( m, n, A, lda, A, lda, R, ldr );
 
 	gettimeofday(&tp, NULL);
 	elapsed+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -111,7 +111,7 @@ int main(int argc, char ** argv) {
 		qr2_dV2tau( m, n, A, lda, tau );
 		LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', m, n, A, lda, tau, T, n );
 
-		qr2_dorgqr( m, n, Q, m, T, n, tau );
+		qr2_dorgqr3( m, n, Q, m, T, n, tau );
 
 		check_qq_orth( &orth, m, n, Q, m );
 		if ( verbose ) printf("qq_orth  = %5.1e  \n ",orth); else printf(" %5.1e  ",orth); 

@@ -15,24 +15,24 @@ extern void dorg2r_( int *m, int *n, int *k, double *a, int *lda, double *tau, d
 #include "mkl.h"
 #endif
 
-extern int qr2_dgeqr3R       ( int m, int n, double *A, int lda, double *T, int ldt, double *R, int ldr );
-extern int qr2_dgeqr3R_UT    ( int m, int n, double *A, int lda, double *T, int ldt, double *R, int ldr );
-extern int qr2_dgeqr3R_ISW   ( int m, int n, double *A, int lda, double *T, int ldt, double *R, int ldr );
-extern int qr2_dgeqr3R_UT_ISW( int m, int n, double *A, int lda, double *T, int ldt, double *R, int ldr );
+extern int qr2_dgeqr3_R       ( int m, int n, double *A, int lda, double *T, int ldt, double *R, int ldr );
+extern int qr2_dgeqr3_R_UT    ( int m, int n, double *A, int lda, double *T, int ldt, double *R, int ldr );
+extern int qr2_dgeqr3_R_ISW   ( int m, int n, double *A, int lda, double *T, int ldt, double *R, int ldr );
+extern int qr2_dgeqr3_R_UT_ISW( int m, int n, double *A, int lda, double *T, int ldt, double *R, int ldr );
 
-extern int qr2_dorgqr     ( int m, int n, double *Q, int ldq, double *T, int ldt, double *tau );
-extern int qr2_dorgqr_UT  ( int m, int n, double *Q, int ldq, double *T, int ldt, double *tau );
-extern int qr2_dorgqr_VT2Q( int m, int n, double *Q, int ldq, double *T, int ldt, double *tau );
-extern int qr2_dorgqr_VS2Q( int m, int n, double *Q, int ldq, double *T, int ldt, double *tau );
+extern int qr2_dorgqr3     ( int m, int n, double *Q, int ldq, double *T, int ldt, double *tau );
+extern int qr2_dorgqr3_UT  ( int m, int n, double *Q, int ldq, double *T, int ldt, double *tau );
+extern int qr2_dorgqr3_VT2Q( int m, int n, double *Q, int ldq, double *T, int ldt, double *tau );
+extern int qr2_dorgqr3_VS2Q( int m, int n, double *Q, int ldq, double *T, int ldt, double *tau );
 
 extern int qr2_dV2tau( int m, int n, double *A, int lda, double *tau );
 
-extern int qr2_larft           ( int m, int n, double *A, int lda, double *T, int ldt, double *tau );
-extern int qr2_larft_UT        ( int m, int n, double *A, int lda, double *T, int ldt, double *tau );
-extern int qr2_larft_ISW       ( int m, int n, double *A, int lda, double *T, int ldt, double *tau );
-extern int qr2_larft_UT_ISW    ( int m, int n, double *A, int lda, double *T, int ldt, double *tau );
-extern int qr2_larft_ISW_V2T   ( int m, int n, double *A, int lda, double *T, int ldt, double *tau );
-extern int qr2_larft_ISW_V2T_UT( int m, int n, double *A, int lda, double *T, int ldt, double *tau );
+extern int qr2_larft3           ( int m, int n, double *A, int lda, double *T, int ldt, double *tau );
+extern int qr2_larft3_UT        ( int m, int n, double *A, int lda, double *T, int ldt, double *tau );
+extern int qr2_larft3_ISW       ( int m, int n, double *A, int lda, double *T, int ldt, double *tau );
+extern int qr2_larft3_UT_ISW    ( int m, int n, double *A, int lda, double *T, int ldt, double *tau );
+extern int qr2_larft3_ISW_V2T   ( int m, int n, double *A, int lda, double *T, int ldt, double *tau );
+extern int qr2_larft3_ISW_V2T_UT( int m, int n, double *A, int lda, double *T, int ldt, double *tau );
 
 extern int qr2_dV2N       ( int n, double *T, int ldt );
 extern int qr2_dN2T       ( int n, double *tau, double *T, int ldt );

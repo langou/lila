@@ -1,6 +1,6 @@
 #include "qr2.h"
 
-int qr2_dgeqr3R_UT_ISW( int m, int n, double *A, int lda, double *T, int ldt, double *R, int ldr ){
+int qr2_dgeqr3_R_UT_ISW( int m, int n, double *A, int lda, double *T, int ldt, double *R, int ldr ){
 
 	int n1, n2, i, j, info;
 	double *A11, *A12, *A21, *A22;
@@ -32,7 +32,7 @@ int qr2_dgeqr3R_UT_ISW( int m, int n, double *A, int lda, double *T, int ldt, do
 		R12 = R+n1*ldr;
 		R22 = R+n1*(1+ldr);
 
-	qr2_dgeqr3R_UT( m, n1, A11, lda, T11, ldt, R11, ldr );
+	qr2_dgeqr3_R_UT( m, n1, A11, lda, T11, ldt, R11, ldr );
 
 		// Using T12 as a workspace
 		if( A11 == R11 ){
@@ -58,7 +58,7 @@ int qr2_dgeqr3R_UT_ISW( int m, int n, double *A, int lda, double *T, int ldt, do
 
 		}
 
-	qr2_dgeqr3R_UT_ISW( m-n1, n2, A22, lda, T22, ldt, R22, ldr );
+	qr2_dgeqr3_R_UT_ISW( m-n1, n2, A22, lda, T22, ldt, R22, ldr );
 
 
 	}
