@@ -10,7 +10,7 @@ int qr2_dgeqr3_R_UT_ISW( int m, int n, double *A, int lda, double *T, int ldt, d
 	if ( n == 1){
 
 		double tau;
-		info = LAPACKE_dlarfg_work( m, (&A[0]), &(A[1]), 1, &tau);
+		info = LAPACKE_dlarfg_work( m, A, A+1, 1, &tau);
 		(*R) = (*A); 
 		(*T) = 1/tau;
 

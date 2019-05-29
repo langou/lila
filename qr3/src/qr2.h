@@ -44,7 +44,6 @@ extern int qr2_aux_dUinvLTinU ( int n, double *L, int ldl, double *U, int ldu );
 
 extern int qr2_aux_dlarf_wrapper( char side, int m, int n, double *V, int incv, double tau, double *C, int ldc, double *work);
 
-extern int lapack_our_dorg2r_bz  ( int m, int n, int k, double *A, int lda, double *tau, double *work, int lwork );
 extern int lapack_our_dorgqr_Q2  ( int m, int n, int k, int nb, double *A, int lda, double *tau, double *work, int lwork );
 extern int lapack_our_dorg2r_Q2  ( int m, int n, int k, double *A, int lda, double *tau, double *work, int lwork );
 
@@ -58,4 +57,6 @@ extern int lapack_mod_dorgqr( int m, int n, int k, int nb, double *A, int lda, d
 extern int lapack_mod_dlarfb_lnfc_bz( int m, int n, int k, double *V, int ldv, double *T, int ldt, double *C, int ldc );
 extern int lapack_mod_dorg2r( int m, int n, int k, double *A, int lda, double *tau );
 
+extern int lapack_ref_dgeqr2( int m, int n, double *A, int lda, double *tau, double *work, int lwork );
+extern int lapack_mod_dgeqr2( int m, int n, double *A, int lda, double *tau );
 

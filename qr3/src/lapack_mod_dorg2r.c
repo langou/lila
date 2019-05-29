@@ -57,10 +57,8 @@ int lapack_mod_dorg2r( int m, int n, int k, double *A, int lda, double *tau ){
 
 //			A12^T = A22^T * A21
 			cblas_dgemv( CblasColMajor, CblasTrans, m1-1, n1-1, (+1.0e+00), A22, lda, A21, 1, (+0.0e+00), A12, lda );
-
 //			A12 = - tau1 * A12
 			cblas_dscal( n1-1, -(*tau1), A12, lda );
-
 //			A22 = A22 + A21 * A12
 			cblas_dger( CblasColMajor, m1-1, n1-1, (+1.0e+00), A21, 1, A12, lda, A22, lda);
 

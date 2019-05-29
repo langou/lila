@@ -3,7 +3,7 @@
 int lapack_mod_dorgqr( int m, int n, int k, int nb, double *A, int lda, double *tau, double *work, int lwork ){
 
 	double *A11, *A01, *A12, *tau1;
-	int k0, m1, n1, n2, ib, i, j, ldwork;
+	int k0, m1, n1, n2, ib, ldwork;
 	
 	ldwork = n;
 
@@ -22,7 +22,7 @@ int lapack_mod_dorgqr( int m, int n, int k, int nb, double *A, int lda, double *
 //	lapack_ref_dorg2r( m1, n1, ib, A11, lda, tau1, work, lwork );
 	lapack_mod_dorg2r( m1, n1, ib, A11, lda, tau1 );
 
-	for( i = 0; i < k0; i++){ for( j = 0; j < n1; j++ ){ A01[i+j*lda] = (+0.0e00); } }
+//	for( i = 0; i < k0; i++){ for( j = 0; j < n1; j++ ){ A01[i+j*lda] = (+0.0e00); } }
 
 	while( k0 > 0 ){
 
@@ -49,7 +49,7 @@ int lapack_mod_dorgqr( int m, int n, int k, int nb, double *A, int lda, double *
 //		lapack_ref_dorg2r( m1, ib, ib, A11, lda, tau1, work, lwork );
 		lapack_mod_dorg2r( m1, ib, ib, A11, lda, tau1 );
 
-		for( i = 0; i < k0; i++){ for( j = 0; j < ib; j++ ){ A01[i+j*lda] = (+0.0e00); } }
+//		for( i = 0; i < k0; i++){ for( j = 0; j < ib; j++ ){ A01[i+j*lda] = (+0.0e00); } }
 
 	}	
 
