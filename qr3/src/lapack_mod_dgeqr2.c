@@ -4,7 +4,10 @@ int lapack_mod_dgeqr2( int m, int n, double *A, int lda, double *tau ){
 
 //	two modifications:
 //	(1) we not do V11 =1.0e+00, this saves on scale, and enable better thread safety (well maybe not here)
-//	(2) we set workspace to be tau
+//	(2) we set workspace to be inside tau (in the tau space that we will use later on)
+//
+//	tau needs to be of size n, in the case m>n
+//	tau needs to be of size n-1, in the case m=n, maybe we want tau[n-1] = 0 in this case, not sure
 
 	double *A11, *A21, *A12, *A22, *tau1, *W;
 	int ml, nl;

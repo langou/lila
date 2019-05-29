@@ -84,7 +84,7 @@ int main(int argc, char ** argv) {
 	for(i = 0; i < ldr * k; i++)
 		*(R + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
 
-	tau = (double *) malloc( k * sizeof(double));
+	tau = (double *) malloc( (k+1) * sizeof(double));
 
 	work = (double *) malloc( 1 * sizeof(double));
 	LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, k, Q, ldq, tau, work, -1 ); 
@@ -96,8 +96,6 @@ int main(int argc, char ** argv) {
 //	LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, k, Q, ldq, tau, work, lwork ); 
 
 	lapack_ref_dgeqrf( m, k, nb, Q, ldq, tau, work, lwork );
-
-
 
 	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', k, k, Q, ldq, R, ldr );
 
