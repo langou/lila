@@ -14,7 +14,10 @@ int qr2_dgeqr3_R_UT( int m, int n, double *A, int lda, double *T, int ldt, doubl
 		info = LAPACKE_dlarfg_work( m, A, A+1, 1, &tau);
 		(*R) = (*A); 
 		(*T) = 1/tau;
-		//(*T) = (+1.0e00) / (*T);
+		
+//		info = LAPACKE_dlarfg_work( m, A, A+1, 1, &(*T));
+//		(*R) = (*A); 
+//		(*T) = (+1.0e00) / (*T);
 
 	} else {
 
