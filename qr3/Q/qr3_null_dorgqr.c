@@ -37,6 +37,7 @@ int qr3_null_dorgqr( int m, int n, int k, int nb, double *A, int lda, double *Q,
 	
 		LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', m1, ib, A11, lda, tau1, work, ib);
 
+//		dorgqr_after( m1, n, ib, A11, lda, A11, lda, Q11, lda );
 //		our_dlarfb_lnfc( m1, n2, ib, A11, lda, work, ib, Q1, ldq, work+ib*ib );
 		cblas_dgemm( CblasColMajor, CblasTrans, CblasNoTrans, ib, n2, m1-ib, (+1.0e+00), A11+ib, lda, Q1+ib, ldq, (+0.0e+00), Q1, ldq );
 		cblas_dtrmm( CblasColMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, ib, n2, (+1.0e+00), A11, lda, Q1, ldq );
