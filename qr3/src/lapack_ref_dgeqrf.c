@@ -8,7 +8,7 @@ int lapack_ref_dgeqrf( int m, int n, int nb, double *A, int lda, double *tau, do
 	ldwork = n;
 
 	i = 0;
-	k = n; // k = min(m,n)
+	k = n;
 
 	ib = nb; if( k - i - nb < 0 ) ib = k - i;
 
@@ -22,8 +22,8 @@ int lapack_ref_dgeqrf( int m, int n, int nb, double *A, int lda, double *tau, do
 	while( k - i > nb ){
 
 //		dgeqr2_( &ml, &ib, A11, &lda, tau1, work, &lwork );
-//		lapack_ref_dgeqr2( ml, ib, A11, lda, tau1, work, lwork );
-		lapack_mod_dgeqr2( ml, ib, A11, lda, tau1, work, lwork );
+		lapack_ref_dgeqr2( ml, ib, A11, lda, tau1, work, lwork );
+//		lapack_mod_dgeqr2( ml, ib, A11, lda, tau1 );
 
 		LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', ml, ib, A11, lda, tau1, work, ldwork);
 
@@ -42,8 +42,8 @@ int lapack_ref_dgeqrf( int m, int n, int nb, double *A, int lda, double *tau, do
 	}	
 
 //	dgeqr2_( &ml, &nl, A11, &lda, tau1, work, &lwork );
-//	lapack_ref_dgeqr2( ml, nl, A11, lda, tau1, work, lwork );
-	lapack_mod_dgeqr2( ml, nl, A11, lda, tau1, work, lwork );
+	lapack_ref_dgeqr2( ml, nl, A11, lda, tau1, work, lwork );
+//	lapack_mod_dgeqr2( ml, nl, A11, lda, tau1 );
 
 	return 0;
 

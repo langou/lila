@@ -35,6 +35,7 @@ SRC = qr2_dgeqr3_R.o                \
 	lapack_mod_dorg2r.o         \
 	lapack_ref_dgeqr2.o         \
 	lapack_mod_dgeqr2.o         \
+	lapack_mod_dgeqrf.o         \
 	qr2_aux_dlarf_wrapper.o
 
 all: $(SRC)

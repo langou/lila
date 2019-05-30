@@ -92,7 +92,11 @@ int main(int argc, char ** argv) {
 	work = (double *) malloc( lwork * sizeof(double));
 
 	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, k, A, lda, Q, ldq );
-	LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, k, Q, ldq, tau, work, lwork ); 
+
+//	LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, k, Q, ldq, tau, work, lwork ); 
+
+	lapack_ref_dgeqrf( m, k, nb, Q, ldq, tau, work, lwork );
+
 	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', k, k, Q, ldq, R, ldr );
 
 	free( work );

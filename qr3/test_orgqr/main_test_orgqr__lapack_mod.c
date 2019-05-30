@@ -6,7 +6,8 @@ int main(int argc, char ** argv) {
 
 	int i, lda, ldq, ldr, ldt, m, n, k, nb, verbose, testing;
 	int lwork;
-	double *A, *Q, *R, *T, *tau, *work;
+	double *A, *Q, *R, *T, *tau;
+//	double *work;
 	double orth, repres;
 	double elapsed, perform;
 	struct timeval tp;
@@ -68,7 +69,7 @@ int main(int argc, char ** argv) {
 	if( lda < 0 ) lda = m;
 	if( ldq < 0 ) ldq = m;
 	if( ldr < 0 ) ldr = k;
-	if( ldt < 0 ) ldt = k;
+	if( ldt < 0 ) ldt = nb;
 
 	A = (double *) malloc( lda * k * sizeof(double));
 	Q = (double *) malloc( ldq * n * sizeof(double));
@@ -84,35 +85,38 @@ int main(int argc, char ** argv) {
 	for(i = 0; i < ldr * k; i++)
 		*(R + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
 
-	tau = (double *) malloc( (k+1) * sizeof(double));
+	tau = (double *) malloc( k * sizeof(double));
 
-	work = (double *) malloc( 1 * sizeof(double));
-	LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, k, Q, ldq, tau, work, -1 ); 
-	lwork = ((int) work[0]);
-	work = (double *) malloc( lwork * sizeof(double));
+//	work = (double *) malloc( 1 * sizeof(double));
+//	LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, k, Q, ldq, tau, work, -1 ); 
+//	lwork = ((int) work[0]);
+//	work = (double *) malloc( lwork * sizeof(double));
 
 	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, k, A, lda, Q, ldq );
 
 //	LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, k, Q, ldq, tau, work, lwork ); 
 
-	lapack_ref_dgeqrf( m, k, nb, Q, ldq, tau, work, lwork );
+//	lapack_ref_dgeqrf( m, k, nb, Q, ldq, tau, work, lwork );
+
+//	since we have T in the interface we probably will want to remove tau . . .
+//	that would require geqr2 to not return a tau, we could have an increment . . .
+//	and then that would be use as the workspace . . . Argh . . . .
+//	I guess this would work, not a big fan to having a not contiguouse workspace . . .
+	lapack_mod_dgeqrf( m, k, nb, Q, ldq, tau, T, ldt );
 
 	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', k, k, Q, ldq, R, ldr );
-
-	free( work );
-	work = (double *) malloc( n * nb * sizeof(double));
 
 	gettimeofday(&tp, NULL);
 
 	elapsed=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-	lapack_mod_dorgqr( m, n, k, nb, Q, ldq, tau, work, lwork );
+	lapack_mod_dorgqr( m, n, k, nb, Q, ldq, tau, T, ldt );
 
 	gettimeofday(&tp, NULL);
 	elapsed+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
 	free( tau );
-	free( work );
+//	free( work );
 
 	perform = ((double) flops_lapack_org2r( m, n, k ) + (double) flops_lapack_geqr2( m, k ) ) / elapsed / 1.0e+9 ;
 

@@ -59,4 +59,6 @@ extern int lapack_mod_dorg2r( int m, int n, int k, double *A, int lda, double *t
 
 extern int lapack_ref_dgeqr2( int m, int n, double *A, int lda, double *tau, double *work, int lwork );
 extern int lapack_mod_dgeqr2( int m, int n, double *A, int lda, double *tau );
+extern int lapack_mod_dgeqrf( int m, int n, int nb, double *A, int lda, double *tau, double *work, int lwork );
+
 

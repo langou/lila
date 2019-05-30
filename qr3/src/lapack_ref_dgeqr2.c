@@ -4,7 +4,6 @@ int lapack_ref_dgeqr2( int m, int n, double *A, int lda, double *tau, double *wo
 
 	double *A11, *A12, *tau1;
 	int ml, nl;
-	int i, j;
 	double tmp;
 
 	A11 = A;
