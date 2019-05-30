@@ -1,0 +1,158 @@
+
+
+
+********************************************************************************
+
+THE FOLDER Q ---- WHAT TO DO WITH THE FILES
+
+********************************************************************************
+
+
+The .sh files in Q. 
+
+	* Do we want to create a "test" folder to store all these and do testing within
+	* Or do we want to have each research folder to contain their own .sh testing files?
+		** As in /V2T/test_V2T.sh   and /A2VR/test_A2VR.sh
+
+
+////////////////////
+
+
+dorgqr_after.c
+
+	* This constructs the null space of Q, Q2 ALL AT ONCE (or block by block if called with ib in a while). 
+	* We do not have this within the qr2 folder
+		** We have recursive and the lapack_mod file. But not just one, this could be        ------>      ** qr2_aux_dorgqr_null **
+
+	Referenced:
+		main_A2Q1Q2R.c://	dorgqr_after( m, n, k, Q, ldq, Q, ldq, Q+k*ldq, ldq );
+		main_A2QR_NminusKblock.c:	dorgqr_after( m, n, k, Q, ldq, Q, ldq, Q+k*ldq, ldq );
+		qr3_null_dorgqr.c:	dorgqr_after( m1, n1, ib, A11, lda, work, ib, Q1, ldq );
+		qr3_null_dorgqr____SAVE.c:	dorgqr_after( m1, n, ib, A11, lda, A11, lda, Q11, lda );           ** REMOVED
+		qr3_null_dorgqr____SAVE.c:	//dorgqr_after( m, n, k, A11, lda, A11, lda, Q11, lda );           ** REMOVED
+		qr3_null_dorgqr____SAVE.c:		dorgqr_after( m1, n, ib, A11, lda, A11, lda, Q11, lda );   ** REMOVED
+
+
+////////////////////
+
+
+our_dorgqr_save.c
+
+	* REMOVED --> was lapack_ref_dorgqr but before it was cleaned up. 
+
+
+////////////////////
+
+
+qr3_dorgqr_level1.c   &&   qr3_dorgqr_level1_UT.c
+
+	* Both of these follow the lapack_mod_something framework within qr2
+		** They instead use 
+			*** V2N then N2T  
+			*** V2N then trtri   
+			*** V2N then trsm
+
+	* We only have recursive forms of code within the qr2 folder
+
+
+////////////////////
+
+
+qr3_null_dorgqr.c
+
+	* This file does the second progession-step within ** lapack_mod_dorg2r ** but with regards the null.
+		** We may want to add this into ** lapack_our_dorg2r_Q2 **
+
+ 
+qr3_null_dorgqr______SAVE.c
+
+	* Same as above REMOVED
+
+
+////////////////////
+
+
+qr3_dA2QRTV.c   &&   qr3_dA2QRTV_fake.c    &&    dV2Q.c
+
+	* The first and last was discussed within the email. You mentioned knowing what to do with dV2Q
+	* The second -- REMOVED. It was a call to qr2_dgeqr3 and qr2_dorgqr3
+		** NOTE: We do not have a qr2_dgeqr3 within /src/  only qr2_dgeqr3_R variants
+			*** Maybe we want to add this? Maybe not
+
+
+////////////////////
+
+
+our_dorgqr_fortran.f 
+
+	* Not sure, exact copy from the LAPACK /SRC/ folder? 
+	* Probably can remove but will leave that up to Julien
+
+
+////////////////////
+
+
+All of the mains
+
+	* main_A2Q1Q2R.c
+		** I'm pretty sure this is an early version of the main within /A2QR_null/
+
+	* main_A2QRTV.c
+		** Calls dA2QRTV and that is all
+
+	* main_A2QR_NminusKblock.c
+		** This does whatever to get the Householder reflectors and then uses dorgqr_after to construct Q2 all at once
+		** So just a variant of breaking n, k, m
+
+	* main_A2QR_ourlapack.c
+		** This one does everything we do in /src/ except for ** qr3_dorgqr_level1.c && qr3_dorgqr_level1_UT.c ** discussed above.
+
+	
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+Updated:  (changing the workspace)
+
+***qr2_dgeqr3_R***   ***qr2_dgeqr3_R_UT***   ***qr2_dgeqr3_R_ISW***   ***qr2_dgeqr3_R_UT_ISW***
+
+Added all logic changes requested and they work for all cases
+	* A points on V, A points on T, R points on R
+	* A points on V, T points on T, A points on R
+	* A points on V, T points on T, R points on R
+
+
+
+BUT for the UT case, in your email you say 
+
+	For UT we would need something like: 
+	(*T) = 1 / (*T);
+	after all this. 
+
+This did not work right away --- Will look into this later after I finish other things I want to do
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+I've also created the A2Q folder for not constructing the R factor 
+
+	* Works for
+		** dgeqr3_Q
+		** dgeqr3_Q_ISW
+			*** _Q represents only Q -- removed R, ldr from interface so original dgeqr3 interface. 
+			*** Need a better naming convention for dgeqr3 -- between interface and UT / ISW
+
+	* Could do the UT transform variation as well, not sure if important
+
+
