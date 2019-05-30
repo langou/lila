@@ -10,10 +10,13 @@ int qr2_dgeqr3_R_ISW( int m, int n, double *A, int lda, double *T, int ldt, doub
 
 	if ( n == 1){
 
-		double tau;
-		info = LAPACKE_dlarfg_work( m, A, A+1, 1, &tau);
-		(*R) = (*A); // Need to copy R over first, at least when we point T and A at the same point ...
-		(*T) = tau;
+//		double tau;
+//		info = LAPACKE_dlarfg_work( m, A, A+1, 1, &tau);
+//		(*R) = (*A); 
+//		(*T) = tau;
+
+		(*R) = (*A); 
+		info = LAPACKE_dlarfg_work( m, R, A+1, 1, T);
 
 	} else {
 

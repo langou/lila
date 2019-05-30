@@ -22,15 +22,15 @@ dorgqr_after.c
 
 	* This constructs the null space of Q, Q2 ALL AT ONCE (or block by block if called with ib in a while). 
 	* We do not have this within the qr2 folder
-		** We have recursive and the lapack_mod file. But not just one, this could be        ------>      ** qr2_aux_dorgqr_null **
+		** We have recursive and the lapack_mod file. But not just one, this could be        ------>      ** qr2_aux_dorgqr_null **  or  ** qr2_aux_dorgq2r **
 
 	Referenced:
 		main_A2Q1Q2R.c://	dorgqr_after( m, n, k, Q, ldq, Q, ldq, Q+k*ldq, ldq );
 		main_A2QR_NminusKblock.c:	dorgqr_after( m, n, k, Q, ldq, Q, ldq, Q+k*ldq, ldq );
 		qr3_null_dorgqr.c:	dorgqr_after( m1, n1, ib, A11, lda, work, ib, Q1, ldq );
-		qr3_null_dorgqr____SAVE.c:	dorgqr_after( m1, n, ib, A11, lda, A11, lda, Q11, lda );           ** REMOVED
-		qr3_null_dorgqr____SAVE.c:	//dorgqr_after( m, n, k, A11, lda, A11, lda, Q11, lda );           ** REMOVED
-		qr3_null_dorgqr____SAVE.c:		dorgqr_after( m1, n, ib, A11, lda, A11, lda, Q11, lda );   ** REMOVED
+		qr3_null_dorgqr____SAVE.c:	dorgqr_after( m1, n, ib, A11, lda, A11, lda, Q11, lda );           ** REMOVED  ____SAVE 
+		qr3_null_dorgqr____SAVE.c:	//dorgqr_after( m, n, k, A11, lda, A11, lda, Q11, lda );           ** REMOVED "        "
+		qr3_null_dorgqr____SAVE.c:		dorgqr_after( m1, n, ib, A11, lda, A11, lda, Q11, lda );   ** REMOVED "        "
 
 
 ////////////////////
@@ -38,7 +38,7 @@ dorgqr_after.c
 
 our_dorgqr_save.c
 
-	* REMOVED --> was lapack_ref_dorgqr but before it was cleaned up. 
+	* REMOVED --> was lapack_ref_dorgqr, but before it was cleaned up to be more readable. 
 
 
 ////////////////////
@@ -48,11 +48,14 @@ qr3_dorgqr_level1.c   &&   qr3_dorgqr_level1_UT.c
 
 	* Both of these follow the lapack_mod_something framework within qr2
 		** They instead use 
-			*** V2N then N2T  
-			*** V2N then trtri   
-			*** V2N then trsm
+			*** V2N then N2T       --> within level1
+			*** V2N then trtri     --> within level1   
+			*** V2N then trsm      --> within level1_UT
 
 	* We only have recursive forms of code within the qr2 folder
+	* Could be added as   ------>    ** qr2_aux_dorgqr_N2T   **
+	* Could be added as   ------>    ** qr2_aux_dorgqr_trtri **
+	* Could be added as   ------>    ** qr2_aux_dorgqr_trsm  **
 
 
 ////////////////////
@@ -60,7 +63,8 @@ qr3_dorgqr_level1.c   &&   qr3_dorgqr_level1_UT.c
 
 qr3_null_dorgqr.c
 
-	* This file does the second progession-step within ** lapack_mod_dorg2r ** but with regards the null.
+	* This file does the second progession-step within ** lapack_mod_dorg2r ** but with regards the null space.
+				     -> (as in the email you sent, what you did after dlarf_bz)
 		** We may want to add this into ** lapack_our_dorg2r_Q2 **
 
  
@@ -74,9 +78,9 @@ qr3_null_dorgqr______SAVE.c
 
 qr3_dA2QRTV.c   &&   qr3_dA2QRTV_fake.c    &&    dV2Q.c
 
-	* The first and last was discussed within the email. You mentioned knowing what to do with dV2Q
+	* The first and third was discussed within the email. You mentioned knowing what to do with dV2Q
 	* The second -- REMOVED. It was a call to qr2_dgeqr3 and qr2_dorgqr3
-		** NOTE: We do not have a qr2_dgeqr3 within /src/  only qr2_dgeqr3_R variants
+		** NOTE: We do not have a qr2_dgeqr3 within /src/ only qr2_dgeqr3_R variants
 			*** Maybe we want to add this? Maybe not
 
 
@@ -155,4 +159,19 @@ I've also created the A2Q folder for not constructing the R factor
 
 	* Could do the UT transform variation as well, not sure if important
 
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+I've started /test_orgqr_Q2 and created a main. I copied into the new folder, dorgqr_after & qr3_null_dorgqr 
+	and changed their names to qr3_aux_dorgq2r & lapack_our_dorgq2r respectively
+
+working on how to make sure we've computed Q2 correctly
+
+Running into issue with Q1 and Q2
 

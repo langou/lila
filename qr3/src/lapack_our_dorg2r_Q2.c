@@ -1,5 +1,6 @@
 #include "qr2.h"
 
+//int lapack_ref_dorg2r_Q2( int m, int n, int k, double *A, int lda, double *tau, double *work, int lwork ){
 int lapack_our_dorg2r_Q2( int m, int n, int k, double *A, int lda, double *tau, double *work, int lwork ){
 
 	double *A11, *Axx, *tau1;

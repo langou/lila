@@ -10,14 +10,14 @@ int qr2_dgeqr3_R_UT( int m, int n, double *A, int lda, double *T, int ldt, doubl
 
 	if ( n == 1){
 
-		double tau;
-		info = LAPACKE_dlarfg_work( m, A, A+1, 1, &tau);
-		(*R) = (*A); 
-		(*T) = 1/tau;
-		
-//		info = LAPACKE_dlarfg_work( m, A, A+1, 1, &(*T));
+//		double tau;
+//		info = LAPACKE_dlarfg_work( m, A, A+1, 1, &tau);
 //		(*R) = (*A); 
-//		(*T) = (+1.0e00) / (*T);
+//		(*T) = 1/tau;
+		
+		(*R) = (*A); 
+		info = LAPACKE_dlarfg_work( m, R, A+1, 1, T);
+		(*T) = (+1.0e00) / (*T);
 
 	} else {
 

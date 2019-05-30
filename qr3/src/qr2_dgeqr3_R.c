@@ -10,10 +10,13 @@ int qr2_dgeqr3_R( int m, int n, double *A, int lda, double *T, int ldt, double *
 
 	if ( n == 1){
 
-		double tau;
-		info = LAPACKE_dlarfg_work( m, A, A+1, 1, &tau);
+//		double tau;
+//		info = LAPACKE_dlarfg_work( m, A, A+1, 1, &tau);
+//		(*R) = (*A); 
+//		(*T) = tau;
+
 		(*R) = (*A); 
-		(*T) = tau;
+		info = LAPACKE_dlarfg_work( m, R, A+1, 1, T);
 
 	} else {
 

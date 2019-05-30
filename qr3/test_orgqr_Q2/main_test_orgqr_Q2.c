@@ -82,7 +82,7 @@ int main(int argc, char ** argv) {
  	R  = (double *) malloc( ldr  * k   * sizeof(double));
  	T  = (double *) malloc( ldt  * k   * sizeof(double));
 
- 	for(i = 0; i < lda * k; i++)
+ 	for(i = 0; i < lda * n; i++)
 		*(A + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
 
 	for(i = 0; i < ldr  * k; i++)
@@ -97,26 +97,36 @@ int main(int argc, char ** argv) {
 
 	qr2_dgeqr3_R( m, k, Q1, ldq1, T, ldt, R, ldr );
 	for(i=0;i<k;i++) tau[i] = T[i+i*ldt];
-	qr2_dorgqr3( m, k, Q1, ldq1, T, ldt, tau );
 
 	gettimeofday(&tp, NULL);
 	elapsed=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
 
-
-//	lapack_our_dorgq2r( m, n, k, nb, Q1, ldq1, Q2, ldq2, tau, work, lwork );
-//	qr3_aux_dorgq2r( m, n, k, Q1, ldq1, T, ldt, Q2, ldq2 );
-
-	
 	double *Q;
 	Q = (double *) malloc( m * n * sizeof(double));	
 	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, k, Q1, ldq1, Q, m );
-	lapack_our_dorgqr_Q2( m, n, k, nb, Q, m, tau, work, lwork );
+
+//	The reason for having the variants,
+//	I can not seem to write in Q2. It ruins the test checks if one of the following is uncommented 
+//	except fpr when I call Q only, or call the /src/ file
+
+//	lapack_our_dorgq2r( m, n, k, nb, Q1, ldq1, Q2, ldq2, tau, work, lwork );
+//	lapack_our_dorgq2r( m, n, k, nb, Q, m, Q2, ldq2, tau, work, lwork );
+//	lapack_our_dorgq2r( m, n, k, nb, Q, m, Q+k*m, m, tau, work, lwork );
+
+//	qr3_aux_dorgq2r( m, n, k, Q1, ldq1, T, ldt, Q2, ldq2 );
+//	qr3_aux_dorgq2r( m, n, k, Q, m, T, ldt, Q2, ldq2 );
+//	qr3_aux_dorgq2r( m, n, k, Q, m, T, ldt, Q+k*m, m );
+
+//	/src -- files
+//	lapack_our_dorgqr_Q2( m, n, k, nb, Q, m, tau, work, lwork );
 
 
 
 	gettimeofday(&tp, NULL);
 	elapsed+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+
+	qr2_dorgqr3( m, k, Q1, ldq1, T, ldt, tau );
 
 	free( tau );
 	free( work );

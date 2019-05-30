@@ -1,5 +1,7 @@
 #include "null.h"
 
+//int lapack_mod_dorgq2r_Q2( int m, int n, int k, int nb, double *A, int lda, double *Q, int ldq, double *tau, double *work, int lwork ){
+
 int lapack_our_dorgq2r( int m, int n, int k, int nb, double *A, int lda, double *Q, int ldq, double *tau, double *work, int lwork ){
 
 	double *A11, *Q1, *tau1;
@@ -20,6 +22,8 @@ int lapack_our_dorgq2r( int m, int n, int k, int nb, double *A, int lda, double 
 	tau1 = tau+k0;
 
 	LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', m1, ib, A11, lda, tau1, work, ib);
+
+//	lapack_mod_dorgq2r_Q2( m1, n1, ib, A11, lda, work, ib, Q1, ldq );
 	qr3_aux_dorgq2r( m1, n1, ib, A11, lda, work, ib, Q1, ldq );
 
 	while( k0 > 0 ){
