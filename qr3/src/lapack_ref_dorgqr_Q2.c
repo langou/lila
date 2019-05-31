@@ -1,11 +1,9 @@
 #include "qr2.h"
 
-int lapack_our_dorgqr_Q2( int m, int n, int k, int nb, double *A, int lda, double *tau, double *work, int lwork ){
+int lapack_ref_dorgqr_Q2( int m, int n, int k, int nb, double *A, int lda, double *tau, double *work, int lwork ){
 
-	double *A11, *tau1;
-	int k0, m1, n1, ib, i, j, ldwork;
-	double *Axx, *A0x;
-	int nx;
+	double *A11, *tau1, *Axx, *A0x;
+	int k0, m1, n1, ib, i, j, nx, ldwork;
 	
 	ldwork = n;
 
@@ -16,23 +14,23 @@ int lapack_our_dorgqr_Q2( int m, int n, int k, int nb, double *A, int lda, doubl
 	m1 = m-k0;
 	n1 = n-k0;
 
-	A11 = A+k0*(1+lda);
+	A11  = A+k0*(1+lda);
 	tau1 = tau+k0;
 
 	A0x = A+k*lda;
 	Axx = A+k*(1+lda)-ib;
-	nx = n-k;
+	nx  = n-k;
 
 	for( i = 0; i < k0; i++){ for( j = 0; j < nx; j++ ){ A0x[i+j*lda] = (+0.0e00); } }
 
-	lapack_our_dorg2r_Q2( m1, n1, ib, A11, lda, tau1, work, lwork );
+	lapack_ref_dorg2r_Q2( m1, n1, ib, A11, lda, tau1, work, lwork );
 
 	while( k0 > 0 ){
 
 		ib = nb; if( k0 - ib < 0 ) ib = k0;
 
-		A11 -= ib*(1+lda);
-		Axx -= ib;
+		A11  -= ib*(1+lda);
+		Axx  -= ib;
 		tau1 -= ib;
 
 		m1 += ib;		

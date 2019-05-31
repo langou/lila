@@ -1,0 +1,13 @@
+./xmain_flops_lapack_orgqr.exe -m 20 -n 4 -k 2 -nb  1
+./xmain_flops_lapack_orgqr.exe -m 20 -n 10 -k 9 -nb  1
+./xmain_flops_lapack_orgqr.exe -m 20 -n 15 -k 14 -nb  1
+./xmain_flops_lapack_orgqr.exe -m 30 -n 20 -k 5 -nb  1
+./xmain_flops_lapack_orgqr.exe -m 30 -n 20 -k 10 -nb  1
+./xmain_flops_lapack_orgqr.exe -m 30 -n 20 -k 15 -nb  1
+./xmain_flops_lapack_orgqr.exe -m 40 -n 10 -k 9 -nb  1
+./xmain_flops_lapack_orgqr.exe -m 40 -n 20 -k 9 -nb  1
+./xmain_flops_lapack_orgqr.exe -m 40 -n 31 -k 9 -nb  1
+./xmain_flops_lapack_orgqr.exe -m 40 -n 31 -k 19 -nb  1
+./xmain_flops_lapack_orgqr.exe -m 65 -n 10 -k 19 -nb  1
+./xmain_flops_lapack_orgqr.exe -m 77 -n 10 -k 23 -nb  1
+./xmain_flops_lapack_orgqr.exe -m 86 -n 55 -k 34 -nb  1

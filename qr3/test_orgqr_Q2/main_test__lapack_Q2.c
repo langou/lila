@@ -4,7 +4,7 @@
 
 int main(int argc, char ** argv) {
 
-	int i, lda, ldq, ldr, ldt, m, n, k, verbose, testing;
+	int i, lda, ldq, ldr, ldt, m, n, k, nb, verbose, testing;
 	int lwork;
 	double *A, *Q, *R, *T, *tau, *work;
 	double orth, repres;
@@ -16,6 +16,7 @@ int main(int argc, char ** argv) {
     	m         = 27;
     	k         = 17;
     	n         = 20;
+    	nb        = 10;
 	lda       = -1;
 	ldq       = -1;
 	ldr       = -1;
@@ -54,6 +55,10 @@ int main(int argc, char ** argv) {
 		}
 		if( strcmp( *(argv + i), "-k") == 0) {
 			k = atoi( *(argv + i + 1) );
+			i++;
+		}
+		if( strcmp( *(argv + i), "-nb") == 0) {
+			nb = atoi( *(argv + i + 1) );
 			i++;
 		}
 	}
@@ -96,10 +101,12 @@ int main(int argc, char ** argv) {
 	gettimeofday(&tp, NULL);
 	elapsed=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-	LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, m, n, k, Q, ldq, tau, work, lwork );
+	lapack_ref_dorgqr_Q2( m, n, k, nb, Q, ldq, tau, work, lwork );
 
 	gettimeofday(&tp, NULL);
 	elapsed+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+
+	LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, m, k, k, Q, ldq, tau, work, lwork );
 
 	free( tau );
 	free( work );
@@ -124,11 +131,11 @@ int main(int argc, char ** argv) {
 
 	if ( testing ){
 
-		check_qq_orth( &orth, m, n, Q, ldq );
+		check_qq_orth( &orth, m, n-k, Q+k*ldq, ldq );
 		if ( verbose ) printf("qq_orth  = %5.1e  \n",orth); else printf(" %5.1e  ",orth); 
 
-		check_qr_repres( &repres, m, k, A, lda, Q, ldq, R, ldr );
-		if ( verbose ) printf("qr_repres = %5.1e  \n",repres); else printf(" %5.1e  ",repres); 
+		check_q2A_repres( &repres, m, n, k, A, lda, Q+k*ldq, ldq );
+		if ( verbose ) printf("q2A_repres  = %5.1e  \n ",repres); else printf(" %5.1e  ",repres);
 
 	}
 

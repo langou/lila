@@ -1,15 +1,14 @@
-#include "qr3.h"
+#include "../src/qr2.h"
+#include "../check/check.h"
+#include "../flops/flops.h"
 
-
-
-//// CHECK PERFORM_REF --- FLOP COUNT IS IN ACCORDANCE TO LAPACK
 int main(int argc, char ** argv) {
 
-	int i, lda, ldq, ldr, ldt, m, n, k, verbose, testing;
+	int i, lda, ldq, ldr, ldt, m, n, k, nb, verbose, testing;
 	int lwork;
 	double *A, *Q, *R, *T, *tau, *work;
 	double orth, repres;
-	double elapsed_ref, perform_ref;
+	double elapsed, perform;
 	struct timeval tp;
 	
 	srand(0);
@@ -17,6 +16,7 @@ int main(int argc, char ** argv) {
     	m         = 27;
     	k         = 17;
     	n         = 20;
+    	nb        = 10;
 	lda       = -1;
 	ldq       = -1;
 	ldr       = -1;
@@ -37,10 +37,6 @@ int main(int argc, char ** argv) {
 			ldr = atoi( *(argv + i + 1) );
 			i++;
 		}
-		if( strcmp( *(argv + i), "-ldt") == 0) {
-			ldt = atoi( *(argv + i + 1) );
-			i++;
-		}
 		if( strcmp( *(argv + i), "-verbose") == 0) {
 			verbose = atoi( *(argv + i + 1) );
 			i++;
@@ -59,6 +55,10 @@ int main(int argc, char ** argv) {
 		}
 		if( strcmp( *(argv + i), "-k") == 0) {
 			k = atoi( *(argv + i + 1) );
+			i++;
+		}
+		if( strcmp( *(argv + i), "-nb") == 0) {
+			nb = atoi( *(argv + i + 1) );
 			i++;
 		}
 	}
@@ -84,9 +84,6 @@ int main(int argc, char ** argv) {
 	for(i = 0; i < ldr * k; i++)
 		*(R + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
 
-	for(i = 0; i < ldt * k; i++)
-		*(R + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
-
 	tau = (double *) malloc( k * sizeof(double));
 
 	work = (double *) malloc( 1 * sizeof(double));
@@ -97,65 +94,48 @@ int main(int argc, char ** argv) {
 	free( work );
 	work = (double *) malloc( lwork * sizeof(double));
 
-	gettimeofday(&tp, NULL);
-	elapsed_ref=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
-
 	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, k, A, lda, Q, ldq );
-
-//	LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, k, Q, ldq, tau, work, lwork ); 
-
-	//dgeqr3_ISW( m, k, Q, ldq, T, ldt );
-	dgeqr3( m, k, Q, ldq, T, ldt );
-
+	LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, k, Q, ldq, tau, work, lwork ); 
 	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', k, k, Q, ldq, R, ldr );
-	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'U', k, k, T, ldt, Q, ldq );
-
-//	LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, m, n, k, Q, ldq, tau, work, lwork );
-
-//	LAPACKE_dlarft_work( LAPACK_COL_MAJOR, 'F', 'C', m, k, Q, ldq, tau, T, ldt );
-
-	dorgqr_after( m, n, k, Q, ldq, Q, ldq, Q+k*ldq, ldq );
-
-//	LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, m, k, k, Q, ldq, tau, work, lwork );
-
-	dVT2Q( m, k, Q, ldq );
 
 	gettimeofday(&tp, NULL);
-	elapsed_ref+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+	elapsed=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+
+	lapack_mod_dorgqr_Q2( m, n, k, nb, Q, ldq, Q+k*ldq, ldq, tau, work, lwork );
+
+	gettimeofday(&tp, NULL);
+	elapsed+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
+
+	LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, m, k, k, Q, ldq, tau, work, lwork );
 
 	free( tau );
 	free( work );
 
-//	perform_ref = ((double) flops_lapack_org2r( m, n, k ) + (double) flops_lapack_geqr2( m, k ) ) / elapsed_ref / 1.0e+9 ;
-	long int flops_lapack_geqr2;
-	long int flops_lapack_org2r;
-	flops_lapack_org2r = (( 6*(m-k)*k + 4*k*k - 3*(m-k) - 1 )*k / 3 ) + ( 4*m - 2*k + 1 )*k*( n - k );
-	flops_lapack_geqr2 = (( 6*m*k*k - 2*k*k*k + 3*m*k + 17*k ) / 3 );
-	perform_ref = ( ((double) flops_lapack_org2r ) + ((double) flops_lapack_geqr2 ) ) / elapsed_ref / 1.0e+9 ;
+	perform = ((double) flops_lapack_org2r( m, n, k ) + (double) flops_lapack_geqr2( m, k ) ) / elapsed / 1.0e+9 ;
 
 	if ( verbose ){ 
 
-		printf("ORGQR");
+		printf("ORGQR  ");
 		printf("m = %4d, ",         m);
 		printf("n = %4d, ",         n);
 		printf("k = %4d, ",         k);
 		printf(" \n");
-		printf(" time = %f    GFlop/sec = %f ", elapsed_ref, perform_ref);	
-		printf(" \n ");
+		printf("time = %16.8f (seconds)    performance = %10.3f (GFlop/sec) ", elapsed, perform);	
+		printf(" \n");
 
 	} else {
 
-		printf("%6d %6d %6d %16.8f %10.3f ", m, n, k, elapsed_ref, perform_ref);
+		printf("%6d %6d %6d %16.8f %10.3f ", m, n, k, elapsed, perform);
 
 	} 
 
 	if ( testing ){
 
-		qr3_test_qq_orth_1( &orth, m, n, Q, ldq );		
-		if ( verbose ) printf("qq_orth  = %5.1e  \n ",orth); else printf(" %5.1e  ",orth); 
+		check_qq_orth( &orth, m, n-k, Q+k*ldq, ldq );
+		if ( verbose ) printf("qq_orth  = %5.1e  \n",orth); else printf(" %5.1e  ",orth); 
 
-		qr3_test_qr_repres_1( &repres, m, k, A, lda, Q, ldq, R, ldr );
-		if ( verbose ) printf("qr_repres = %5.1e  \n ",repres); else printf(" %5.1e  ",repres); 
+		check_q2A_repres( &repres, m, n, k, A, lda, Q+k*ldq, ldq );
+		if ( verbose ) printf("q2A_repres  = %5.1e  \n ",repres); else printf(" %5.1e  ",repres);
 
 	}
 
@@ -163,8 +143,8 @@ int main(int argc, char ** argv) {
 
 	free( A );
 	free( Q );
-	free( T );
 	free( R );
+	free( T );
 
 	return 0;
 

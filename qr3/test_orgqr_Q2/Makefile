@@ -1,13 +1,19 @@
 
 include ../make.inc
 
-all: xmain_test_orgqr_Q2.exe 
+all: xmain_test__lapack_Q2.exe xmain_test__lapack_mod_Q2.exe
 
-xmain_test_orgqr_Q2.exe: main_test_orgqr_Q2.o qr3_aux_dorgq2r.o lapack_our_dorgq2r.o
+xmain_test__lapack_Q2.exe: main_test__lapack_Q2.o 
 	make -C ../src/
 	make -C ../flops/
 	make -C ../check/
-	$(LOADER) -o $@ main_test_orgqr_Q2.o qr3_aux_dorgq2r.o lapack_our_dorgq2r.o ../src/libqr2.a ../check/libcheck.a ../flops/libflops.a $(LIB)
+	$(LOADER) -o $@ main_test__lapack_Q2.o ../src/libqr2.a ../check/libcheck.a ../flops/libflops.a $(LIB)
+
+xmain_test__lapack_mod_Q2.exe: main_test__lapack_mod_Q2.o 
+	make -C ../src/
+	make -C ../flops/
+	make -C ../check/
+	$(LOADER) -o $@ main_test__lapack_mod_Q2.o ../src/libqr2.a ../check/libcheck.a ../flops/libflops.a $(LIB)
 
 .c.o:
 	$(CC) $(OPTS) -I$(INCLUDE) -c -o $@ $<

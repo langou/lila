@@ -1,6 +1,6 @@
-#include "null.h"
+#include "qr2.h"
 
-int qr3_aux_dorgq2r( int m, int n, int k, double *A, int lda, double *T, int ldt, double *Q, int ldq ){
+int lapack_mod_dorg2r_Q2( int m, int n, int k, double *A, int lda, double *T, int ldt, double *Q, int ldq ){
 
 	double *A1, *A2, *A3;
 	double *Q1, *Q2, *Q3;
