@@ -15,6 +15,8 @@
 
 extern int check_qq_orth( double *norm_orth_1, int m, int n, double *Q, int ldq  );
 extern int check_qr_repres( double *norm_repres, int m, int n, double *A, int lda, double *Q, int ldq, double *R, int ldr );
+extern int check_q2A_repres( double *norm_repres, int m, int n, int k, double *A, int lda, double *Q2, int ldq2 );
+
 
 
 

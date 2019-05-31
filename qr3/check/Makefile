@@ -3,6 +3,7 @@ include ../make.inc
 
 CHECK = check_qq_orth.o      \
 	check_qr_repres.o    \
+	check_q2A_repres.o    
 
 all: $(CHECK)
 	ar -cr libcheck.a $^
