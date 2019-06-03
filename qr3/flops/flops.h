@@ -66,6 +66,10 @@ extern long int flops_geqr3_bef_constructT_check( int m, int n );
 extern long int flops_geqr3_bef_useT_check( int n );
 extern long int flops_geqr3_bef_constructT( int m, int n );
 extern long int flops_geqr3_bef_useT( int n );
+extern long int flops_geqr3_noR( int int_m, int int_n );
+extern long int flops_geqr3_noR_check( int int_m, int int_n );
+extern long int flops_geqr3_onlyR( int int_n );
+extern long int flops_geqr3_onlyR_check( int int_n );
 
 extern long int flops_geqr3_ISW( int m, int n );
 extern long int flops_geqr3_ISW_check( int m, int n );
@@ -79,8 +83,12 @@ extern long int flops_geqr3_UT( int int_m, int int_n );
 
 extern long int flops_geqr3_ISW_UT_check( int int_m, int int_n );
 extern long int flops_geqr3_ISW_UT( int int_m, int int_n );
-extern long int flops_qr2_dorgqr_check( int m, int n );
 
+extern long int flops_qr2_dorgqr_check( int m, int n );
+extern long int flops_qr2_dorgqr( int int_m, int int_n );
+
+extern long int flops_dlarft3_check( int int_m, int int_n );
+extern long int flops_dlarft3( int int_m, int int_n );
 
 
 
