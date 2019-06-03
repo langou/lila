@@ -1,5 +1,0 @@
-CC = mpicc
-OPTS = -O3 
-LOADER = mpif77 
-LINKOPT = -O3 -L$(TOOLS) -lgoto -llapack -lgoto
-
