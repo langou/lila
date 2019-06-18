@@ -128,7 +128,7 @@ int main(int argc, char ** argv) {
 		2.0e+00 * ( (double) m) * ((double) n) *((double) n) - ((double) n) * ((double) n) * ((double) n) / 3.0e+00 
 		+ 4.0e+00 * ((double) (m-n)) * ((double) n) * ((double) k)
 		+ 4.0e+00 * ((double) n) * ((double) n) * ((double) k) 
-		) / elapsed / 1.0e+9 ; // need the flop count for gels -- flop count of geqrf and orgqr + other things
+		) / elapsed / 1.0e+9 ;  
 
 	if ( verbose ){ 
 
