@@ -3,7 +3,7 @@
 int main(int argc, char ** argv) {
 
 	int i, j, m, n, k, lda, ldt, ldb, verbose, testing;
-	double *A, *As, *T, *bs, *b;
+	double *A, *As, *T, *b, *bs;
 	double norm_A, norm_b; 
 	double norm_repres, norm_orth;
 	double elapsed, perform;
@@ -64,8 +64,8 @@ int main(int argc, char ** argv) {
 	A  = (double *) malloc( lda * n * sizeof(double));
 	T  = (double *) malloc( ldt * n * sizeof(double));
 	As = (double *) malloc( lda * n * sizeof(double));
-	bs = (double *) malloc( ldb * k * sizeof(double));
 	b  = (double *) malloc( ldb * k * sizeof(double));
+	bs = (double *) malloc( ldb * k * sizeof(double));
 
  	for(i = 0; i < lda * n; i++)
 		*(A + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
@@ -109,12 +109,11 @@ int main(int argc, char ** argv) {
 	cblas_dtrmm( CblasColMajor, CblasLeft, CblasUpper, CblasTrans, CblasNonUnit, n, k, (+1.0e+00), T, ldt, work, n ); 
 
 	// x2 = b2 - V2 * work 
-	cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans, m-n, k, n, (+1.0e+00), A+n, lda, work, n, (+0.0e+00), b+n, ldb );
-	for(j=0;j<k;j++) for(i=0;i<m-n;i++) b[ i+n+j*ldb ] = bs[ i+n+j*ldb ] - b[ i+n+j*ldb ];
+	cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans, m-n, k, n, (-1.0e+00), A+n, lda, work, n, (+1.0e+00), b+n, ldb );
 
 	// x1 = b1 - V1 * work
 	cblas_dtrmm( CblasColMajor, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, n, k, (+1.0e+00), A, lda, work, n ); 
-	for(j=0;j<k;j++) for(i=0;i<n;i++) b[ i+j*ldb ] = bs[ i+j*ldb ] - work[ i+j*n ];
+	for(j=0;j<k;j++) for(i=0;i<n;i++) b[ i+j*ldb ] -= work[ i+j*n ];
 
 	// Solve for x
 	cblas_dtrsm( CblasColMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, n, k, (+1.0e00), A, lda, b, ldb );
@@ -177,8 +176,8 @@ int main(int argc, char ** argv) {
 
 	free( A );
 	free( T );
-	free( bs );
 	free( b );
+	free( bs );
 	free( As );
 
 	
