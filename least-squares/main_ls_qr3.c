@@ -105,7 +105,7 @@ int main(int argc, char ** argv) {
 	// work = V2^T * b2 + work
 	cblas_dgemm( CblasColMajor, CblasTrans, CblasNoTrans, n, k, m-n, (+1.0e+00), A+n, lda, b+n, ldb, (+1.0e+00), work, n );
 
-	// work = T * work
+	// work = T^T * work
 	cblas_dtrmm( CblasColMajor, CblasLeft, CblasUpper, CblasTrans, CblasNonUnit, n, k, (+1.0e+00), T, ldt, work, n ); 
 
 	// x2 = b2 - V2 * work 
