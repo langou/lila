@@ -19,6 +19,9 @@ int qr2_dorgqr3( int m, int n, double *Q, int ldq, double *T, int ldt, double *t
 		for( int i=1; i<m; i++)  Q[i] *= -(*tau);
 		(*Q) = (+1.0e+00) - (*tau);
 
+//		for( int i=1; i<m; i++)  Q[i] *= -(*T);
+//		(*Q) = (+1.0e+00) - (*T);
+
 
 	} else {
 

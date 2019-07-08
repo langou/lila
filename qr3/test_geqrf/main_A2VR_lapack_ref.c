@@ -14,7 +14,7 @@ int main(int argc, char ** argv) {
 
     	m         = 27;
     	n         = 21;
-    	nb        = 10;
+    	nb        = 100;
 	lda       = -1;
 	ldr       = -1;
 	verbose   = 0;
@@ -97,14 +97,13 @@ int main(int argc, char ** argv) {
 		printf("LAPACK GEQRF");
 		printf("m = %4d, ",   m);
 		printf("n = %4d, ",   n);
-		printf("nb = %4d, ", nb);
 		printf(" \n");
 		printf(" time = %f    GFlop/sec (rel) = %f  GFlop/sec (abs) = %f ", elapsed, perform_rel, perform_abs);	
 		printf(" \n ");
 
 	} else {
 
-		printf("%6d %6d %6d %16.8f %10.3f %10.3f ", m, n, nb, elapsed, perform_rel, perform_abs);
+		printf("%6d %6d %16.8f %10.3f %10.3f ", m, n, elapsed, perform_rel, perform_abs);
 
 	} 
 
