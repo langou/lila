@@ -2,7 +2,7 @@
 include ../make.inc
 
 #all: xmain_A2QR_lapack.exe 
-#all: xmain_A2QR_qr3.exe  
+all: xmain_A2QR_qr3.exe  
 #all: xmain_A2QR_qr3_UT.exe  
 #all: xmain_A2QR_qr3_UT_ISW.exe  
 #all: xmain_A2QR_qr3_ISW.exe  
@@ -12,7 +12,7 @@ include ../make.inc
 #all: xmain_A2QR_qr3_UT_VS2Q.exe  
 #all: xmain_A2QR_qr3_UT_VS2Q_ISW.exe  
 
-all: xmain_A2QR_lapack.exe xmain_A2QR_qr3.exe xmain_A2QR_qr3_ISW.exe xmain_A2QR_qr3_VT2Q.exe xmain_A2QR_qr3_VT2Q_ISW.exe xmain_A2QR_qr3_UT.exe xmain_A2QR_qr3_ISW_VT2Q_ISW.exe xmain_A2QR_qr3_UT_ISW.exe xmain_A2QR_qr3_UT_VS2Q.exe xmain_A2QR_qr3_UT_VS2Q_ISW.exe  
+#all: xmain_A2QR_lapack.exe xmain_A2QR_qr3.exe xmain_A2QR_qr3_ISW.exe xmain_A2QR_qr3_VT2Q.exe xmain_A2QR_qr3_VT2Q_ISW.exe xmain_A2QR_qr3_UT.exe xmain_A2QR_qr3_ISW_VT2Q_ISW.exe xmain_A2QR_qr3_UT_ISW.exe xmain_A2QR_qr3_UT_VS2Q.exe xmain_A2QR_qr3_UT_VS2Q_ISW.exe  
 
 xmain_A2QR_lapack.exe: main_A2QR_lapack.o
 	make -C ../src/

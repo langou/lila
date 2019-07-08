@@ -4,8 +4,8 @@
 
 int main(int argc, char ** argv) {
 
-	int i, lda, ldq, ldr, m, n, lwork, verbose, testing;
-	double *A, *Q, *R, *tau, *work;
+	int i, lda, ldq, ldr, ldt, m, n, lwork, verbose, testing;
+	double *A, *Q, *R, *T, *tau, *work;
 	double orth, repres;
 	double elapsed, perform_rel, perform_abs;
 	struct timeval tp;
@@ -17,6 +17,7 @@ int main(int argc, char ** argv) {
 	lda       = -1;
 	ldq       = -1;
 	ldr       = -1;
+	ldt       = -1;
 	verbose   = 0;
 	testing   = 1;
 
@@ -31,6 +32,10 @@ int main(int argc, char ** argv) {
 		}
 		if( strcmp( *(argv + i), "-ldr") == 0) {
 			ldr = atoi( *(argv + i + 1) );
+			i++;
+		}
+		if( strcmp( *(argv + i), "-ldt") == 0) {
+			ldt = atoi( *(argv + i + 1) );
 			i++;
 		}
 		if( strcmp( *(argv + i), "-verbose") == 0) {
@@ -56,10 +61,12 @@ int main(int argc, char ** argv) {
 	if( lda < 0 ) lda = m;
 	if( ldq < 0 ) ldq = m;
 	if( ldr < 0 ) ldr = n;
+	if( ldt < 0 ) ldt = n;
 
 	A  = (double *) malloc( lda * n * sizeof(double));
 	Q  = (double *) malloc( ldq * n * sizeof(double));
  	R  = (double *) malloc( ldr * n * sizeof(double));
+ 	T  = (double *) malloc( ldt * n * sizeof(double));
 
  	for(i = 0; i < lda * n; i++)
 		*(A + i) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
@@ -88,6 +95,10 @@ int main(int argc, char ** argv) {
 	qr2_dgeqr3_R( m, n, Q, ldq, Q, ldq, R, ldr );
 	for(i=0;i<n;i++) tau[i] = Q[i+i*ldq];
 	qr2_dorgqr3( m, n, Q, ldq, Q, ldq, tau );
+
+//	qr2_dgeqr3_R( m, n, Q, ldq, T, ldt, R, ldr );
+//	for(i=0;i<n;i++) tau[i] = T[i+i*ldt];
+//	qr2_dorgqr3( m, n, Q, ldq, T, ldt, tau );
 
 	gettimeofday(&tp, NULL);
 	elapsed+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -126,6 +137,7 @@ int main(int argc, char ** argv) {
 	free( A  );
 	free( Q  );
 	free( R  );
+	free( T  );
 	free( work );
 	free( tau );
 

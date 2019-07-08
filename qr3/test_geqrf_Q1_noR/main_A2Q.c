@@ -4,8 +4,8 @@
 
 int main(int argc, char ** argv) {
 
-	int i, lda, ldq, m, n, lwork, verbose, testing;
-	double *A, *Q, *tau, *work;
+	int i, lda, ldq, m, n, verbose, testing;
+	double *A, *Q, *tau;
 	double orth, repres;
 	double elapsed, perform_rel, perform_abs;
 	struct timeval tp;
@@ -62,14 +62,6 @@ int main(int argc, char ** argv) {
 
 	tau = (double *) malloc( n * sizeof(double));
 
-	work = (double *) malloc( 1 * sizeof(double));
-	LAPACKE_dgeqrf_work( LAPACK_COL_MAJOR, m, n, A, lda, tau, work, -1 ); 
-	lwork = ((int) work[0]);
-	LAPACKE_dorgqr_work( LAPACK_COL_MAJOR, m, n, n, A, lda, tau, work, -1 );
-	if (lwork < ((int) work[0])) lwork = ((int) work[0]); 
-	free( work );
-	work = (double *) malloc( lwork * sizeof(double));
-
 	LAPACKE_dlacpy_work( LAPACK_COL_MAJOR, 'A', m, n, A, lda,  Q, ldq );
 
 	gettimeofday(&tp, NULL);
@@ -124,7 +116,6 @@ int main(int argc, char ** argv) {
 
 	free( A  );
 	free( Q  );
-	free( work );
 	free( tau );
 
 	return 0;
