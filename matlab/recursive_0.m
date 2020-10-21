@@ -18,14 +18,15 @@
 %
 %
 %
+   figure
    ax = axes;
-   loglog(1:4,mkl_lapack,'LineWidth', 2, 'color', 'b'); hold on;
-   loglog(1:4,rec_lapack,'LineWidth', 2, 'color', 'r'); hold on;
+   loglog(mt,mkl_lapack,'LineWidth', 2, 'color', 'b'); hold on;
+   loglog(mt,rec_lapack,'LineWidth', 2, 'color', 'r'); hold on;
    grid on;
    axis([ 100 10000 0 153 ]);
    legend('MKL LAPACK', 'Recursive - LAPACK Panel');
-   title({'Profiling of QR Factorization Using LAPACK','Time results','Comparing MKL LAPACK to Recursive LAPACK'});
-   xlabel('mt - size of block Householder Update')
+   title({'Profiling of QR Factorization Using LAPACK','Timing Results','Comparing MKL LAPACK to Recursive LAPACK'});
+   xlabel('mt - size of block Householder update')
    ylabel('time (seconds)')
    set( ax, 'XTick', 1:4 );
    set( ax, 'XTickLabel', mt );
@@ -39,11 +40,11 @@
    plot(1:4,mkl_lapack_gflop,'LineWidth', 2, 'color', 'b'); hold on;
    plot(1:4,rec_lapack_gflop,'LineWidth', 2, 'color', 'r'); hold on;
    grid on;
-   axis([ 1 4 0 23 ]);
+   axis([ 1 4 0 25 ]);
    legend('MKL LAPACK', 'Recursive - LAPACK Panel');
    title({'Performance Using One Core','m = n = 10,000'});
-   xlabel('m')
-   ylabel('performance for varying m (GFlop/sec/core)')
+   xlabel('mt - size of bkock Householder update')
+   ylabel('performance for varying mt sizes (GFlop/sec)')
    set( ax, 'XTick', 1:4 );
    set( ax, 'XTickLabel', mt  );
    set(gca,'FontSize',12);
