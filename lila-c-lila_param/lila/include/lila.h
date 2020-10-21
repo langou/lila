@@ -3,8 +3,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
-#include "cblas.h"
-#include "lapacke.h"
+
+
+//#include "cblas.h"
+//#include "lapacke.h"
+#include "mkl_cblas.h"
+#include "mkl_lapacke.h"
 
 extern int dgeqr3( int m, int n, double *A, int lda, double *T, int ldt );
 

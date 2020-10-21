@@ -1,7 +1,7 @@
 
 include make.inc
 
-all:  xmain.exe xmain_dgemm.exe xmain_dgeqrf.exe
+all:  xmain.exe xmain_dgeqrf.exe
 
 lila_dlarft_connect_w02.o: lila_dlarft_connect_w02.c
 	$(CC) -c $(OPTS) -I$(INCLUDECBLAS) -I$(INCLUDELAPACKE) lila_dlarft_connect_w02.c

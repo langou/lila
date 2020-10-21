@@ -1,6 +1,8 @@
 .DS_Store
 .*.swp
 make.inc
+*.sh
+*.out
 *.o
 *.exe
 *.a

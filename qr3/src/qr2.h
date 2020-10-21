@@ -5,8 +5,10 @@
 #include <sys/time.h>
 
 #if !defined(USE_MKL)
-#include "cblas.h"
-#include "lapacke.h"
+//#include "cblas.h"
+//#include "lapacke.h"
+#include "mkl_cblas.h"
+#include "mkl_lapacke.h"
 //extern void dlarf_( char *side, int *m, int *n, double *v, int *incv, double *tau, double *c, int *ldc, double *work);
 extern void dorg2r_( int *m, int *n, int *k, double *a, int *lda, double *tau, double *work, int *info );
 #endif
