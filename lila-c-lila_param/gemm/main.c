@@ -8,7 +8,7 @@
 
 int main(int argc, char ** argv) {
 
-	int i, info, m, n, k;
+	int i, m, n, k;
 	double *A, *B, *C;
 	double elapsed_ref, perform_ref;
 	struct timeval tp;
@@ -51,7 +51,7 @@ int main(int argc, char ** argv) {
 	gettimeofday(&tp, NULL);
 	elapsed_ref=-((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
 
-	cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans, m, n, k, (+1.0e+00), A, m, B, n, (+1.0e+00), C, n);	
+	cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans, m, n, k, (+1.0e+00), A, m, B, k, (-1.0e+00), C, m);	
 
 	gettimeofday(&tp, NULL);
 	elapsed_ref+=((double)tp.tv_sec+(1.e-6)*tp.tv_usec);
@@ -59,8 +59,9 @@ int main(int argc, char ** argv) {
 	perform_ref = ( 2.0e+00 * ((double) m) * ((double) k) * ((double) n) ) / elapsed_ref / 1.0e+9 ;
 
 	printf("dgemm - ");
-	printf("m = %4d, ",         m);
-	printf("n = %4d, ",         n);
+	printf("m = %4d, ", m);
+	printf("n = %4d, ", n);
+	printf("k = %4d, ", k);
 	printf(" time = %f    GFlop/sec = %f ", elapsed_ref, perform_ref);	
 	printf(" \n");
 
