@@ -33,6 +33,10 @@ int main(int argc, char ** argv) {
 			i++;
 		}
 	}
+	// This is for an experiment, please comment if not looking at square
+    	n = m;
+	k = m;
+
 
 	A = (double *) malloc( m * k * sizeof(double));
 	B = (double *) malloc( k * n * sizeof(double));
